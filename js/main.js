@@ -300,7 +300,23 @@ const AppController = {
     LabView.renderLab();
   },
 
+  toggleFullscreen() {
+    if (!document.fullscreenEnabled) return;
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  },
+
+  syncFullscreenBtn() {
+    const btn = document.getElementById('fullscreen-btn');
+    if (!btn) return;
+    btn.textContent = document.fullscreenElement ? '✕ 全画面解除' : '⛶ 全画面';
+  },
+
   attachEvents() {
+    document.addEventListener('fullscreenchange', () => this.syncFullscreenBtn());
     document.addEventListener('click', (e) => {
       const target = e.target.closest('[data-action]');
       if (!target) return;
@@ -345,6 +361,9 @@ const AppController = {
           break;
         case 'toggle-actual-result':
           this.toggleActualResult();
+          break;
+        case 'toggle-fullscreen':
+          this.toggleFullscreen();
           break;
         case 'reset-all':
           this.resetAll();

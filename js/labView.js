@@ -20,21 +20,21 @@ export const LabView = {
     const animClass = animateGrow ? 'animate-grow-top' : '';
     const animStyle = animateGrow && delaySec > 0 ? `style="animation-delay:${delaySec}s;"` : '';
     if (color === 'red') {
-      return `<div class="w-3.5 h-24 rounded-full bg-rose-500 shadow-sm ${animClass}" ${animStyle}></div>`;
+      return `<div class="dna-strand-h w-3.5 rounded-full bg-rose-500 shadow-sm ${animClass}" ${animStyle}></div>`;
     }
     if (color === 'blue') {
-      return `<div class="w-3.5 h-24 rounded-full bg-sky-500 shadow-sm ${animClass}" ${animStyle}></div>`;
+      return `<div class="dna-strand-h w-3.5 rounded-full bg-sky-500 shadow-sm ${animClass}" ${animStyle}></div>`;
     }
     const fillHtml = buildSlotId !== null
       ? `<div data-build-fill="${buildSlotId}" class="absolute inset-x-0 top-0 bg-sky-500 rounded-full" style="height:0%;"></div>`
       : '';
-    return `<div class="relative w-3.5 h-24 rounded-full border-2 border-dashed border-sky-300 bg-sky-50/60 overflow-hidden">${fillHtml}</div>`;
+    return `<div class="dna-strand-h relative w-3.5 rounded-full border-2 border-dashed border-sky-300 bg-sky-50/60 overflow-hidden">${fillHtml}</div>`;
   },
 
   renderSegmentedStrandHtml(segs, isCut, newMask = [], animateGrow = false, buildSlotId = null) {
     if (!isCut) {
       return `
-        <div class="flex flex-col h-24 w-3.5 rounded-full overflow-hidden shadow-sm">
+        <div class="dna-strand-h flex flex-col w-3.5 rounded-full overflow-hidden shadow-sm">
           ${segs
             .map((c) => {
               const bg = c === 'red' ? 'bg-rose-500' : c === 'blue' ? 'bg-sky-500' : 'bg-slate-100/60';
@@ -45,7 +45,7 @@ export const LabView = {
       `;
     }
     return `
-      <div class="flex flex-col gap-1 h-24 justify-between">
+      <div class="dna-strand-h flex flex-col gap-1 justify-between">
         ${segs
           .map((c, idx) => {
             const isNew = animateGrow && newMask[idx];
@@ -70,7 +70,7 @@ export const LabView = {
   renderRungsHtml(active) {
     const color = active ? 'bg-slate-400' : 'bg-slate-200';
     return `
-      <div class="flex flex-col justify-around h-20" aria-hidden="true">
+      <div class="dna-rungs-h flex flex-col justify-around" aria-hidden="true">
         <span class="w-2.5 h-0.5 ${color}"></span>
         <span class="w-2.5 h-0.5 ${color}"></span>
         <span class="w-2.5 h-0.5 ${color}"></span>
@@ -208,7 +208,7 @@ export const LabView = {
       : this.renderSwipeBuildGuide(slot.id, '上から下へなぞって青の2本鎖を作る！');
 
     return `
-      <div class="relative overflow-hidden bg-white/90 rounded-2xl border-2 ${slot.built ? 'border-emerald-300' : 'border-slate-200'} p-3 flex flex-col items-center justify-between gap-2 shadow-sm">
+      <div class="compact-dna-card relative overflow-hidden bg-white/90 rounded-2xl border-2 ${slot.built ? 'border-emerald-300' : 'border-slate-200'} p-2.5 sm:p-3 flex flex-col items-center justify-between gap-2 shadow-sm">
         ${this.renderCardAmbientBlueSpecks()}
         <div class="relative z-10 w-full flex items-center justify-between gap-1">
           <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
@@ -252,7 +252,7 @@ export const LabView = {
       : this.renderStrandHtml(slot.right, { animateGrow: animRight, buildSlotId: canBuild && !slot.right ? slot.id : null });
 
     return `
-      <div data-card-slot="${slot.id}" class="relative overflow-hidden bg-white/90 rounded-2xl border-2 ${isDone ? 'border-emerald-300' : 'border-slate-200'} p-3 flex flex-col items-center justify-between gap-2 shadow-sm transition">
+      <div data-card-slot="${slot.id}" class="compact-dna-card relative overflow-hidden bg-white/90 rounded-2xl border-2 ${isDone ? 'border-emerald-300' : 'border-slate-200'} p-2.5 sm:p-3 flex flex-col items-center justify-between gap-2 shadow-sm transition">
         ${this.renderCardAmbientBlueSpecks()}
         <div class="relative z-10 w-full flex items-center justify-between gap-1">
           <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
@@ -303,7 +303,7 @@ export const LabView = {
       : '';
 
     return `
-      <div class="relative overflow-hidden bg-white/90 rounded-2xl border-2 ${isDone ? 'border-emerald-300' : 'border-slate-200'} p-3 flex flex-col items-center justify-between gap-2 shadow-sm">
+      <div class="compact-dna-card relative overflow-hidden bg-white/90 rounded-2xl border-2 ${isDone ? 'border-emerald-300' : 'border-slate-200'} p-2.5 sm:p-3 flex flex-col items-center justify-between gap-2 shadow-sm">
         ${this.renderCardAmbientBlueSpecks()}
         <div class="relative z-10 w-full flex items-center justify-between gap-1">
           <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
@@ -447,7 +447,7 @@ export const LabView = {
     const summary = molecules ? BiologyModel.aggregateBands(molecules).compactLabel : '未実験';
     return `
       <div class="flex flex-col items-center">
-        <div class="relative w-11 h-28 rounded-b-full border border-slate-500/80 bg-slate-800 overflow-hidden">
+        <div class="mini-tube-height relative w-11 rounded-b-full border border-slate-500/80 bg-slate-800 overflow-hidden">
           <div class="absolute inset-x-0 top-[24%] -translate-y-1/2 border-t border-dashed border-sky-400/35"></div>
           <div class="absolute inset-x-0 top-[52%] -translate-y-1/2 border-t border-dashed border-slate-400/35"></div>
           <div class="absolute inset-x-0 top-[80%] -translate-y-1/2 border-t border-dashed border-rose-400/35"></div>
