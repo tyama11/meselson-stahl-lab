@@ -444,7 +444,7 @@ export const LabView = {
       }
       if (spinIcon) spinIcon.className = 'w-3 h-3 rounded-sm bg-white inline-block';
       if (spinLabel) spinLabel.textContent = '遠心分離機を止める（ストップ）';
-      if (statusEl) statusEl.textContent = '回転中！もう一度押して止めよう';
+      if (statusEl) statusEl.textContent = '回転しながら比重の位置へ移動中！もう一度押して止めよう';
     } else if (phase === 'settling') {
       if (spinBtn) {
         spinBtn.disabled = true;
