@@ -114,18 +114,26 @@ export const LabView = {
 
   renderBlueAbsorbParticles(slotId, mode) {
     const coords = [
-      { sx: -46, sy: -34, d: 0 },
-      { sx: 46, sy: -30, d: 0.05 },
-      { sx: -52, sy: 0, d: 0.1 },
-      { sx: 52, sy: 4, d: 0.15 },
-      { sx: -42, sy: 34, d: 0.2 },
-      { sx: 44, sy: 32, d: 0.25 }
+      { sx: -68, sy: -48, d: 0, sz: 'w-1.5 h-1.5' },
+      { sx: -44, sy: -54, d: 0.04, sz: 'w-1 h-1' },
+      { sx: 66, sy: -46, d: 0.07, sz: 'w-1.5 h-1.5' },
+      { sx: 42, sy: -52, d: 0.1, sz: 'w-1 h-1' },
+      { sx: -76, sy: -16, d: 0.13, sz: 'w-1 h-1' },
+      { sx: 76, sy: -14, d: 0.16, sz: 'w-1.5 h-1.5' },
+      { sx: -74, sy: 16, d: 0.19, sz: 'w-1.5 h-1.5' },
+      { sx: 74, sy: 18, d: 0.22, sz: 'w-1 h-1' },
+      { sx: -66, sy: 48, d: 0.25, sz: 'w-1 h-1' },
+      { sx: -40, sy: 54, d: 0.28, sz: 'w-1.5 h-1.5' },
+      { sx: 64, sy: 46, d: 0.31, sz: 'w-1.5 h-1.5' },
+      { sx: 38, sy: 54, d: 0.34, sz: 'w-1 h-1' },
+      { sx: -16, sy: -56, d: 0.08, sz: 'w-1 h-1' },
+      { sx: 18, sy: 56, d: 0.29, sz: 'w-1 h-1' }
     ];
     if (mode === 'ready') {
       return coords
         .map(
           (p) =>
-            `<span data-build-dot="${slotId}" data-sx="${p.sx}" data-sy="${p.sy}" class="blue-ambient-dot pointer-events-none absolute w-2 h-2 rounded-full bg-sky-400/80" style="--sx:${p.sx}px; --sy:${p.sy}px;"></span>`
+            `<span data-build-dot="${slotId}" data-sx="${p.sx}" data-sy="${p.sy}" class="blue-ambient-dot pointer-events-none absolute ${p.sz} rounded-full bg-sky-400/90" style="--sx:${p.sx}px; --sy:${p.sy}px;"></span>`
         )
         .join('');
     }
@@ -133,7 +141,7 @@ export const LabView = {
       return coords
         .map(
           (p) =>
-            `<span class="blue-absorb-once pointer-events-none absolute w-2.5 h-2.5 rounded-full bg-sky-400" style="--sx:${p.sx}px; --sy:${p.sy}px; animation-delay:${p.d}s;"></span>`
+            `<span class="blue-absorb-once pointer-events-none absolute ${p.sz} rounded-full bg-sky-500" style="--sx:${p.sx}px; --sy:${p.sy}px; animation-delay:${p.d}s;"></span>`
         )
         .join('');
     }
