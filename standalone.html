@@ -1,0 +1,2192 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>メセルソンとスタールの実験ラボ</title>
+  <meta name="description" content="保存的複製・半保存的複製・分散的複製の3つの仮説を操作しながら再現し、塩化セシウム密度勾配遠心法のバンドを比較できるインタラクティブ生物教材。" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'M PLUS Rounded 1c', 'Inter', sans-serif;
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+
+    @keyframes spinCentrifuge {
+      0% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(360deg) scale(1.04); }
+      60% { transform: rotate(720deg) scale(1.04); }
+      100% { transform: rotate(1080deg) scale(1); }
+    }
+    .animate-centrifuge {
+      animation: spinCentrifuge 1.3s cubic-bezier(0.35, 0, 0.25, 1) infinite;
+    }
+
+    @keyframes floatParticle {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(5px, -6px) rotate(22deg); }
+      66% { transform: translate(-5px, 5px) rotate(-22deg); }
+    }
+    .dna-particle-swirl {
+      animation: floatParticle 0.55s ease-in-out infinite;
+    }
+
+    .dna-strand-move {
+      transition:
+        top 1.15s cubic-bezier(0.22, 1, 0.36, 1),
+        left 1.15s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 1.15s ease;
+    }
+
+    @keyframes bandAppear {
+      0% { opacity: 0; transform: translateY(-50%) scaleX(0.6); }
+      100% { opacity: 1; transform: translateY(-50%) scaleX(1); }
+    }
+    .band-appear {
+      animation: bandAppear 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.85), 0 4px 12px rgba(2, 132, 199, 0.3);
+      }
+      50% {
+        transform: scale(1.03);
+        box-shadow: 0 0 0 6px rgba(250, 204, 21, 0), 0 6px 16px rgba(2, 132, 199, 0.45);
+      }
+    }
+    .next-action-glow {
+      animation: pulseGlow 1.4s ease-in-out infinite;
+      outline: 3px solid #facc15;
+      outline-offset: 2px;
+    }
+
+    @keyframes scissorSnip {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(-18deg) scale(1.15); }
+    }
+    .scissor-snip-anim {
+      animation: scissorSnip 0.45s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    @keyframes growStrandFromTop {
+      0% { transform: scaleY(0); opacity: 0; }
+      100% { transform: scaleY(1); opacity: 1; }
+    }
+    .animate-grow-top {
+      transform-origin: top center;
+      animation: growStrandFromTop 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .gesture-zone {
+      touch-action: none;
+      user-select: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-50 text-slate-800">
+
+  <!-- コンパクトなトップバー -->
+  <header class="bg-white border-b border-slate-200 px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 shrink-0 shadow-sm">
+    <div class="flex items-center gap-2.5">
+      <span class="text-2xl" aria-hidden="true">🧬</span>
+      <div>
+        <h1 class="text-base sm:text-lg font-extrabold text-slate-900 leading-tight">
+          メセルソンとスタールの実験ラボ
+        </h1>
+        <p class="text-[11px] text-slate-500 font-bold hidden sm:block">
+          仮説を選んでDNAを複製させ、遠心分離機で比重のバンドを観察しよう！
+        </p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 flex-wrap">
+      <!-- 凡例 -->
+      <div class="hidden md:flex items-center gap-3 bg-slate-100 px-3 py-1.5 rounded-xl text-xs font-bold mr-1">
+        <span class="flex items-center gap-1">
+          <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>重い赤 (<sup>15</sup>N)
+        </span>
+        <span class="flex items-center gap-1">
+          <span class="w-3 h-3 rounded-full bg-sky-500 inline-block"></span>軽い青 (<sup>14</sup>N)
+        </span>
+      </div>
+
+      <button
+        id="open-compare-btn"
+        type="button"
+        data-action="open-compare"
+        class="bg-indigo-100 hover:bg-indigo-200 text-indigo-900 font-extrabold text-xs sm:text-sm px-3 py-1.5 rounded-xl border border-indigo-300 transition cursor-pointer flex items-center gap-1.5"
+      >
+        <span>📊 結果の比較</span>
+        <span id="compare-count-badge" class="bg-indigo-600 text-white text-[10px] font-black px-1.5 py-0.5 rounded-full">0/3</span>
+      </button>
+
+      <button
+        type="button"
+        data-action="open-rules"
+        class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-extrabold text-xs sm:text-sm px-3 py-1.5 rounded-xl border border-amber-300 transition cursor-pointer"
+      >
+        📖 ルールを見る
+      </button>
+
+      <button
+        type="button"
+        data-action="reset-all"
+        class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-extrabold text-xs sm:text-sm px-3 py-1.5 rounded-xl transition cursor-pointer"
+      >
+        🔄 最初から
+      </button>
+    </div>
+  </header>
+
+  <!-- メイン作業エリア（1画面に収まる12カラムグリッド） -->
+  <main class="flex-1 max-w-[1440px] w-full mx-auto p-3 sm:p-4 grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+
+    <!-- 左側（7カラム）：仮説選択 ＋ 世代切り替え ＋ DNA組み立て台 -->
+    <section class="lg:col-span-7 bg-white rounded-3xl border border-slate-200 shadow-sm p-3.5 sm:p-4 flex flex-col justify-between gap-3">
+      <!-- 上段：3つの仮説タブ ＋ 世代ステップ -->
+      <div class="space-y-2.5">
+        <div class="grid grid-cols-3 gap-2" role="tablist" aria-label="DNA複製の仮説選択">
+          <button
+            id="hypo-btn-conservative"
+            type="button"
+            role="tab"
+            data-action="select-hypothesis"
+            data-hypothesis="conservative"
+            class="p-2 sm:p-2.5 rounded-2xl border-2 text-left transition cursor-pointer"
+          >
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-[10px] font-extrabold text-amber-600">仮説①</span>
+              <span id="hypo-done-conservative" class="hidden text-[10px] font-black px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">✓ 記録済</span>
+            </div>
+            <div class="font-extrabold text-xs sm:text-sm text-slate-900">保存的複製</div>
+            <div class="text-[10px] text-slate-500 hidden sm:block">元の赤を残し青を新造</div>
+          </button>
+
+          <button
+            id="hypo-btn-semiconservative"
+            type="button"
+            role="tab"
+            data-action="select-hypothesis"
+            data-hypothesis="semiconservative"
+            class="p-2 sm:p-2.5 rounded-2xl border-2 text-left transition cursor-pointer"
+          >
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-[10px] font-extrabold text-emerald-600">仮説②</span>
+              <span id="hypo-done-semiconservative" class="hidden text-[10px] font-black px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">✓ 記録済</span>
+            </div>
+            <div class="font-extrabold text-xs sm:text-sm text-slate-900">半保存的複製</div>
+            <div class="text-[10px] text-slate-500 hidden sm:block">1本ずつ開き青を合成</div>
+          </button>
+
+          <button
+            id="hypo-btn-dispersive"
+            type="button"
+            role="tab"
+            data-action="select-hypothesis"
+            data-hypothesis="dispersive"
+            class="p-2 sm:p-2.5 rounded-2xl border-2 text-left transition cursor-pointer"
+          >
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-[10px] font-extrabold text-purple-600">仮説③</span>
+              <span id="hypo-done-dispersive" class="hidden text-[10px] font-black px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">✓ 記録済</span>
+            </div>
+            <div class="font-extrabold text-xs sm:text-sm text-slate-900">分散的複製</div>
+            <div class="text-[10px] text-slate-500 hidden sm:block">細かく切り青と補完</div>
+          </button>
+        </div>
+
+        <!-- 世代インジケーター＆ガイド -->
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-1.5">
+            <button
+              id="step-badge-1"
+              type="button"
+              data-action="go-gen-1"
+              title="クリックすると第1世代（1回目の複製）に戻れます"
+              class="px-2.5 py-1 rounded-xl text-xs font-extrabold transition cursor-pointer"
+            >
+              第1世代 (1→2本)
+            </button>
+            <span class="text-slate-300 font-bold" aria-hidden="true">▶</span>
+            <span id="step-badge-2" class="px-2.5 py-1 rounded-xl text-xs font-extrabold">
+              第2世代 (2→4本)
+            </span>
+          </div>
+          <p id="builder-guide-text" class="text-xs font-bold text-slate-700" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <!-- 中段：DNA組み立てスロット -->
+      <div class="flex-1 flex flex-col justify-center bg-slate-50/70 border-2 border-dashed border-slate-200 rounded-2xl p-3">
+        <div id="dna-slots-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <!-- JSで動的にDNAカードを描画 -->
+        </div>
+      </div>
+
+      <!-- 下段：操作ボタン -->
+      <div class="flex flex-wrap items-center justify-end gap-2.5">
+        <button
+          id="spin-centrifuge-btn"
+          type="button"
+          data-action="toggle-centrifuge"
+          disabled
+          class="bg-rose-500 hover:bg-rose-600 disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+        >
+          <span id="spin-btn-icon" class="w-3 h-3 rounded-full bg-white inline-block"></span>
+          <span id="spin-btn-label">遠心分離機を回す（スタート）</span>
+        </button>
+
+        <button
+          id="next-gen-btn"
+          type="button"
+          data-action="go-gen-2"
+          class="hidden bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-sm px-5 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer"
+        >
+          第2世代へ進む ▶
+        </button>
+
+        <button
+          id="compare-cta-btn"
+          type="button"
+          data-action="open-compare"
+          class="hidden bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm px-5 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer"
+        >
+          📊 実験結果を比較・考察する
+        </button>
+      </div>
+    </section>
+
+    <!-- 右側（5カラム）：遠心分離機＆試験管（第0世代・第1世代・第2世代） -->
+    <section class="lg:col-span-5 bg-white rounded-3xl border border-slate-200 shadow-sm p-3.5 sm:p-4 flex flex-col justify-between gap-3">
+      <div class="flex items-center justify-between gap-2">
+        <h2 class="font-extrabold text-sm sm:text-base text-slate-900 flex items-center gap-1.5">
+          <span aria-hidden="true">🧪</span> 遠心分離機の試験管（比重比べ）
+        </h2>
+        <span id="centrifuge-status" class="text-[11px] font-extrabold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">
+          待機中
+        </span>
+      </div>
+
+      <!-- 3本の試験管エリア -->
+      <div class="flex-1 bg-slate-900 rounded-2xl p-3 sm:p-4 flex flex-col justify-between relative overflow-hidden gap-2">
+        <div class="flex items-start gap-2 sm:gap-3 my-auto pt-2 pb-1">
+          <!-- 左側：比重ガイドライン（試験管の目盛り高さと一致） -->
+          <div class="relative w-12 sm:w-14 h-52 sm:h-60 shrink-0 text-[10px] font-bold text-slate-400 text-right pr-1">
+            <span class="absolute right-1 top-[24%] -translate-y-1/2 leading-tight text-sky-300">↑ 比重小</span>
+            <span class="absolute right-1 top-[52%] -translate-y-1/2 leading-tight">中くらい</span>
+            <span class="absolute right-1 top-[80%] -translate-y-1/2 leading-tight text-rose-300">↓ 比重大</span>
+          </div>
+
+          <div class="flex-1 grid grid-cols-3 gap-2 sm:gap-3 items-end">
+            <!-- 第0世代 試験管 -->
+            <div class="flex flex-col items-center">
+              <div id="tube-wrapper-0" class="relative w-14 sm:w-16 md:w-20 h-52 sm:h-60 rounded-b-full border-2 border-slate-400/70 bg-slate-800/80 overflow-hidden shadow-inner">
+                <div class="absolute inset-x-0 bottom-0 top-5 bg-gradient-to-b from-sky-400/5 via-sky-400/10 to-sky-400/20"></div>
+                <div class="absolute inset-x-0 top-[24%] -translate-y-1/2 border-t border-dashed border-sky-400/35"></div>
+                <div class="absolute inset-x-0 top-[52%] -translate-y-1/2 border-t border-dashed border-slate-400/35"></div>
+                <div class="absolute inset-x-0 top-[80%] -translate-y-1/2 border-t border-dashed border-rose-400/35"></div>
+                <div id="tube-content-0" class="absolute inset-0"></div>
+              </div>
+              <div class="mt-2 text-center min-h-[36px]">
+                <div class="text-xs font-extrabold text-white">第0世代</div>
+                <div id="tube-label-0" class="text-[10px] font-bold text-rose-400 leading-tight">準備中</div>
+              </div>
+            </div>
+
+            <!-- 第1世代 試験管 -->
+            <div class="flex flex-col items-center">
+              <div id="tube-wrapper-1" class="relative w-14 sm:w-16 md:w-20 h-52 sm:h-60 rounded-b-full border-2 border-slate-400/70 bg-slate-800/80 overflow-hidden shadow-inner">
+                <div class="absolute inset-x-0 bottom-0 top-5 bg-gradient-to-b from-sky-400/5 via-sky-400/10 to-sky-400/20"></div>
+                <div class="absolute inset-x-0 top-[24%] -translate-y-1/2 border-t border-dashed border-sky-400/35"></div>
+                <div class="absolute inset-x-0 top-[52%] -translate-y-1/2 border-t border-dashed border-slate-400/35"></div>
+                <div class="absolute inset-x-0 top-[80%] -translate-y-1/2 border-t border-dashed border-rose-400/35"></div>
+                <div id="tube-content-1" class="absolute inset-0"></div>
+              </div>
+              <div class="mt-2 text-center min-h-[36px]">
+                <div class="text-xs font-extrabold text-white">第1世代</div>
+                <div id="tube-label-1" class="text-[10px] font-bold text-slate-400 leading-tight">未実験</div>
+              </div>
+            </div>
+
+            <!-- 第2世代 試験管 -->
+            <div class="flex flex-col items-center">
+              <div id="tube-wrapper-2" class="relative w-14 sm:w-16 md:w-20 h-52 sm:h-60 rounded-b-full border-2 border-slate-400/70 bg-slate-800/80 overflow-hidden shadow-inner">
+                <div class="absolute inset-x-0 bottom-0 top-5 bg-gradient-to-b from-sky-400/5 via-sky-400/10 to-sky-400/20"></div>
+                <div class="absolute inset-x-0 top-[24%] -translate-y-1/2 border-t border-dashed border-sky-400/35"></div>
+                <div class="absolute inset-x-0 top-[52%] -translate-y-1/2 border-t border-dashed border-slate-400/35"></div>
+                <div class="absolute inset-x-0 top-[80%] -translate-y-1/2 border-t border-dashed border-rose-400/35"></div>
+                <div id="tube-content-2" class="absolute inset-0"></div>
+              </div>
+              <div class="mt-2 text-center min-h-[36px]">
+                <div class="text-xs font-extrabold text-white">第2世代</div>
+                <div id="tube-label-2" class="text-[10px] font-bold text-slate-400 leading-tight">未実験</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 実験観察メモ -->
+        <div id="observation-box" class="bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 font-bold text-center" aria-live="polite">
+          まずは第0世代（重い赤いDNA）の動きを見てみよう！
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================= -->
+  <!-- モーダル1：ルール説明＆第0世代確認（2ステップ構成） -->
+  <!-- ========================================================= -->
+  <div
+    id="rules-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="rules-modal-title"
+    class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto"
+  >
+    <div class="bg-white rounded-3xl max-w-4xl w-full p-4 sm:p-6 shadow-2xl border-2 border-slate-200 my-auto">
+
+      <!-- ステップ1：ルール説明画面 -->
+      <div id="modal-step-1">
+        <div class="flex items-center justify-between border-b border-slate-200 pb-2.5 mb-3">
+          <div class="flex items-center gap-2">
+            <span class="bg-sky-500 text-white text-xs font-black px-2.5 py-0.5 rounded-full">ステップ 1 / 2</span>
+            <h2 id="rules-modal-title" class="text-base sm:text-xl font-black text-slate-900 flex items-center gap-1.5">
+              <span aria-hidden="true">🔬</span> 今日のミッション：DNAの複製様式を調べよう！
+            </h2>
+          </div>
+          <button
+            type="button"
+            data-action="close-rules"
+            class="text-slate-400 hover:text-slate-700 font-black text-lg px-2 py-1 rounded-xl hover:bg-slate-100 cursor-pointer"
+            aria-label="閉じる"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div class="bg-sky-50 border-2 border-sky-200 rounded-2xl p-3 mb-3.5 flex items-start gap-3">
+          <div class="text-2xl sm:text-3xl shrink-0" aria-hidden="true">💡</div>
+          <div class="text-xs sm:text-sm text-slate-800 leading-relaxed">
+            <div class="font-black text-sky-900 mb-0.5">2本の鎖はどうやってコピーされるのだろう？</div>
+            細胞が増えるとき、2重らせん構造をもつ<strong>DNA（2本の鎖）</strong>も同じものが複製されます。
+            重い窒素（<sup>15</sup>N）で標識した元のDNAを、軽い窒素（<sup>14</sup>N）の培地で複製させたとき、<strong>3つの仮説で試験管のバンドがどう変わるか</strong>を確かめよう！
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+          <div class="bg-amber-50/70 border-2 border-amber-200 rounded-2xl p-3 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="bg-amber-500 text-white text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">仮説①</span>
+                <span class="text-[11px] font-extrabold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-lg">まるごと新品を作る</span>
+              </div>
+              <h3 class="font-black text-base text-slate-900 mb-1">保存的複製</h3>
+              <p class="text-xs text-slate-700 leading-relaxed mb-2.5">
+                元の「赤＋赤」の2本鎖は<strong>そのまま残し</strong>、別に「青＋青」の新しい2本鎖をまるごと1セット合成する仮説。
+              </p>
+            </div>
+            <div class="bg-white/90 rounded-xl p-2 border border-amber-200 flex items-center justify-center gap-3">
+              <div class="flex gap-1"><span class="w-2 h-8 rounded-full bg-rose-500"></span><span class="w-2 h-8 rounded-full bg-rose-500"></span></div>
+              <span class="text-slate-400 font-black text-xs">▶</span>
+              <div class="flex gap-2">
+                <div class="flex gap-0.5"><span class="w-2 h-8 rounded-full bg-rose-500"></span><span class="w-2 h-8 rounded-full bg-rose-500"></span></div>
+                <div class="flex gap-0.5"><span class="w-2 h-8 rounded-full bg-sky-500"></span><span class="w-2 h-8 rounded-full bg-sky-500"></span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-emerald-50/70 border-2 border-emerald-200 rounded-2xl p-3 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="bg-emerald-500 text-white text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">仮説②</span>
+                <span class="text-[11px] font-extrabold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-lg">1本ずつ開いて鋳型に</span>
+              </div>
+              <h3 class="font-black text-base text-slate-900 mb-1">半保存的複製</h3>
+              <p class="text-xs text-slate-700 leading-relaxed mb-2.5">
+                元の2本鎖を<strong>1本ずつにほどき</strong>、それぞれを鋳型（いがた）にして<strong>軽い青（<sup>14</sup>N）</strong>で新しい鎖を合成する仮説。
+              </p>
+            </div>
+            <div class="bg-white/90 rounded-xl p-2 border border-emerald-200 flex items-center justify-center gap-3">
+              <div class="flex gap-1"><span class="w-2 h-8 rounded-full bg-rose-500"></span><span class="w-2 h-8 rounded-full bg-rose-500"></span></div>
+              <span class="text-slate-400 font-black text-xs">▶</span>
+              <div class="flex gap-2">
+                <div class="flex gap-0.5"><span class="w-2 h-8 rounded-full bg-rose-500"></span><span class="w-2 h-8 rounded-full bg-sky-500"></span></div>
+                <div class="flex gap-0.5"><span class="w-2 h-8 rounded-full bg-sky-500"></span><span class="w-2 h-8 rounded-full bg-rose-500"></span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-purple-50/70 border-2 border-purple-200 rounded-2xl p-3 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="bg-purple-500 text-white text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">仮説③</span>
+                <span class="text-[11px] font-extrabold text-purple-800 bg-purple-100 px-2 py-0.5 rounded-lg">断片に切って分配</span>
+              </div>
+              <h3 class="font-black text-base text-slate-900 mb-1">分散的複製</h3>
+              <p class="text-xs text-slate-700 leading-relaxed mb-2.5">
+                元のDNAを<strong>細かく切断して均等に分配</strong>し、足りない部分を<strong>軽い青（<sup>14</sup>N）</strong>で補って2本鎖にする仮説。
+              </p>
+            </div>
+            <div class="bg-white/90 rounded-xl p-2 border border-purple-200 flex items-center justify-center gap-3">
+              <div class="flex gap-1"><span class="w-2 h-8 rounded-full bg-rose-500"></span><span class="w-2 h-8 rounded-full bg-rose-500"></span></div>
+              <span class="text-slate-400 font-black text-xs">▶</span>
+              <div class="flex gap-2">
+                <div class="flex gap-0.5">
+                  <div class="flex flex-col w-2 h-8 rounded-full overflow-hidden"><span class="flex-1 bg-rose-500"></span><span class="flex-1 bg-sky-500"></span><span class="flex-1 bg-rose-500"></span><span class="flex-1 bg-sky-500"></span></div>
+                  <div class="flex flex-col w-2 h-8 rounded-full overflow-hidden"><span class="flex-1 bg-sky-500"></span><span class="flex-1 bg-rose-500"></span><span class="flex-1 bg-sky-500"></span><span class="flex-1 bg-rose-500"></span></div>
+                </div>
+                <div class="flex gap-0.5">
+                  <div class="flex flex-col w-2 h-8 rounded-full overflow-hidden"><span class="flex-1 bg-sky-500"></span><span class="flex-1 bg-rose-500"></span><span class="flex-1 bg-sky-500"></span><span class="flex-1 bg-rose-500"></span></div>
+                  <div class="flex flex-col w-2 h-8 rounded-full overflow-hidden"><span class="flex-1 bg-rose-500"></span><span class="flex-1 bg-sky-500"></span><span class="flex-1 bg-rose-500"></span><span class="flex-1 bg-sky-500"></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center">
+          <button
+            type="button"
+            data-action="modal-step"
+            data-step="2"
+            class="bg-sky-500 hover:bg-sky-600 text-white font-black px-8 py-3 rounded-2xl text-sm sm:text-base shadow-md transition active:scale-95 cursor-pointer"
+          >
+            次へ：基準となる第0世代（赤いDNA）を確かめる ▶
+          </button>
+        </div>
+      </div>
+
+      <!-- ステップ2：第0世代の確認 -->
+      <div id="modal-step-2" class="hidden">
+        <div class="flex items-center justify-between border-b border-slate-200 pb-2.5 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="bg-rose-500 text-white text-xs font-black px-2.5 py-0.5 rounded-full">ステップ 2 / 2</span>
+            <h2 class="text-base sm:text-xl font-black text-slate-900 flex items-center gap-1.5">
+              <span aria-hidden="true">🧬</span> スタートは「重い赤い2本鎖」のDNA！
+            </h2>
+          </div>
+          <button
+            type="button"
+            data-action="close-rules"
+            class="text-slate-400 hover:text-slate-700 font-black text-lg px-2 py-1 rounded-xl hover:bg-slate-100 cursor-pointer"
+            aria-label="閉じる"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center mb-5">
+          <div class="md:col-span-4 bg-rose-50 border-2 border-rose-200 rounded-3xl p-4 flex flex-col items-center justify-center text-center shadow-inner h-full">
+            <span class="bg-rose-500 text-white text-xs font-black px-3 py-1 rounded-full mb-2.5">
+              第0世代（元の親DNA）
+            </span>
+            <div class="flex items-center justify-center gap-3 my-1.5">
+              <div class="w-4 h-28 rounded-full bg-rose-500 shadow-md"></div>
+              <div class="flex flex-col justify-around h-24">
+                <span class="w-3.5 h-1 bg-rose-300 rounded-full"></span>
+                <span class="w-3.5 h-1 bg-rose-300 rounded-full"></span>
+                <span class="w-3.5 h-1 bg-rose-300 rounded-full"></span>
+                <span class="w-3.5 h-1 bg-rose-300 rounded-full"></span>
+              </div>
+              <div class="w-4 h-28 rounded-full bg-rose-500 shadow-md"></div>
+            </div>
+            <div class="mt-2.5 font-black text-sm text-slate-900">重い鎖 2本がペアのDNA</div>
+            <div class="text-[11px] font-bold text-rose-700 mt-0.5"><sup>15</sup>Nの割合：100%（重い）</div>
+          </div>
+
+          <div class="md:col-span-4 bg-slate-900 rounded-3xl p-4 flex flex-col items-center justify-between text-center border-2 border-slate-700 h-full">
+            <div class="text-[11px] font-extrabold text-slate-300 mb-2">
+              🧪 第0世代の遠心分離テスト
+            </div>
+            <div class="flex items-center gap-3 my-auto">
+              <div class="flex flex-col justify-between h-44 text-[10px] font-bold text-slate-400 text-right py-1">
+                <span>↑ 比重小</span>
+                <span>中くらい</span>
+                <span>↓ 比重大</span>
+              </div>
+              <div id="modal-tube-wrapper" class="relative w-16 h-44 rounded-b-full border-2 border-slate-400/80 bg-slate-800/90 overflow-hidden shadow-inner">
+                <div class="absolute inset-x-0 bottom-0 top-4 bg-gradient-to-b from-sky-400/5 via-sky-400/10 to-sky-400/20"></div>
+                <div class="absolute inset-x-0 top-[24%] -translate-y-1/2 border-t border-dashed border-sky-400/35"></div>
+                <div class="absolute inset-x-0 top-[52%] -translate-y-1/2 border-t border-dashed border-slate-400/35"></div>
+                <div class="absolute inset-x-0 top-[80%] -translate-y-1/2 border-t border-dashed border-rose-400/35"></div>
+                <div id="modal-tube-content" class="absolute inset-0"></div>
+              </div>
+            </div>
+            <div id="modal-tube-status" class="mt-2.5 text-xs font-extrabold text-amber-300" aria-live="polite">
+              ボタンを押して回してみよう！
+            </div>
+          </div>
+
+          <div class="md:col-span-4 space-y-3 flex flex-col justify-between h-full">
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3 space-y-2 text-xs font-bold">
+              <div class="font-black text-slate-900 text-sm">🎨 DNAの色のルール</div>
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-3 rounded-full bg-rose-500 inline-block shrink-0"></span>
+                <span><strong class="text-rose-600">赤い鎖</strong>：重い（<sup>15</sup>N）元のDNA</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-3 rounded-full bg-sky-500 inline-block shrink-0"></span>
+                <span><strong class="text-sky-600">青い鎖</strong>：軽い（<sup>14</sup>N）新しいDNA</span>
+              </div>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3 text-xs text-slate-800 leading-relaxed">
+              <div class="font-black text-amber-900 mb-1">👀 基準の位置を確かめよう！</div>
+              赤い2本の鎖のDNAは比重が大きいため、遠心分離機にかけて止めると試験管の<strong>一番下</strong>に沈みます。これが比較の基準になります。
+            </div>
+
+            <button
+              id="modal-spin-gen0-btn"
+              type="button"
+              data-action="toggle-modal-gen0"
+              class="w-full bg-rose-500 hover:bg-rose-600 disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-black py-2.5 px-4 rounded-2xl text-xs sm:text-sm shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 next-action-glow"
+            >
+              <span id="modal-spin-icon" class="w-3 h-3 rounded-full bg-white inline-block"></span>
+              <span id="modal-spin-label">遠心分離機を回す（スタート）</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <button
+            type="button"
+            data-action="modal-step"
+            data-step="1"
+            class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-extrabold px-5 py-3 rounded-2xl text-xs sm:text-sm transition cursor-pointer"
+          >
+            ◀ ルール説明にもどる
+          </button>
+          <button
+            id="modal-start-btn"
+            type="button"
+            data-action="close-rules"
+            disabled
+            class="bg-emerald-500 hover:bg-emerald-600 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-black px-8 py-3 rounded-2xl text-sm sm:text-base shadow-md transition active:scale-95 cursor-pointer"
+          >
+            基準がわかった！第1世代の実験へ ▶
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- モーダル2：3仮説の結果比較＆実際の実験結果（探究のまとめ） -->
+  <!-- ========================================================= -->
+  <div
+    id="compare-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="compare-modal-title"
+    class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto"
+  >
+    <div class="bg-white rounded-3xl max-w-5xl w-full p-4 sm:p-6 shadow-2xl border-2 border-slate-200 my-auto space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-2.5">
+        <div>
+          <h2 id="compare-modal-title" class="text-base sm:text-xl font-black text-slate-900 flex items-center gap-2">
+            <span aria-hidden="true">📊</span> 仮説ごとの実験結果 比較ノート
+          </h2>
+          <p class="text-xs text-slate-500 font-bold">
+            各仮説の第1世代・第2世代を完了すると自動で記録されます。すべて実験してから実際の結果と比べてみよう！
+          </p>
+        </div>
+        <button
+          type="button"
+          data-action="close-compare"
+          class="text-slate-400 hover:text-slate-700 font-black text-lg px-2 py-1 rounded-xl hover:bg-slate-100 cursor-pointer"
+          aria-label="閉じる"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div id="compare-cards-grid" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
+
+      <div class="bg-slate-50 border-2 border-indigo-200 rounded-2xl p-4 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="font-black text-sm sm:text-base text-indigo-950 flex items-center gap-1.5">
+            <span aria-hidden="true">🏆</span> メセルソンとスタールの実際の実験結果（1958年）
+          </div>
+          <button
+            id="toggle-actual-btn"
+            type="button"
+            data-action="toggle-actual-result"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-sm transition active:scale-95 cursor-pointer"
+          >
+            実際の実験結果を表示する
+          </button>
+        </div>
+
+        <div id="actual-result-panel" class="hidden grid grid-cols-1 md:grid-cols-12 gap-4 items-center pt-2 border-t border-indigo-200">
+          <div id="actual-tubes-container" class="md:col-span-5 bg-slate-900 rounded-2xl p-3 flex items-end justify-around"></div>
+
+          <div class="md:col-span-7 space-y-2 text-xs sm:text-sm text-slate-800 leading-relaxed">
+            <div class="bg-white border border-indigo-200 rounded-xl p-2.5">
+              <div class="font-black text-amber-700 mb-0.5">① 第1世代で「保存的複製」が否定された！</div>
+              一番下（重いバンド）と一番上（軽いバンド）に分かれず、<strong>真ん中（中間）に1本だけ</strong>現れた。
+            </div>
+            <div class="bg-white border border-indigo-200 rounded-xl p-2.5">
+              <div class="font-black text-purple-700 mb-0.5">② 第2世代で「分散的複製」が否定された！</div>
+              「やや上」に1本だけになるのではなく、<strong>真ん中（中間）と上（軽い）の2本が 1 : 1 の割合</strong>で現れた。
+            </div>
+            <div class="bg-emerald-50 border-2 border-emerald-300 rounded-xl p-2.5 font-bold text-emerald-950">
+              結論：DNAは2本の鎖がほどけてそれぞれを鋳型にする<strong>「半保存的複製」</strong>を行うことが実証された！
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-right">
+        <button
+          type="button"
+          data-action="close-compare"
+          class="bg-slate-800 hover:bg-slate-900 text-white font-extrabold text-xs sm:text-sm px-6 py-2.5 rounded-2xl cursor-pointer"
+        >
+          実験ラボにもどる
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      // =========================================================================
+      // 定数・ドメイン設定 (Single Source of Truth)
+      // =========================================================================
+
+      const CONFIG = {
+        SETTLE_DURATION_MS: 1200,
+        TUBE_TOP_LIGHT_PCT: 24, // 15N = 0% (完全な14N DNA)
+        TUBE_SPAN_PCT: 56       // 15N = 100% -> 24 + 56 = 80% (完全な15N DNA)
+      };
+
+      const HYPOTHESES = {
+        conservative: {
+          id: 'conservative',
+          number: '仮説①',
+          name: '保存的複製',
+          accentText: 'text-amber-600',
+          summary: '元の2本鎖を残し、新しい2本鎖をまるごと合成'
+        },
+        semiconservative: {
+          id: 'semiconservative',
+          number: '仮説②',
+          name: '半保存的複製',
+          accentText: 'text-emerald-600',
+          summary: '元の2本鎖を1本ずつ開き、それぞれに新しい鎖を合成'
+        },
+        dispersive: {
+          id: 'dispersive',
+          number: '仮説③',
+          name: '分散的複製',
+          accentText: 'text-purple-600',
+          summary: '元のDNAを細かく切って分配し、隙間を新しい鎖で補完'
+        }
+      };
+
+      const HYPOTHESIS_ORDER = ['conservative', 'semiconservative', 'dispersive'];
+
+      // 15Nの含有割合（0.0〜1.0）から線形密度位置・視覚表現を一元定義
+      const DENSITY_TIERS = {
+        light: {
+          key: 'light',
+          ratio: 0,
+          shortLabel: '上（軽）',
+          positionLabel: '上',
+          bgClass: 'bg-sky-400',
+          glowClass: 'shadow-[0_0_10px_rgba(56,189,248,0.9)]',
+          badgeClass: 'bg-sky-100 text-sky-800',
+          ratioText: '15N 0%'
+        },
+        'light-mid': {
+          key: 'light-mid',
+          ratio: 0.25,
+          shortLabel: 'やや上',
+          positionLabel: 'やや上',
+          bgClass: 'bg-gradient-to-r from-rose-500 via-sky-400 to-sky-400',
+          glowClass: 'shadow-[0_0_10px_rgba(56,189,248,0.8)]',
+          badgeClass: 'bg-purple-100 text-purple-800',
+          ratioText: '15N 25%'
+        },
+        mid: {
+          key: 'mid',
+          ratio: 0.5,
+          shortLabel: '真ん中（中）',
+          positionLabel: '真ん中',
+          bgClass: 'bg-gradient-to-r from-rose-500 to-sky-400',
+          glowClass: 'shadow-[0_0_10px_rgba(168,85,247,0.7)]',
+          badgeClass: 'bg-indigo-100 text-indigo-800',
+          ratioText: '15N 50%'
+        },
+        heavy: {
+          key: 'heavy',
+          ratio: 1,
+          shortLabel: '下（重）',
+          positionLabel: '下',
+          bgClass: 'bg-rose-500',
+          glowClass: 'shadow-[0_0_10px_rgba(244,63,94,0.9)]',
+          badgeClass: 'bg-rose-100 text-rose-800',
+          ratioText: '15N 100%'
+        }
+      };
+
+      const ACTUAL_MESELSON_STAHL = {
+        gen0: [{ tierKey: 'heavy', heavyRatio: 1, segmented: false }],
+        gen1: [
+          { tierKey: 'mid', heavyRatio: 0.5, segmented: false },
+          { tierKey: 'mid', heavyRatio: 0.5, segmented: false }
+        ],
+        gen2: [
+          { tierKey: 'mid', heavyRatio: 0.5, segmented: false },
+          { tierKey: 'light', heavyRatio: 0, segmented: false },
+          { tierKey: 'light', heavyRatio: 0, segmented: false },
+          { tierKey: 'mid', heavyRatio: 0.5, segmented: false }
+        ]
+      };
+
+      // =========================================================================
+      // 純粋な生物モデル層 (BiologyModel: DOM非依存)
+      // =========================================================================
+      const BiologyModel = {
+        computeBandTopPct(heavyRatio) {
+          return CONFIG.TUBE_TOP_LIGHT_PCT + heavyRatio * CONFIG.TUBE_SPAN_PCT;
+        },
+
+        tierKeyFromHeavyRatio(heavyRatio) {
+          if (heavyRatio >= 0.875) return 'heavy';
+          if (heavyRatio >= 0.375) return 'mid';
+          if (heavyRatio >= 0.125) return 'light-mid';
+          return 'light';
+        },
+
+        createDispersiveSlot(id, label, exists, leftSegs, rightSegs) {
+          return {
+            id,
+            label,
+            exists,
+            cut: false,
+            mixed: false,
+            justBuilt: false,
+            leftSegs: [...leftSegs],
+            rightSegs: [...rightSegs],
+            newLeftMask: [false, false, false, false],
+            newRightMask: [false, false, false, false]
+          };
+        },
+
+        createGen1Slots(hypo) {
+          if (hypo === 'conservative') {
+            return [
+              { id: 0, label: '① 元のDNA', left: 'red', right: 'red', built: true, isOriginal: true, justBuilt: false },
+              { id: 1, label: '② 新しく作るDNA', left: null, right: null, built: false, isOriginal: false, justBuilt: false }
+            ];
+          }
+          if (hypo === 'semiconservative') {
+            return [
+              { id: 0, label: '① 1本目のDNA', exists: true, split: false, left: 'red', right: 'red', built: false, newSide: null, justBuilt: false },
+              { id: 1, label: '② 2本目のDNA', exists: false, split: false, left: null, right: null, built: false, newSide: null, justBuilt: false }
+            ];
+          }
+          return [
+            this.createDispersiveSlot(0, '① 1本目のDNA', true, ['red', 'red', 'red', 'red'], ['red', 'red', 'red', 'red']),
+            this.createDispersiveSlot(1, '② 2本目のDNA', false, [null, null, null, null], [null, null, null, null])
+          ];
+        },
+
+        // 第1世代の実際の結果を引き継いで第2世代の初期スロットを生成
+        createGen2Slots(hypo, gen1Slots = []) {
+          if (hypo === 'conservative') {
+            const p0 = gen1Slots[0] || { left: 'red', right: 'red' };
+            const p1 = gen1Slots[1] || { left: 'blue', right: 'blue' };
+            return [
+              { id: 0, label: '① 元のDNA', left: p0.left, right: p0.right, built: true, isOriginal: true, justBuilt: false },
+              { id: 1, label: '② 第1世代のDNA', left: p1.left, right: p1.right, built: true, isOriginal: true, justBuilt: false },
+              { id: 2, label: '③ 新しく作るDNA', left: null, right: null, built: false, isOriginal: false, justBuilt: false },
+              { id: 3, label: '④ 新しく作るDNA', left: null, right: null, built: false, isOriginal: false, justBuilt: false }
+            ];
+          }
+          if (hypo === 'semiconservative') {
+            const p0 = gen1Slots[0] || { left: 'red', right: 'blue' };
+            const p1 = gen1Slots[1] || { left: 'blue', right: 'red' };
+            return [
+              { id: 0, label: '① 1本目のDNA', exists: true, split: false, left: p0.left, right: p0.right, built: false, newSide: null, justBuilt: false },
+              { id: 1, label: '② 2本目のDNA', exists: false, split: false, left: null, right: null, built: false, newSide: null, justBuilt: false },
+              { id: 2, label: '③ 3本目のDNA', exists: true, split: false, left: p1.left, right: p1.right, built: false, newSide: null, justBuilt: false },
+              { id: 3, label: '④ 4本目のDNA', exists: false, split: false, left: null, right: null, built: false, newSide: null, justBuilt: false }
+            ];
+          }
+          const p0 = gen1Slots[0] || {
+            leftSegs: ['red', 'blue', 'red', 'blue'],
+            rightSegs: ['blue', 'red', 'blue', 'red']
+          };
+          const p1 = gen1Slots[1] || {
+            leftSegs: ['blue', 'red', 'blue', 'red'],
+            rightSegs: ['red', 'blue', 'red', 'blue']
+          };
+          return [
+            this.createDispersiveSlot(0, '① 1本目のDNA', true, p0.leftSegs, p0.rightSegs),
+            this.createDispersiveSlot(1, '② 2本目のDNA', false, [null, null, null, null], [null, null, null, null]),
+            this.createDispersiveSlot(2, '③ 3本目のDNA', true, p1.leftSegs, p1.rightSegs),
+            this.createDispersiveSlot(3, '④ 4本目のDNA', false, [null, null, null, null], [null, null, null, null])
+          ];
+        },
+
+        clearJustBuiltFlags(slots) {
+          slots.forEach((s) => {
+            s.justBuilt = false;
+          });
+        },
+
+        applySlotAction(slots, hypo, gen, slotId, actionType) {
+          this.clearJustBuiltFlags(slots);
+
+          if (hypo === 'conservative') {
+            const slot = slots[slotId];
+            if (!slot || slot.built) return false;
+            slot.left = 'blue';
+            slot.right = 'blue';
+            slot.built = true;
+            slot.justBuilt = true;
+            return true;
+          }
+
+          if (hypo === 'semiconservative') {
+            if (actionType === 'split') {
+              const parent = slots[slotId];
+              const child = slots[slotId + 1];
+              if (!parent || !child || !parent.exists || parent.split) return false;
+              child.left = null;
+              child.right = parent.right;
+              parent.right = null;
+              parent.split = true;
+              child.exists = true;
+              child.split = true;
+              return true;
+            }
+            if (actionType === 'build') {
+              const slot = slots[slotId];
+              if (!slot || !slot.exists || !slot.split || slot.built) return false;
+              if (!slot.left) {
+                slot.left = 'blue';
+                slot.newSide = 'left';
+              } else if (!slot.right) {
+                slot.right = 'blue';
+                slot.newSide = 'right';
+              }
+              slot.built = true;
+              slot.justBuilt = true;
+              return true;
+            }
+            return false;
+          }
+
+          if (hypo === 'dispersive') {
+            if (actionType === 'cut') {
+              const parent = slots[slotId];
+              const child = slots[slotId + 1];
+              if (!parent || !child || !parent.exists || parent.cut) return false;
+
+              const pL = [...parent.leftSegs];
+              const pR = [...parent.rightSegs];
+
+              if (gen === 1) {
+                parent.leftSegs = [pL[0], null, pL[2], null];
+                parent.rightSegs = [null, pR[1], null, pR[3]];
+                child.leftSegs = [null, pL[1], null, pL[3]];
+                child.rightSegs = [pR[0], null, pR[2], null];
+              } else if (slotId === 0) {
+                parent.leftSegs = [pL[0], null, null, pL[3]];
+                parent.rightSegs = [null, pR[1], pR[2], null];
+                child.leftSegs = [null, pL[1], pL[2], null];
+                child.rightSegs = [pR[0], null, null, pR[3]];
+              } else {
+                parent.leftSegs = [null, pL[1], pL[2], null];
+                parent.rightSegs = [pR[0], null, null, pR[3]];
+                child.leftSegs = [pL[0], null, null, pL[3]];
+                child.rightSegs = [null, pR[1], pR[2], null];
+              }
+
+              parent.cut = true;
+              child.exists = true;
+              child.cut = true;
+              return true;
+            }
+
+            if (actionType === 'mix') {
+              const slot = slots[slotId];
+              if (!slot || !slot.exists || !slot.cut || slot.mixed) return false;
+              slot.newLeftMask = slot.leftSegs.map((c) => c === null);
+              slot.newRightMask = slot.rightSegs.map((c) => c === null);
+              slot.leftSegs = slot.leftSegs.map((c) => c || 'blue');
+              slot.rightSegs = slot.rightSegs.map((c) => c || 'blue');
+              slot.mixed = true;
+              slot.justBuilt = true;
+              return true;
+            }
+          }
+          return false;
+        },
+
+        isSlotComplete(slot, hypo) {
+          if (hypo === 'dispersive') return Boolean(slot.exists && slot.cut && slot.mixed);
+          if (hypo === 'semiconservative') return Boolean(slot.exists && slot.split && slot.built);
+          return Boolean(slot.built);
+        },
+
+        isGenerationComplete(slots, hypo) {
+          return slots.length > 0 && slots.every((s) => this.isSlotComplete(s, hypo));
+        },
+
+        findNextActionSlotId(slots, hypo) {
+          if (hypo === 'dispersive') {
+            const uncut = slots.find((s) => s.exists && !s.cut);
+            if (uncut) return uncut.id;
+            const unmixed = slots.find((s) => s.exists && s.cut && !s.mixed);
+            return unmixed ? unmixed.id : null;
+          }
+          if (hypo === 'semiconservative') {
+            const unsplit = slots.find((s) => s.exists && !s.split);
+            if (unsplit) return unsplit.id;
+            const unbuilt = slots.find((s) => s.exists && s.split && !s.built);
+            return unbuilt ? unbuilt.id : null;
+          }
+          const unbuilt = slots.find((s) => !s.built);
+          return unbuilt ? unbuilt.id : null;
+        },
+
+        // 各DNA分子の15N割合を計算（0.0〜1.0）
+        calculateHeavyRatio(slot, hypo) {
+          if (hypo === 'dispersive') {
+            const all = [...slot.leftSegs, ...slot.rightSegs].filter(Boolean);
+            if (all.length === 0) return 0;
+            const redCount = all.filter((c) => c === 'red').length;
+            return redCount / all.length;
+          }
+          const strands = [slot.left, slot.right].filter(Boolean);
+          if (strands.length === 0) return 0;
+          const redCount = strands.filter((c) => c === 'red').length;
+          return redCount / strands.length;
+        },
+
+        getMoleculesFromSlots(slots, hypo) {
+          return slots.map((slot) => {
+            const heavyRatio = this.calculateHeavyRatio(slot, hypo);
+            return {
+              tierKey: this.tierKeyFromHeavyRatio(heavyRatio),
+              heavyRatio,
+              segmented: hypo === 'dispersive'
+            };
+          });
+        },
+
+        // バンドごとの分子数・割合・比率テキスト（例：3 : 1）を集計
+        aggregateBands(molecules) {
+          const total = molecules.length || 1;
+          const counts = new Map();
+          molecules.forEach((m) => {
+            counts.set(m.tierKey, (counts.get(m.tierKey) || 0) + 1);
+          });
+
+          const order = ['light', 'light-mid', 'mid', 'heavy'];
+          const bands = order
+            .filter((k) => counts.has(k))
+            .map((k) => {
+              const count = counts.get(k);
+              const tier = DENSITY_TIERS[k];
+              return {
+                ...tier,
+                count,
+                fraction: count / total,
+                percent: Math.round((count / total) * 100),
+                topPct: this.computeBandTopPct(tier.ratio)
+              };
+            });
+
+          const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
+          const divisor = bands.reduce((acc, b) => gcd(acc, b.count), bands[0]?.count || 1);
+          const ratioStr = bands.length > 1
+            ? bands.map((b) => b.count / divisor).join(' : ')
+            : '100%';
+
+          const posSummary = bands.map((b) => b.positionLabel).join('と');
+          const compactLabel = bands.length === 1
+            ? `${bands[0].shortLabel}（100%）`
+            : `${bands.map((b) => b.positionLabel).join('・')}（${ratioStr}）`;
+          const detailText = bands.length === 1
+            ? `${posSummary}にバンド1本（100%）`
+            : `${posSummary}にバンド${bands.length}本（比 ${ratioStr}）`;
+
+          return { bands, ratioStr, compactLabel, detailText };
+        }
+      };
+
+      // =========================================================================
+      // 状態管理ストア (Single State Tree + Timer Management)
+      // =========================================================================
+      const store = {
+        hypothesis: 'semiconservative',
+        currentGen: 1,
+        gen0Phase: 'idle',       // 'idle' | 'spinning' | 'settling' | 'done'
+        centrifugePhase: 'idle', // 'idle' | 'spinning' | 'settling'
+        gen1Spun: false,
+        gen2Spun: false,
+        gen1Slots: [],
+        gen2Slots: [],
+        recordedResults: {
+          conservative: { gen1: null, gen2: null },
+          semiconservative: { gen1: null, gen2: null },
+          dispersive: { gen1: null, gen2: null }
+        },
+        actualResultRevealed: false,
+        timers: new Map(),
+
+        setTimer(key, fn, ms) {
+          this.clearTimer(key);
+          const id = window.setTimeout(() => {
+            this.timers.delete(key);
+            fn();
+          }, ms);
+          this.timers.set(key, id);
+        },
+
+        clearTimer(key) {
+          if (this.timers.has(key)) {
+            window.clearTimeout(this.timers.get(key));
+            this.timers.delete(key);
+          }
+        },
+
+        clearAllTimers() {
+          this.timers.forEach((id) => window.clearTimeout(id));
+          this.timers.clear();
+        },
+
+        isBusy() {
+          return this.centrifugePhase !== 'idle';
+        },
+
+        getCurrentSlots() {
+          return this.currentGen === 1 ? this.gen1Slots : this.gen2Slots;
+        },
+
+        countCompletedHypotheses() {
+          return HYPOTHESIS_ORDER.filter(
+            (h) => this.recordedResults[h].gen1 && this.recordedResults[h].gen2
+          ).length;
+        }
+      };
+
+      // =========================================================================
+      // 遠心分離機＆試験管ビュー (CentrifugeView)
+      // =========================================================================
+      const CentrifugeView = {
+        renderParticleInnerHtml(molecule) {
+          if (molecule.segmented) {
+            const segsL = molecule.tierKey === 'mid'
+              ? ['bg-rose-500', 'bg-sky-400', 'bg-rose-500', 'bg-sky-400']
+              : ['bg-rose-500', 'bg-sky-400', 'bg-sky-400', 'bg-sky-400'];
+            const segsR = molecule.tierKey === 'mid'
+              ? ['bg-sky-400', 'bg-rose-500', 'bg-sky-400', 'bg-rose-500']
+              : ['bg-sky-400', 'bg-rose-500', 'bg-sky-400', 'bg-sky-400'];
+
+            const buildCol = (arr) =>
+              `<span class="w-1 h-4 rounded-full overflow-hidden flex flex-col">${arr.map((c) => `<span class="flex-1 ${c}"></span>`).join('')}</span>`;
+            return buildCol(segsL) + buildCol(segsR);
+          }
+
+          const pairMap = {
+            heavy: ['bg-rose-500', 'bg-rose-500'],
+            mid: ['bg-rose-500', 'bg-sky-400'],
+            'light-mid': ['bg-rose-500', 'bg-sky-400'],
+            light: ['bg-sky-400', 'bg-sky-400']
+          };
+          const [l, r] = pairMap[molecule.tierKey] || pairMap.heavy;
+          return `
+            <span class="w-1 h-4 rounded-full ${l} shadow-sm"></span>
+            <span class="w-1 h-4 rounded-full ${r} shadow-sm"></span>
+          `;
+        },
+
+        renderParticles(containerId, molecules, swirling = false) {
+          const container = document.getElementById(containerId);
+          if (!container) return;
+
+          const total = molecules.length;
+          const swirlClass = swirling ? 'dna-particle-swirl' : '';
+
+          container.innerHTML = molecules
+            .map((m, idx) => {
+              const topPct = total === 1 ? 48 : 28 + ((idx * 17) % 46);
+              const leftPct = total === 1 ? 42 : 20 + ((idx * 19) % 52);
+              const delay = (idx * 0.12).toFixed(2);
+              return `
+                <div
+                  data-heavy-ratio="${m.heavyRatio}"
+                  data-strand-idx="${idx}"
+                  class="dna-strand-item dna-strand-move ${swirlClass} absolute flex items-center gap-0.5 opacity-95 -translate-y-1/2"
+                  style="top:${topPct}%; left:${leftPct}%; animation-delay:${delay}s;"
+                >
+                  ${this.renderParticleInnerHtml(m)}
+                </div>
+              `;
+            })
+            .join('');
+        },
+
+        migrateParticlesToDensity(containerId) {
+          const container = document.getElementById(containerId);
+          if (!container) return;
+          const items = container.querySelectorAll('.dna-strand-item');
+          const layouts = {
+            1: ['44%'],
+            2: ['30%', '58%'],
+            4: ['16%', '35%', '54%', '73%']
+          };
+          const xSlots = layouts[items.length] || ['22%', '44%', '66%'];
+
+          items.forEach((el, idx) => {
+            el.classList.remove('dna-particle-swirl');
+            const ratio = parseFloat(el.getAttribute('data-heavy-ratio') || '1');
+            const targetTop = BiologyModel.computeBandTopPct(ratio);
+            el.style.top = `${targetTop}%`;
+            el.style.left = xSlots[idx % xSlots.length];
+            el.style.transform = 'translateY(-50%) rotate(90deg)';
+          });
+        },
+
+        renderBands(containerId, molecules, compact = false) {
+          const container = document.getElementById(containerId);
+          if (!container) return;
+          const { bands } = BiologyModel.aggregateBands(molecules);
+
+          container.innerHTML = bands
+            .map((b) => {
+              const heightPx = compact
+                ? Math.max(5, Math.round(5 + b.fraction * 5))
+                : Math.max(7, Math.round(6 + b.fraction * 7));
+              const percentBadge = !compact && bands.length > 1
+                ? `<span class="absolute right-0.5 -top-3.5 text-[9px] font-black text-slate-200 bg-slate-900/80 px-1 rounded">${b.percent}%</span>`
+                : '';
+              return `
+                <div
+                  class="band-appear absolute inset-x-1.5 rounded-full ${b.bgClass} ${b.glowClass}"
+                  style="top:${b.topPct}%; height:${heightPx}px;"
+                  title="${b.shortLabel}: ${b.percent}% (${b.count}/${molecules.length}本)"
+                >
+                  ${percentBadge}
+                </div>
+              `;
+            })
+            .join('');
+        },
+
+        clearGenTubes() {
+          [1, 2].forEach((g) => {
+            const content = document.getElementById(`tube-content-${g}`);
+            const label = document.getElementById(`tube-label-${g}`);
+            const wrapper = document.getElementById(`tube-wrapper-${g}`);
+            if (wrapper) wrapper.classList.remove('animate-centrifuge');
+            if (content) content.innerHTML = '';
+            if (label) {
+              label.textContent = '未実験';
+              label.className = 'text-[10px] font-bold text-slate-400 leading-tight';
+            }
+          });
+        },
+
+        setStatusBadge(text, colorClasses) {
+          const badge = document.getElementById('centrifuge-status');
+          if (!badge) return;
+          badge.textContent = text;
+          badge.className = `text-[11px] font-extrabold px-2.5 py-1 rounded-full ${colorClasses}`;
+        }
+      };
+
+      // =========================================================================
+      // DNAカード＆ラボ全体ビュー (LabView)
+      // =========================================================================
+      const LabView = {
+        setObservation(text) {
+          const el = document.getElementById('observation-box');
+          if (el) el.textContent = text;
+        },
+
+        renderStrandHtml(color, { animateGrow = false, delaySec = 0, buildSlotId = null } = {}) {
+          const animClass = animateGrow ? 'animate-grow-top' : '';
+          const animStyle = animateGrow && delaySec > 0 ? `style="animation-delay:${delaySec}s;"` : '';
+          if (color === 'red') {
+            return `<div class="w-3.5 h-24 rounded-full bg-rose-500 shadow-sm ${animClass}" ${animStyle}></div>`;
+          }
+          if (color === 'blue') {
+            return `<div class="w-3.5 h-24 rounded-full bg-sky-500 shadow-sm ${animClass}" ${animStyle}></div>`;
+          }
+          const fillHtml = buildSlotId !== null
+            ? `<div data-build-fill="${buildSlotId}" class="absolute inset-x-0 top-0 bg-sky-500 rounded-full" style="height:0%;"></div>`
+            : '';
+          return `<div class="relative w-3.5 h-24 rounded-full border-2 border-dashed border-sky-300 bg-sky-50/60 overflow-hidden">${fillHtml}</div>`;
+        },
+
+        renderSegmentedStrandHtml(segs, isCut, newMask = [], animateGrow = false, buildSlotId = null) {
+          if (!isCut) {
+            return `
+              <div class="flex flex-col h-24 w-3.5 rounded-full overflow-hidden shadow-sm">
+                ${segs
+                  .map((c) => {
+                    const bg = c === 'red' ? 'bg-rose-500' : c === 'blue' ? 'bg-sky-500' : 'bg-slate-100/60';
+                    return `<span class="w-full flex-1 ${bg}"></span>`;
+                  })
+                  .join('')}
+              </div>
+            `;
+          }
+          return `
+            <div class="flex flex-col gap-1 h-24 justify-between">
+              ${segs
+                .map((c, idx) => {
+                  const isNew = animateGrow && newMask[idx];
+                  const animAttr = isNew ? `style="animation-delay:${idx * 0.22}s;"` : '';
+                  const animClass = isNew ? 'animate-grow-top' : '';
+                  if (c === 'red') {
+                    return `<span class="w-3.5 flex-1 rounded-full bg-rose-500 shadow-sm"></span>`;
+                  }
+                  if (c === 'blue') {
+                    return `<span class="w-3.5 flex-1 rounded-full bg-sky-500 shadow-sm ${animClass}" ${animAttr}></span>`;
+                  }
+                  const segFill = buildSlotId !== null
+                    ? `<span data-build-seg-fill="${buildSlotId}" data-seg-idx="${idx}" class="absolute inset-x-0 top-0 bg-sky-500 rounded-full" style="height:0%;"></span>`
+                    : '';
+                  return `<span class="relative w-3.5 flex-1 rounded-full border border-dashed border-sky-300 bg-sky-50/60 overflow-hidden">${segFill}</span>`;
+                })
+                .join('')}
+            </div>
+          `;
+        },
+
+        renderRungsHtml(active) {
+          const color = active ? 'bg-slate-400' : 'bg-slate-200';
+          return `
+            <div class="flex flex-col justify-around h-20" aria-hidden="true">
+              <span class="w-2.5 h-0.5 ${color}"></span>
+              <span class="w-2.5 h-0.5 ${color}"></span>
+              <span class="w-2.5 h-0.5 ${color}"></span>
+            </div>
+          `;
+        },
+
+        renderStatusBadge(slot, hypo) {
+          if (BiologyModel.isSlotComplete(slot, hypo)) {
+            return `<span class="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">完成</span>`;
+          }
+          const label = slot.exists === false ? '待機中' : '作業中';
+          return `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">${label}</span>`;
+        },
+
+        renderSwipeBuildGuide(slotId, text = '上から下へなぞって青い鎖を合成！') {
+          return `
+            <div class="text-center text-[11px] font-extrabold text-sky-800 py-1 bg-sky-50 rounded-xl border border-sky-200">
+              ${text}
+              <div class="mt-1 mx-2 h-1.5 bg-sky-200/80 rounded-full overflow-hidden">
+                <div data-build-bar="${slotId}" class="h-full bg-sky-500 rounded-full transition-all duration-75" style="width:0%;"></div>
+              </div>
+            </div>
+          `;
+        },
+
+        renderBuildOverlay(slotId, op, glowClass) {
+          return `
+            <div
+              data-build-slot="${slotId}"
+              data-build-op="${op}"
+              class="gesture-zone absolute -inset-1.5 flex items-center justify-center cursor-ns-resize rounded-xl ${glowClass}"
+              title="上から下へドラッグして青い鎖を伸ばそう！"
+            >
+              <span class="pointer-events-none text-[10px] font-black text-sky-900 bg-sky-100/95 px-2 py-0.5 rounded-full border border-sky-300 shadow-sm">
+                ⬇ なぞって合成
+              </span>
+            </div>
+          `;
+        },
+
+        renderConservativeCard(slot, glowClass) {
+          const animGrow = Boolean(slot.justBuilt && !slot.isOriginal);
+          const canBuild = !slot.built;
+          const actionHtml = slot.built
+            ? `<div class="text-center text-[11px] font-extrabold text-emerald-700 py-1.5 bg-emerald-50 rounded-xl">${slot.isOriginal ? '元のDNAそのまま' : '2本鎖が完成！'}</div>`
+            : this.renderSwipeBuildGuide(slot.id, '上から下へなぞって青の2本鎖を作る！');
+
+          return `
+            <div class="bg-white rounded-2xl border-2 ${slot.built ? 'border-emerald-300' : 'border-slate-200'} p-3 flex flex-col items-center justify-between gap-2 shadow-sm">
+              <div class="w-full flex items-center justify-between gap-1">
+                <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
+                ${this.renderStatusBadge(slot, 'conservative')}
+              </div>
+              <div class="relative flex items-center justify-center gap-3 my-1 px-2">
+                ${this.renderStrandHtml(slot.left, { animateGrow: animGrow, delaySec: 0, buildSlotId: canBuild ? slot.id : null })}
+                ${this.renderRungsHtml(slot.built)}
+                ${this.renderStrandHtml(slot.right, { animateGrow: animGrow, delaySec: 0.4, buildSlotId: canBuild ? slot.id : null })}
+                ${canBuild ? this.renderBuildOverlay(slot.id, 'build', glowClass) : ''}
+              </div>
+              <div class="w-full">${actionHtml}</div>
+            </div>
+          `;
+        },
+
+        renderSemiconservativeCard(slot, glowClass) {
+          const isDone = BiologyModel.isSlotComplete(slot, 'semiconservative');
+          const animLeft = Boolean(slot.justBuilt && slot.newSide === 'left');
+          const animRight = Boolean(slot.justBuilt && slot.newSide === 'right');
+          const canBuild = Boolean(slot.exists && slot.split && !slot.built);
+
+          let actionHtml = '';
+          if (!slot.exists) {
+            actionHtml = `<div data-drop-target="${slot.id}" class="text-center text-[11px] font-bold text-slate-400 py-1.5 bg-slate-50 rounded-xl border border-dashed border-slate-200 transition">ここに右の鎖をドラッグ！</div>`;
+          } else if (!slot.split) {
+            actionHtml = `<div class="text-center text-[11px] font-extrabold text-amber-800 py-1.5 bg-amber-50 rounded-xl border border-amber-200">右側の鎖を隣へドラッグ！</div>`;
+          } else if (canBuild) {
+            actionHtml = this.renderSwipeBuildGuide(slot.id);
+          } else {
+            actionHtml = `<div class="text-center text-[11px] font-extrabold text-emerald-700 py-1.5 bg-emerald-50 rounded-xl">2本鎖が完成！</div>`;
+          }
+
+          const rightStrandInteractive = slot.exists && !slot.split
+            ? `<div data-split-slot="${slot.id}" class="gesture-zone relative cursor-grab active:cursor-grabbing group p-1 -m-1 rounded-xl ${glowClass}" title="掴んで隣の枠までドラッグして離そう！">
+                 ${this.renderStrandHtml(slot.right)}
+                 <span class="absolute -right-2.5 top-1/2 -translate-y-1/2 bg-amber-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-full shadow-sm group-hover:scale-110 transition">➡</span>
+               </div>`
+            : this.renderStrandHtml(slot.right, { animateGrow: animRight, buildSlotId: canBuild && !slot.right ? slot.id : null });
+
+          return `
+            <div data-card-slot="${slot.id}" class="bg-white rounded-2xl border-2 ${isDone ? 'border-emerald-300' : 'border-slate-200'} p-3 flex flex-col items-center justify-between gap-2 shadow-sm transition">
+              <div class="w-full flex items-center justify-between gap-1">
+                <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
+                ${this.renderStatusBadge(slot, 'semiconservative')}
+              </div>
+              <div class="relative flex items-center justify-center gap-3 my-1 px-2">
+                ${this.renderStrandHtml(slot.left, { animateGrow: animLeft, buildSlotId: canBuild && !slot.left ? slot.id : null })}
+                ${this.renderRungsHtml(isDone || (slot.exists && !slot.split))}
+                ${rightStrandInteractive}
+                ${canBuild ? this.renderBuildOverlay(slot.id, 'build', glowClass) : ''}
+              </div>
+              <div class="w-full">${actionHtml}</div>
+            </div>
+          `;
+        },
+
+        renderDispersiveCard(slot, glowClass) {
+          const isDone = BiologyModel.isSlotComplete(slot, 'dispersive');
+          const canBuild = Boolean(slot.exists && slot.cut && !slot.mixed);
+
+          let actionHtml = '';
+          if (!slot.exists) {
+            actionHtml = `<div class="text-center text-[11px] font-bold text-slate-400 py-1.5 bg-slate-50 rounded-xl">隣のカット待ち</div>`;
+          } else if (!slot.cut) {
+            actionHtml = `
+              <div class="text-center text-[11px] font-extrabold text-amber-800 py-1 bg-amber-50 rounded-xl border border-amber-200">
+                上のハサミ線を左右になぞって切ろう！
+                <div class="mt-1 mx-2 h-1.5 bg-amber-200/80 rounded-full overflow-hidden">
+                  <div data-cut-bar="${slot.id}" class="h-full bg-amber-500 rounded-full transition-all duration-75" style="width:0%;"></div>
+                </div>
+              </div>
+            `;
+          } else if (canBuild) {
+            actionHtml = this.renderSwipeBuildGuide(slot.id, '上から下へなぞって青の断片を埋める！');
+          } else {
+            actionHtml = `<div class="text-center text-[11px] font-extrabold text-emerald-700 py-1.5 bg-emerald-50 rounded-xl">2本鎖が完成！</div>`;
+          }
+
+          const cutOverlay = slot.exists && !slot.cut
+            ? `<div data-cut-slot="${slot.id}" class="gesture-zone absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-center cursor-ew-resize py-2 rounded-xl ${glowClass}" title="端までドラッグしてハサミで切ろう！">
+                 <div class="w-full border-t-2 border-dashed border-amber-500 flex items-center justify-between px-1">
+                   <span class="scissor-snip-anim text-sm bg-amber-100 border border-amber-400 rounded-full px-1 shadow-sm">✂️</span>
+                   <span class="text-[10px] font-black text-amber-900 bg-amber-100/95 px-1.5 rounded-full border border-amber-300">なぞって切る</span>
+                 </div>
+               </div>`
+            : '';
+
+          return `
+            <div class="bg-white rounded-2xl border-2 ${isDone ? 'border-emerald-300' : 'border-slate-200'} p-3 flex flex-col items-center justify-between gap-2 shadow-sm">
+              <div class="w-full flex items-center justify-between gap-1">
+                <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
+                ${this.renderStatusBadge(slot, 'dispersive')}
+              </div>
+              <div class="relative flex items-center justify-center gap-3 my-1 px-2">
+                ${this.renderSegmentedStrandHtml(slot.leftSegs, slot.cut, slot.newLeftMask, Boolean(slot.justBuilt), canBuild ? slot.id : null)}
+                ${this.renderRungsHtml(isDone)}
+                ${this.renderSegmentedStrandHtml(slot.rightSegs, slot.cut, slot.newRightMask, Boolean(slot.justBuilt), canBuild ? slot.id : null)}
+                ${cutOverlay}
+                ${canBuild ? this.renderBuildOverlay(slot.id, 'mix', glowClass) : ''}
+              </div>
+              <div class="w-full">${actionHtml}</div>
+            </div>
+          `;
+        },
+
+        renderLab() {
+          const h = store.hypothesis;
+          const gen = store.currentGen;
+          const slots = store.getCurrentSlots();
+          const complete = BiologyModel.isGenerationComplete(slots, h);
+          const spun = gen === 1 ? store.gen1Spun : store.gen2Spun;
+
+          HYPOTHESIS_ORDER.forEach((key) => {
+            const btn = document.getElementById(`hypo-btn-${key}`);
+            const doneBadge = document.getElementById(`hypo-done-${key}`);
+            const isRecorded = Boolean(store.recordedResults[key].gen1 && store.recordedResults[key].gen2);
+            if (doneBadge) doneBadge.classList.toggle('hidden', !isRecorded);
+            if (!btn) return;
+            const selected = key === h;
+            btn.setAttribute('aria-selected', String(selected));
+            btn.className = selected
+              ? 'p-2 sm:p-2.5 rounded-2xl border-2 border-sky-500 bg-sky-50/70 text-left transition cursor-pointer shadow-sm'
+              : 'p-2 sm:p-2.5 rounded-2xl border-2 border-slate-200 bg-white hover:bg-slate-50 text-left transition cursor-pointer';
+          });
+
+          const completedCount = store.countCompletedHypotheses();
+          const countBadge = document.getElementById('compare-count-badge');
+          if (countBadge) countBadge.textContent = `${completedCount}/3`;
+
+          const b1 = document.getElementById('step-badge-1');
+          const b2 = document.getElementById('step-badge-2');
+          if (b1 && b2) {
+            if (gen === 1) {
+              b1.className = 'px-2.5 py-1 rounded-xl text-xs font-extrabold bg-sky-500 text-white shadow-sm cursor-pointer';
+              b2.className = 'px-2.5 py-1 rounded-xl text-xs font-extrabold bg-slate-200 text-slate-500';
+            } else {
+              b1.className = 'px-2.5 py-1 rounded-xl text-xs font-extrabold bg-emerald-100 text-emerald-800 hover:bg-emerald-200 cursor-pointer';
+              b2.className = 'px-2.5 py-1 rounded-xl text-xs font-extrabold bg-sky-500 text-white shadow-sm';
+            }
+          }
+
+          const guideEl = document.getElementById('builder-guide-text');
+          if (guideEl) {
+            if (!complete) {
+              guideEl.textContent = '光っている場所をドラッグ・なぞってDNAを完成させよう！';
+            } else if (store.centrifugePhase === 'spinning') {
+              guideEl.textContent = '回転中！もう一度ボタンを押して止めよう！';
+            } else if (store.centrifugePhase === 'settling') {
+              guideEl.textContent = '比重の合う高さへDNAが移動中...';
+            } else if (!spun) {
+              guideEl.textContent = 'DNAが完成！赤いボタンを押して遠心分離機を回そう！';
+            } else if (gen === 1) {
+              guideEl.textContent = '第1世代の分離完了！「第2世代へ進む」を押そう！';
+            } else if (completedCount < 3) {
+              guideEl.textContent = `記録完了（${completedCount}/3仮説）！他の仮説も試してみよう！`;
+            } else {
+              guideEl.textContent = '全3仮説の実験完了！「結果の比較」で実際の結果と比べよう！';
+            }
+          }
+
+          const nextSlotId = store.isBusy() ? null : BiologyModel.findNextActionSlotId(slots, h);
+          const container = document.getElementById('dna-slots-container');
+          if (container) {
+            container.className = gen === 1
+              ? 'grid grid-cols-1 sm:grid-cols-2 gap-2.5'
+              : 'grid grid-cols-2 lg:grid-cols-4 gap-2.5';
+            container.innerHTML = slots
+              .map((slot) => {
+                const glow = slot.id === nextSlotId ? 'next-action-glow' : '';
+                if (h === 'conservative') return this.renderConservativeCard(slot, glow);
+                if (h === 'semiconservative') return this.renderSemiconservativeCard(slot, glow);
+                return this.renderDispersiveCard(slot, glow);
+              })
+              .join('');
+          }
+
+          const spinBtn = document.getElementById('spin-centrifuge-btn');
+          const spinIcon = document.getElementById('spin-btn-icon');
+          const spinLabel = document.getElementById('spin-btn-label');
+          const nextBtn = document.getElementById('next-gen-btn');
+          const compareCtaBtn = document.getElementById('compare-cta-btn');
+
+          if (spinBtn && spinIcon && spinLabel) {
+            if (store.centrifugePhase === 'spinning') {
+              spinBtn.disabled = false;
+              spinBtn.className = 'bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 next-action-glow';
+              spinIcon.className = 'w-3 h-3 rounded-sm bg-white inline-block';
+              spinLabel.textContent = '遠心分離機を止める（ストップ）';
+            } else if (store.centrifugePhase === 'settling') {
+              spinBtn.disabled = true;
+              spinBtn.className = 'bg-slate-300 text-slate-500 cursor-not-allowed font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm flex items-center justify-center gap-2';
+              spinIcon.className = 'w-3 h-3 rounded-full bg-slate-400 inline-block';
+              spinLabel.textContent = '比重の位置へ移動中...';
+            } else if (complete && !spun) {
+              spinBtn.disabled = false;
+              spinBtn.className = 'bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 next-action-glow';
+              spinIcon.className = 'w-3 h-3 rounded-full bg-white inline-block';
+              spinLabel.textContent = '遠心分離機を回す（スタート）';
+            } else {
+              spinBtn.disabled = true;
+              spinBtn.className = 'bg-slate-300 text-slate-500 cursor-not-allowed font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm flex items-center justify-center gap-2';
+              spinIcon.className = 'w-3 h-3 rounded-full bg-slate-400 inline-block';
+              spinLabel.textContent = spun ? '遠心分離 完了' : '遠心分離機を回す（スタート）';
+            }
+          }
+
+          if (nextBtn) {
+            const showNext = gen === 1 && spun && !store.isBusy();
+            nextBtn.classList.toggle('hidden', !showNext);
+            nextBtn.classList.toggle('next-action-glow', showNext);
+          }
+
+          if (compareCtaBtn) {
+            const showCompare = gen === 2 && spun && !store.isBusy();
+            compareCtaBtn.classList.toggle('hidden', !showCompare);
+            compareCtaBtn.classList.toggle('next-action-glow', showCompare && completedCount === 3);
+          }
+        },
+
+        renderMiniTubeHtml(title, molecules, idPrefix) {
+          const summary = molecules ? BiologyModel.aggregateBands(molecules).compactLabel : '未実験';
+          return `
+            <div class="flex flex-col items-center">
+              <div class="relative w-11 h-28 rounded-b-full border border-slate-500/80 bg-slate-800 overflow-hidden">
+                <div class="absolute inset-x-0 top-[24%] -translate-y-1/2 border-t border-dashed border-sky-400/35"></div>
+                <div class="absolute inset-x-0 top-[52%] -translate-y-1/2 border-t border-dashed border-slate-400/35"></div>
+                <div class="absolute inset-x-0 top-[80%] -translate-y-1/2 border-t border-dashed border-rose-400/35"></div>
+                <div id="${idPrefix}" class="absolute inset-0"></div>
+              </div>
+              <div class="text-[10px] font-extrabold text-slate-200 mt-1">${title}</div>
+              <div class="text-[9px] font-bold ${molecules ? 'text-emerald-300' : 'text-slate-400'} text-center leading-tight min-h-[22px]">${summary}</div>
+            </div>
+          `;
+        },
+
+        renderCompareModal() {
+          const grid = document.getElementById('compare-cards-grid');
+          if (!grid) return;
+
+          grid.innerHTML = HYPOTHESIS_ORDER.map((key) => {
+            const meta = HYPOTHESES[key];
+            const rec = store.recordedResults[key];
+            const bothDone = Boolean(rec.gen1 && rec.gen2);
+            return `
+              <div class="bg-white border-2 ${bothDone ? 'border-emerald-300' : 'border-slate-200'} rounded-2xl p-3 flex flex-col gap-2">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="text-[10px] font-extrabold ${meta.accentText}">${meta.number}</span>
+                    <h3 class="font-black text-sm text-slate-900">${meta.name}</h3>
+                  </div>
+                  <span class="text-[10px] font-black px-2 py-0.5 rounded-full ${bothDone ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}">
+                    ${bothDone ? '記録完了' : '未完了'}
+                  </span>
+                </div>
+                <div class="bg-slate-900 rounded-xl p-2.5 flex items-end justify-around gap-1">
+                  ${this.renderMiniTubeHtml('第0世代', ACTUAL_MESELSON_STAHL.gen0, `cmp-${key}-0`)}
+                  ${this.renderMiniTubeHtml('第1世代', rec.gen1, `cmp-${key}-1`)}
+                  ${this.renderMiniTubeHtml('第2世代', rec.gen2, `cmp-${key}-2`)}
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          HYPOTHESIS_ORDER.forEach((key) => {
+            const rec = store.recordedResults[key];
+            CentrifugeView.renderBands(`cmp-${key}-0`, ACTUAL_MESELSON_STAHL.gen0, true);
+            if (rec.gen1) CentrifugeView.renderBands(`cmp-${key}-1`, rec.gen1, true);
+            if (rec.gen2) CentrifugeView.renderBands(`cmp-${key}-2`, rec.gen2, true);
+          });
+
+          const actualPanel = document.getElementById('actual-result-panel');
+          const toggleBtn = document.getElementById('toggle-actual-btn');
+          const actualTubes = document.getElementById('actual-tubes-container');
+
+          if (actualPanel && toggleBtn && actualTubes) {
+            actualPanel.classList.toggle('hidden', !store.actualResultRevealed);
+            toggleBtn.textContent = store.actualResultRevealed
+              ? '実際の実験結果を隠す'
+              : '実際の実験結果を表示する';
+
+            if (store.actualResultRevealed) {
+              actualTubes.innerHTML = [
+                this.renderMiniTubeHtml('第0世代', ACTUAL_MESELSON_STAHL.gen0, 'actual-tube-0'),
+                this.renderMiniTubeHtml('第1世代', ACTUAL_MESELSON_STAHL.gen1, 'actual-tube-1'),
+                this.renderMiniTubeHtml('第2世代', ACTUAL_MESELSON_STAHL.gen2, 'actual-tube-2')
+              ].join('');
+              CentrifugeView.renderBands('actual-tube-0', ACTUAL_MESELSON_STAHL.gen0, true);
+              CentrifugeView.renderBands('actual-tube-1', ACTUAL_MESELSON_STAHL.gen1, true);
+              CentrifugeView.renderBands('actual-tube-2', ACTUAL_MESELSON_STAHL.gen2, true);
+            }
+          }
+        },
+
+        syncGen0ModalUi() {
+          const wrapper = document.getElementById('modal-tube-wrapper');
+          const spinBtn = document.getElementById('modal-spin-gen0-btn');
+          const spinLabel = document.getElementById('modal-spin-label');
+          const spinIcon = document.getElementById('modal-spin-icon');
+          const startBtn = document.getElementById('modal-start-btn');
+          const statusEl = document.getElementById('modal-tube-status');
+          const phase = store.gen0Phase;
+
+          if (wrapper) wrapper.classList.toggle('animate-centrifuge', phase === 'spinning');
+
+          if (phase === 'idle') {
+            if (spinBtn) {
+              spinBtn.disabled = false;
+              spinBtn.className = 'w-full bg-rose-500 hover:bg-rose-600 text-white font-black py-2.5 px-4 rounded-2xl text-xs sm:text-sm shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 next-action-glow';
+            }
+            if (spinIcon) spinIcon.className = 'w-3 h-3 rounded-full bg-white inline-block';
+            if (spinLabel) spinLabel.textContent = '遠心分離機を回す（スタート）';
+            if (statusEl) statusEl.textContent = 'ボタンを押して回してみよう！';
+            if (startBtn) {
+              startBtn.disabled = true;
+              startBtn.classList.remove('next-action-glow');
+            }
+          } else if (phase === 'spinning') {
+            if (spinBtn) {
+              spinBtn.disabled = false;
+              spinBtn.className = 'w-full bg-amber-500 hover:bg-amber-600 text-white font-black py-2.5 px-4 rounded-2xl text-xs sm:text-sm shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 next-action-glow';
+            }
+            if (spinIcon) spinIcon.className = 'w-3 h-3 rounded-sm bg-white inline-block';
+            if (spinLabel) spinLabel.textContent = '遠心分離機を止める（ストップ）';
+            if (statusEl) statusEl.textContent = '回転しながら比重の位置へ移動中！もう一度押して止めよう';
+          } else if (phase === 'settling') {
+            if (spinBtn) {
+              spinBtn.disabled = true;
+              spinBtn.classList.remove('next-action-glow');
+            }
+            if (spinLabel) spinLabel.textContent = 'バンドに集まっています...';
+            if (statusEl) statusEl.textContent = '比重の高さへ移動中...';
+          } else if (phase === 'done') {
+            if (spinBtn) {
+              spinBtn.disabled = true;
+              spinBtn.className = 'w-full bg-slate-300 text-slate-500 cursor-not-allowed font-black py-2.5 px-4 rounded-2xl text-xs sm:text-sm shadow-sm flex items-center justify-center gap-2';
+            }
+            if (spinIcon) spinIcon.className = 'w-3 h-3 rounded-full bg-slate-400 inline-block';
+            if (spinLabel) spinLabel.textContent = '分離完了！';
+            if (statusEl) statusEl.textContent = '一番下（比重大）にバンドができた！';
+            if (startBtn) {
+              startBtn.disabled = false;
+              startBtn.classList.add('next-action-glow');
+            }
+          }
+        }
+      };
+
+      // =========================================================================
+      // インタラクティブジェスチャー制御 (ドラッグ分離・ハサミ切り・なぞり合成)
+      // =========================================================================
+      const GestureController = {
+        activeSplitSlotId: null,
+        splitGhostEl: null,
+        isOverTargetCard: false,
+        activeCutSlotId: null,
+        cutStartX: 0,
+        activeBuildSlotId: null,
+        activeBuildOp: null,
+        buildStartY: 0,
+
+        isPointInCard(cardEl, x, y, margin = 12) {
+          if (!cardEl) return false;
+          const r = cardEl.getBoundingClientRect();
+          return x >= r.left - margin && x <= r.right + margin && y >= r.top - margin && y <= r.bottom + margin;
+        },
+
+        cleanupSplitDrag() {
+          if (this.splitGhostEl) {
+            this.splitGhostEl.remove();
+            this.splitGhostEl = null;
+          }
+          if (this.activeSplitSlotId !== null) {
+            const origZone = document.querySelector(`[data-split-slot="${this.activeSplitSlotId}"]`);
+            if (origZone) origZone.classList.remove('opacity-30');
+
+            const targetCard = document.querySelector(`[data-card-slot="${this.activeSplitSlotId + 1}"]`);
+            if (targetCard) {
+              targetCard.classList.remove('ring-4', 'ring-amber-400', 'bg-amber-50/60', 'scale-[1.02]');
+            }
+            const targetDrop = document.querySelector(`[data-drop-target="${this.activeSplitSlotId + 1}"]`);
+            if (targetDrop) {
+              targetDrop.classList.remove('border-amber-400', 'bg-amber-50', 'text-amber-800');
+              targetDrop.textContent = 'ここに右の鎖をドラッグ！';
+            }
+          }
+          this.activeSplitSlotId = null;
+          this.isOverTargetCard = false;
+        },
+
+        cleanupCutSwipe() {
+          if (this.activeCutSlotId !== null) {
+            const bar = document.querySelector(`[data-cut-bar="${this.activeCutSlotId}"]`);
+            if (bar) bar.style.width = '0%';
+          }
+          this.activeCutSlotId = null;
+        },
+
+        updateBuildProgress(slotId, pct) {
+          const bar = document.querySelector(`[data-build-bar="${slotId}"]`);
+          if (bar) bar.style.width = `${pct}%`;
+
+          document.querySelectorAll(`[data-build-fill="${slotId}"]`).forEach((el) => {
+            el.style.height = `${pct}%`;
+          });
+
+          document.querySelectorAll(`[data-build-seg-fill="${slotId}"]`).forEach((el) => {
+            const idx = parseInt(el.getAttribute('data-seg-idx') || '0', 10);
+            const segPct = Math.max(0, Math.min(100, ((pct - idx * 25) / 25) * 100));
+            el.style.height = `${segPct}%`;
+          });
+        },
+
+        cleanupBuildSwipe() {
+          if (this.activeBuildSlotId !== null) {
+            this.updateBuildProgress(this.activeBuildSlotId, 0);
+          }
+          this.activeBuildSlotId = null;
+          this.activeBuildOp = null;
+        },
+
+        attach(onSlotAction) {
+          document.addEventListener('pointerdown', (e) => {
+            if (store.isBusy()) return;
+
+            // 1. 半保存的複製：右鎖ドラッグ
+            const splitZone = e.target.closest('[data-split-slot]');
+            if (splitZone) {
+              e.preventDefault();
+              const slotId = parseInt(splitZone.getAttribute('data-split-slot'), 10);
+              const slot = store.getCurrentSlots()[slotId];
+              if (!slot || !slot.exists || slot.split) return;
+
+              this.activeSplitSlotId = slotId;
+              this.isOverTargetCard = false;
+              splitZone.classList.add('opacity-30');
+
+              const colorClass = slot.right === 'red' ? 'bg-rose-500' : 'bg-sky-500';
+              this.splitGhostEl = document.createElement('div');
+              this.splitGhostEl.className = `fixed w-4 h-24 rounded-full ${colorClass} shadow-xl opacity-95 pointer-events-none z-50 border-2 border-white scale-110`;
+              this.splitGhostEl.style.left = `${e.clientX - 8}px`;
+              this.splitGhostEl.style.top = `${e.clientY - 48}px`;
+              document.body.appendChild(this.splitGhostEl);
+
+              const targetDrop = document.querySelector(`[data-drop-target="${slotId + 1}"]`);
+              if (targetDrop) {
+                targetDrop.classList.add('border-amber-400', 'bg-amber-50', 'text-amber-800');
+                targetDrop.textContent = 'ここにドロップして離す！';
+              }
+              return;
+            }
+
+            // 2. 分散的複製：ハサミのスワイプ切り
+            const cutZone = e.target.closest('[data-cut-slot]');
+            if (cutZone) {
+              e.preventDefault();
+              this.activeCutSlotId = parseInt(cutZone.getAttribute('data-cut-slot'), 10);
+              this.cutStartX = e.clientX;
+              return;
+            }
+
+            // 3. 全仮説共通：上から下へなぞって青い鎖を合成
+            const buildZone = e.target.closest('[data-build-slot]');
+            if (buildZone) {
+              e.preventDefault();
+              this.activeBuildSlotId = parseInt(buildZone.getAttribute('data-build-slot'), 10);
+              this.activeBuildOp = buildZone.getAttribute('data-build-op') || 'build';
+              this.buildStartY = e.clientY;
+            }
+          });
+
+          document.addEventListener('pointermove', (e) => {
+            if (this.activeSplitSlotId !== null) {
+              if (this.splitGhostEl) {
+                this.splitGhostEl.style.left = `${e.clientX - 8}px`;
+                this.splitGhostEl.style.top = `${e.clientY - 48}px`;
+              }
+              const targetCard = document.querySelector(`[data-card-slot="${this.activeSplitSlotId + 1}"]`);
+              const inside = this.isPointInCard(targetCard, e.clientX, e.clientY);
+              this.isOverTargetCard = inside;
+              if (targetCard) {
+                targetCard.classList.toggle('ring-4', inside);
+                targetCard.classList.toggle('ring-amber-400', inside);
+                targetCard.classList.toggle('bg-amber-50/60', inside);
+                targetCard.classList.toggle('scale-[1.02]', inside);
+              }
+            }
+
+            if (this.activeCutSlotId !== null) {
+              const zone = document.querySelector(`[data-cut-slot="${this.activeCutSlotId}"]`);
+              const requiredDist = zone ? Math.max(50, zone.getBoundingClientRect().width * 0.7) : 60;
+              const dist = Math.abs(e.clientX - this.cutStartX);
+              const pct = Math.min(100, Math.round((dist / requiredDist) * 100));
+              const bar = document.querySelector(`[data-cut-bar="${this.activeCutSlotId}"]`);
+              if (bar) bar.style.width = `${pct}%`;
+
+              if (dist >= requiredDist) {
+                const targetId = this.activeCutSlotId;
+                this.cleanupCutSwipe();
+                onSlotAction(targetId, 'cut');
+              }
+            }
+
+            if (this.activeBuildSlotId !== null) {
+              const zone = document.querySelector(`[data-build-slot="${this.activeBuildSlotId}"]`);
+              const requiredDist = zone ? Math.max(48, zone.getBoundingClientRect().height * 0.65) : 56;
+              const dy = Math.max(0, e.clientY - this.buildStartY);
+              const pct = Math.min(100, Math.round((dy / requiredDist) * 100));
+              this.updateBuildProgress(this.activeBuildSlotId, pct);
+
+              if (dy >= requiredDist) {
+                const targetId = this.activeBuildSlotId;
+                const targetOp = this.activeBuildOp;
+                this.activeBuildSlotId = null;
+                this.activeBuildOp = null;
+                onSlotAction(targetId, targetOp);
+              }
+            }
+          });
+
+          document.addEventListener('pointerup', (e) => {
+            if (this.activeSplitSlotId !== null) {
+              const targetId = this.activeSplitSlotId;
+              const targetCard = document.querySelector(`[data-card-slot="${targetId + 1}"]`);
+              const dropped = this.isOverTargetCard || this.isPointInCard(targetCard, e.clientX, e.clientY);
+              this.cleanupSplitDrag();
+              if (dropped) onSlotAction(targetId, 'split');
+            }
+            if (this.activeCutSlotId !== null) {
+              this.cleanupCutSwipe();
+            }
+            if (this.activeBuildSlotId !== null) {
+              this.cleanupBuildSwipe();
+            }
+          });
+
+          document.addEventListener('pointercancel', () => {
+            this.cleanupSplitDrag();
+            this.cleanupCutSwipe();
+            this.cleanupBuildSwipe();
+          });
+        }
+      };
+
+      // =========================================================================
+      // アプリケーションコントローラ (Actions & Lifecycle)
+      // =========================================================================
+      const AppController = {
+        init() {
+          store.gen1Slots = BiologyModel.createGen1Slots(store.hypothesis);
+          CentrifugeView.renderParticles('tube-content-0', ACTUAL_MESELSON_STAHL.gen0, false);
+          CentrifugeView.renderParticles('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0, false);
+          this.showModalStep(1);
+          LabView.syncGen0ModalUi();
+          LabView.renderLab();
+          GestureController.attach((slotId, op) => this.handleSlotAction(slotId, op));
+          this.attachEvents();
+        },
+
+        openRulesModal(step = 1) {
+          const modal = document.getElementById('rules-modal');
+          if (!modal) return;
+          this.showModalStep(step);
+          modal.classList.remove('hidden');
+        },
+
+        closeRulesModal() {
+          const modal = document.getElementById('rules-modal');
+          if (modal) modal.classList.add('hidden');
+          store.clearTimer('gen0');
+
+          if (store.gen0Phase !== 'done') {
+            store.gen0Phase = 'done';
+            this.finalizeGen0Visuals();
+          }
+          LabView.renderLab();
+        },
+
+        showModalStep(step) {
+          const s1 = document.getElementById('modal-step-1');
+          const s2 = document.getElementById('modal-step-2');
+          if (!s1 || !s2) return;
+          s1.classList.toggle('hidden', step !== 1);
+          s2.classList.toggle('hidden', step !== 2);
+          if (step === 2) {
+            if (store.gen0Phase === 'idle') {
+              CentrifugeView.renderParticles('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0, false);
+            } else if (store.gen0Phase === 'done') {
+              CentrifugeView.renderBands('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0);
+            }
+            LabView.syncGen0ModalUi();
+          }
+        },
+
+        finalizeGen0Visuals() {
+          CentrifugeView.renderBands('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0);
+          CentrifugeView.renderBands('tube-content-0', ACTUAL_MESELSON_STAHL.gen0);
+          const lbl0 = document.getElementById('tube-label-0');
+          if (lbl0) {
+            lbl0.textContent = '下（重・100%）';
+            lbl0.className = 'text-[10px] font-extrabold text-rose-400 leading-tight';
+          }
+          LabView.syncGen0ModalUi();
+          LabView.setObservation('第0世代は一番下（比重大）に沈みました！次は第1世代を作ろう！');
+        },
+
+        toggleModalGen0() {
+          if (store.gen0Phase === 'idle') {
+            store.gen0Phase = 'spinning';
+            CentrifugeView.renderParticles('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0, true);
+            CentrifugeView.renderParticles('tube-content-0', ACTUAL_MESELSON_STAHL.gen0, true);
+            LabView.syncGen0ModalUi();
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                CentrifugeView.migrateParticlesToDensity('modal-tube-content');
+                CentrifugeView.migrateParticlesToDensity('tube-content-0');
+              });
+            });
+          } else if (store.gen0Phase === 'spinning') {
+            store.gen0Phase = 'settling';
+            LabView.syncGen0ModalUi();
+
+            requestAnimationFrame(() => {
+              CentrifugeView.migrateParticlesToDensity('modal-tube-content');
+              CentrifugeView.migrateParticlesToDensity('tube-content-0');
+            });
+
+            store.setTimer('gen0', () => {
+              store.gen0Phase = 'done';
+              this.finalizeGen0Visuals();
+            }, CONFIG.SETTLE_DURATION_MS);
+          }
+        },
+
+        selectHypothesis(hypo) {
+          if (store.isBusy() || !HYPOTHESES[hypo]) return;
+          store.hypothesis = hypo;
+          store.currentGen = 1;
+          store.gen1Spun = false;
+          store.gen2Spun = false;
+          store.gen1Slots = BiologyModel.createGen1Slots(hypo);
+          store.gen2Slots = [];
+          CentrifugeView.clearGenTubes();
+          CentrifugeView.setStatusBadge('待機中', 'bg-slate-100 text-slate-600');
+          LabView.setObservation(`【${HYPOTHESES[hypo].name}】に切り替えました。第1世代のDNAを組み立てよう！`);
+          LabView.renderLab();
+        },
+
+        goToGen1() {
+          if (store.isBusy() || store.currentGen === 1) return;
+          store.currentGen = 1;
+          store.gen1Spun = false;
+          store.gen2Spun = false;
+          store.gen1Slots = BiologyModel.createGen1Slots(store.hypothesis);
+          store.gen2Slots = [];
+          CentrifugeView.clearGenTubes();
+          CentrifugeView.setStatusBadge('待機中', 'bg-slate-100 text-slate-600');
+          LabView.setObservation('第1世代（1回目の複製）に戻りました！');
+          LabView.renderLab();
+        },
+
+        goToGen2() {
+          if (store.isBusy() || !store.gen1Spun) return;
+          store.currentGen = 2;
+          store.gen2Spun = false;
+          store.gen2Slots = BiologyModel.createGen2Slots(store.hypothesis, store.gen1Slots);
+          CentrifugeView.setStatusBadge('待機中', 'bg-slate-100 text-slate-600');
+          LabView.setObservation('第1世代のDNAをさらに複製して、第2世代（4本）を作ろう！');
+          LabView.renderLab();
+        },
+
+        handleSlotAction(slotId, actionType) {
+          if (store.isBusy()) return;
+          const slots = store.getCurrentSlots();
+          const changed = BiologyModel.applySlotAction(slots, store.hypothesis, store.currentGen, slotId, actionType);
+          if (changed) LabView.renderLab();
+        },
+
+        toggleCentrifuge() {
+          const slots = store.getCurrentSlots();
+          if (store.centrifugePhase === 'settling') return;
+          if (!BiologyModel.isGenerationComplete(slots, store.hypothesis)) return;
+
+          const gen = store.currentGen;
+          const wrapper = document.getElementById(`tube-wrapper-${gen}`);
+          const labelEl = document.getElementById(`tube-label-${gen}`);
+          BiologyModel.clearJustBuiltFlags(slots);
+          const molecules = BiologyModel.getMoleculesFromSlots(slots, store.hypothesis);
+
+          if (store.centrifugePhase === 'idle') {
+            store.centrifugePhase = 'spinning';
+            CentrifugeView.setStatusBadge('回転・分離中...', 'bg-rose-100 text-rose-700');
+            if (labelEl) {
+              labelEl.textContent = '移動中...';
+              labelEl.className = 'text-[10px] font-bold text-rose-400 leading-tight';
+            }
+            CentrifugeView.renderParticles(`tube-content-${gen}`, molecules, true);
+            if (wrapper) wrapper.classList.add('animate-centrifuge');
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                CentrifugeView.migrateParticlesToDensity(`tube-content-${gen}`);
+              });
+            });
+            LabView.renderLab();
+          } else if (store.centrifugePhase === 'spinning') {
+            store.centrifugePhase = 'settling';
+            if (wrapper) wrapper.classList.remove('animate-centrifuge');
+            CentrifugeView.setStatusBadge('バンド形成中...', 'bg-amber-100 text-amber-800');
+            if (labelEl) {
+              labelEl.textContent = '分離中...';
+              labelEl.className = 'text-[10px] font-bold text-amber-400 leading-tight';
+            }
+
+            requestAnimationFrame(() => {
+              CentrifugeView.migrateParticlesToDensity(`tube-content-${gen}`);
+            });
+            LabView.renderLab();
+
+            store.setTimer('centrifuge', () => {
+              store.centrifugePhase = 'idle';
+              if (gen === 1) {
+                store.gen1Spun = true;
+                store.recordedResults[store.hypothesis].gen1 = molecules;
+              } else {
+                store.gen2Spun = true;
+                store.recordedResults[store.hypothesis].gen2 = molecules;
+              }
+
+              CentrifugeView.renderBands(`tube-content-${gen}`, molecules);
+              const summary = BiologyModel.aggregateBands(molecules);
+
+              CentrifugeView.setStatusBadge('分離完了', 'bg-emerald-100 text-emerald-700');
+              if (labelEl) {
+                labelEl.textContent = summary.compactLabel;
+                labelEl.className = 'text-[10px] font-extrabold text-emerald-400 leading-tight';
+              }
+
+              LabView.setObservation(
+                `【${HYPOTHESES[store.hypothesis].name}・第${gen}世代】${summary.detailText}が現れました！`
+              );
+              LabView.renderLab();
+            }, CONFIG.SETTLE_DURATION_MS);
+          }
+        },
+
+        openCompareModal() {
+          const modal = document.getElementById('compare-modal');
+          if (!modal) return;
+          LabView.renderCompareModal();
+          modal.classList.remove('hidden');
+        },
+
+        closeCompareModal() {
+          const modal = document.getElementById('compare-modal');
+          if (modal) modal.classList.add('hidden');
+        },
+
+        toggleActualResult() {
+          store.actualResultRevealed = !store.actualResultRevealed;
+          LabView.renderCompareModal();
+        },
+
+        resetAll() {
+          store.clearAllTimers();
+          store.gen0Phase = 'idle';
+          store.centrifugePhase = 'idle';
+          store.currentGen = 1;
+          store.gen1Spun = false;
+          store.gen2Spun = false;
+          store.actualResultRevealed = false;
+          HYPOTHESIS_ORDER.forEach((h) => {
+            store.recordedResults[h] = { gen1: null, gen2: null };
+          });
+          store.gen1Slots = BiologyModel.createGen1Slots(store.hypothesis);
+          store.gen2Slots = [];
+
+          CentrifugeView.renderParticles('tube-content-0', ACTUAL_MESELSON_STAHL.gen0, false);
+          CentrifugeView.renderParticles('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0, false);
+          const lbl0 = document.getElementById('tube-label-0');
+          if (lbl0) {
+            lbl0.textContent = '準備中';
+            lbl0.className = 'text-[10px] font-bold text-rose-400 leading-tight';
+          }
+          CentrifugeView.clearGenTubes();
+          CentrifugeView.setStatusBadge('待機中', 'bg-slate-100 text-slate-600');
+          LabView.setObservation('まずは第0世代（重い赤いDNA）の動きを見てみよう！');
+          LabView.syncGen0ModalUi();
+          this.closeCompareModal();
+          this.openRulesModal(1);
+          LabView.renderLab();
+        },
+
+        attachEvents() {
+          document.addEventListener('click', (e) => {
+            const target = e.target.closest('[data-action]');
+            if (!target) return;
+
+            const action = target.getAttribute('data-action');
+            switch (action) {
+              case 'select-hypothesis':
+                this.selectHypothesis(target.getAttribute('data-hypothesis'));
+                break;
+              case 'go-gen-1':
+                this.goToGen1();
+                break;
+              case 'go-gen-2':
+                this.goToGen2();
+                break;
+              case 'slot-action':
+                this.handleSlotAction(
+                  parseInt(target.getAttribute('data-slot-id'), 10),
+                  target.getAttribute('data-slot-op')
+                );
+                break;
+              case 'toggle-centrifuge':
+                this.toggleCentrifuge();
+                break;
+              case 'toggle-modal-gen0':
+                this.toggleModalGen0();
+                break;
+              case 'open-rules':
+                this.openRulesModal(1);
+                break;
+              case 'close-rules':
+                this.closeRulesModal();
+                break;
+              case 'modal-step':
+                this.showModalStep(parseInt(target.getAttribute('data-step'), 10));
+                break;
+              case 'open-compare':
+                this.openCompareModal();
+                break;
+              case 'close-compare':
+                this.closeCompareModal();
+                break;
+              case 'toggle-actual-result':
+                this.toggleActualResult();
+                break;
+              case 'reset-all':
+                this.resetAll();
+                break;
+              default:
+                break;
+            }
+          });
+
+          document.addEventListener('keydown', (e) => {
+            if (e.key !== 'Escape') return;
+            const compareModal = document.getElementById('compare-modal');
+            if (compareModal && !compareModal.classList.contains('hidden')) {
+              this.closeCompareModal();
+              return;
+            }
+            const rulesModal = document.getElementById('rules-modal');
+            if (rulesModal && !rulesModal.classList.contains('hidden')) {
+              this.closeRulesModal();
+            }
+          });
+        }
+      };
+
+      document.addEventListener('DOMContentLoaded', () => {
+        AppController.init();
+      });
+    })();
+  </script>
+</body>
+</html>
