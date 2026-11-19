@@ -152,3 +152,28 @@ body {
   will-change: opacity;
   animation: synthRungsLoop 3.8s ease-in-out infinite;
 }
+
+/* 複製時：周りの青い粒がDNA鎖へ吸収されるアニメーション */
+@keyframes absorbBlueOnce {
+  0% {
+    transform: translate3d(var(--sx), var(--sy), 0) scale(1);
+    opacity: 0.95;
+  }
+  75% {
+    transform: translate3d(0px, 0px, 0) scale(0.45);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate3d(0px, 0px, 0) scale(0.1);
+    opacity: 0;
+  }
+}
+.blue-absorb-once {
+  will-change: transform, opacity;
+  animation: absorbBlueOnce 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.blue-ambient-dot {
+  will-change: transform, opacity;
+  transform: translate3d(var(--sx), var(--sy), 0);
+}

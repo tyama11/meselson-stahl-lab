@@ -22,6 +22,7 @@ export const GestureController = {
   buildBarEl: null,
   buildFillEls: [],
   buildSegFillEls: [],
+  buildDotEls: [],
 
   isPointInRect(r, x, y, margin = 12) {
     if (!r) return false;
@@ -72,6 +73,16 @@ export const GestureController = {
       const segPct = Math.max(0, Math.min(100, ((pct - idx * 25) / 25) * 100));
       el.style.height = `${segPct}%`;
     }
+
+    const t = pct / 100;
+    for (let i = 0; i < this.buildDotEls.length; i++) {
+      const { el, sx, sy } = this.buildDotEls[i];
+      const cx = (sx * (1 - t)).toFixed(1);
+      const cy = (sy * (1 - t)).toFixed(1);
+      const sc = (1 - t * 0.65).toFixed(2);
+      el.style.transform = `translate3d(${cx}px, ${cy}px, 0) scale(${sc})`;
+      el.style.opacity = String((1 - t * 0.75).toFixed(2));
+    }
   },
 
   cleanupBuildSwipe() {
@@ -83,6 +94,7 @@ export const GestureController = {
     this.buildBarEl = null;
     this.buildFillEls = [];
     this.buildSegFillEls = [];
+    this.buildDotEls = [];
   },
 
   attach(onSlotAction) {
@@ -145,6 +157,11 @@ export const GestureController = {
           el,
           idx: parseInt(el.getAttribute('data-seg-idx') || '0', 10)
         }));
+        this.buildDotEls = [...document.querySelectorAll(`[data-build-dot="${slotId}"]`)].map((el) => ({
+          el,
+          sx: parseFloat(el.getAttribute('data-sx') || '0'),
+          sy: parseFloat(el.getAttribute('data-sy') || '0')
+        }));
       }
     });
 
@@ -190,6 +207,7 @@ export const GestureController = {
           this.buildBarEl = null;
           this.buildFillEls = [];
           this.buildSegFillEls = [];
+          this.buildDotEls = [];
           onSlotAction(targetId, targetOp);
         }
       }

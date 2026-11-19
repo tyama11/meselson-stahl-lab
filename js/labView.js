@@ -112,9 +112,38 @@ export const LabView = {
     `;
   },
 
+  renderBlueAbsorbParticles(slotId, mode) {
+    const coords = [
+      { sx: -46, sy: -34, d: 0 },
+      { sx: 46, sy: -30, d: 0.05 },
+      { sx: -52, sy: 0, d: 0.1 },
+      { sx: 52, sy: 4, d: 0.15 },
+      { sx: -42, sy: 34, d: 0.2 },
+      { sx: 44, sy: 32, d: 0.25 }
+    ];
+    if (mode === 'ready') {
+      return coords
+        .map(
+          (p) =>
+            `<span data-build-dot="${slotId}" data-sx="${p.sx}" data-sy="${p.sy}" class="blue-ambient-dot pointer-events-none absolute w-2 h-2 rounded-full bg-sky-400/80" style="--sx:${p.sx}px; --sy:${p.sy}px;"></span>`
+        )
+        .join('');
+    }
+    if (mode === 'justBuilt') {
+      return coords
+        .map(
+          (p) =>
+            `<span class="blue-absorb-once pointer-events-none absolute w-2.5 h-2.5 rounded-full bg-sky-400" style="--sx:${p.sx}px; --sy:${p.sy}px; animation-delay:${p.d}s;"></span>`
+        )
+        .join('');
+    }
+    return '';
+  },
+
   renderConservativeCard(slot, glowClass) {
     const animGrow = Boolean(slot.justBuilt && !slot.isOriginal);
     const canBuild = !slot.built;
+    const absorbMode = canBuild ? 'ready' : animGrow ? 'justBuilt' : null;
     const actionHtml = slot.built
       ? `<div class="text-center text-[11px] font-extrabold text-emerald-700 py-1.5 bg-emerald-50 rounded-xl">${slot.isOriginal ? '元のDNAそのまま' : '2本鎖が完成！'}</div>`
       : this.renderSwipeBuildGuide(slot.id, '上から下へなぞって青の2本鎖を作る！');
@@ -126,6 +155,7 @@ export const LabView = {
           ${this.renderStatusBadge(slot, 'conservative')}
         </div>
         <div data-dna-visual="${slot.id}" class="relative flex items-center justify-center gap-3 my-1 px-2">
+          ${this.renderBlueAbsorbParticles(slot.id, absorbMode)}
           ${this.renderStrandHtml(slot.left, { animateGrow: animGrow, delaySec: 0, buildSlotId: canBuild ? slot.id : null })}
           ${this.renderRungsHtml(slot.built)}
           ${this.renderStrandHtml(slot.right, { animateGrow: animGrow, delaySec: 0.4, buildSlotId: canBuild ? slot.id : null })}
@@ -141,6 +171,7 @@ export const LabView = {
     const animLeft = Boolean(slot.justBuilt && slot.newSide === 'left');
     const animRight = Boolean(slot.justBuilt && slot.newSide === 'right');
     const canBuild = Boolean(slot.exists && slot.split && !slot.built);
+    const absorbMode = canBuild ? 'ready' : slot.justBuilt ? 'justBuilt' : null;
 
     let actionHtml = '';
     if (!slot.exists) {
@@ -167,6 +198,7 @@ export const LabView = {
           ${this.renderStatusBadge(slot, 'semiconservative')}
         </div>
         <div data-dna-visual="${slot.id}" class="relative flex items-center justify-center gap-3 my-1 px-2">
+          ${this.renderBlueAbsorbParticles(slot.id, absorbMode)}
           ${this.renderStrandHtml(slot.left, { animateGrow: animLeft, buildSlotId: canBuild && !slot.left ? slot.id : null })}
           ${this.renderRungsHtml(isDone || (slot.exists && !slot.split))}
           ${rightStrandInteractive}
@@ -180,6 +212,7 @@ export const LabView = {
   renderDispersiveCard(slot, glowClass) {
     const isDone = BiologyModel.isSlotComplete(slot, 'dispersive');
     const canBuild = Boolean(slot.exists && slot.cut && !slot.mixed);
+    const absorbMode = canBuild ? 'ready' : slot.justBuilt ? 'justBuilt' : null;
 
     let actionHtml = '';
     if (!slot.exists) {
@@ -215,6 +248,7 @@ export const LabView = {
           ${this.renderStatusBadge(slot, 'dispersive')}
         </div>
         <div data-dna-visual="${slot.id}" class="relative flex items-center justify-center gap-3 my-1 px-2">
+          ${this.renderBlueAbsorbParticles(slot.id, absorbMode)}
           ${this.renderSegmentedStrandHtml(slot.leftSegs, slot.cut, slot.newLeftMask, Boolean(slot.justBuilt), canBuild ? slot.id : null)}
           ${this.renderRungsHtml(isDone)}
           ${this.renderSegmentedStrandHtml(slot.rightSegs, slot.cut, slot.newRightMask, Boolean(slot.justBuilt), canBuild ? slot.id : null)}
