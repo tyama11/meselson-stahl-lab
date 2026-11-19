@@ -119,8 +119,62 @@ export const CentrifugeView = {
   },
 
   clearFlyingDna() {
-    document.querySelectorAll('.dna-fly-clone').forEach((el) => el.remove());
+    document.querySelectorAll('.dna-fly-clone, .result-fly-badge').forEach((el) => el.remove());
     document.querySelectorAll('.tube-receive-pulse').forEach((el) => el.classList.remove('tube-receive-pulse'));
+  },
+
+  flyResultToCompareBtn(hypothesisName) {
+    const srcTube = document.getElementById('tube-wrapper-2');
+    const compareBtn = document.getElementById('open-compare-btn');
+    if (!srcTube || !compareBtn) return;
+
+    const srcRect = srcTube.getBoundingClientRect();
+    const dstRect = compareBtn.getBoundingClientRect();
+
+    // 第2世代の試験管＋仮説ラベルの小さなデータカードを飛ばす
+    const badge = document.createElement('div');
+    badge.className = 'result-fly-badge flex items-center gap-1.5 bg-indigo-600 text-white text-xs font-black px-3 py-1.5 rounded-full shadow-lg border-2 border-white';
+    badge.style.position = 'fixed';
+    badge.style.zIndex = '70';
+    badge.style.pointerEvents = 'none';
+    badge.style.willChange = 'transform, opacity';
+    badge.style.left = `${srcRect.left + srcRect.width / 2 - 58}px`;
+    badge.style.top = `${srcRect.top + srcRect.height / 2 - 16}px`;
+    badge.textContent = `📊 ${hypothesisName} 記録`;
+    document.body.appendChild(badge);
+
+    const startX = srcRect.left + srcRect.width / 2;
+    const startY = srcRect.top + srcRect.height / 2;
+    const endX = dstRect.left + dstRect.width / 2;
+    const endY = dstRect.top + dstRect.height / 2;
+    const dx = endX - startX;
+    const dy = endY - startY;
+    const midX = dx * 0.45;
+    const midY = Math.min(dy * 0.4, -40) - 30;
+
+    if (typeof badge.animate === 'function') {
+      const anim = badge.animate(
+        [
+          { transform: 'translate3d(0px, 0px, 0) scale(0.85)', opacity: 0, offset: 0 },
+          { transform: 'translate3d(0px, -12px, 0) scale(1.06)', opacity: 1, offset: 0.18 },
+          { transform: `translate3d(${midX}px, ${midY}px, 0) scale(0.95)`, opacity: 0.98, offset: 0.58 },
+          { transform: `translate3d(${dx}px, ${dy}px, 0) scale(0.35)`, opacity: 0.1, offset: 1 }
+        ],
+        {
+          duration: 780,
+          easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+          fill: 'forwards'
+        }
+      );
+      anim.onfinish = () => {
+        badge.remove();
+        compareBtn.classList.remove('compare-receive-pop');
+        void compareBtn.offsetWidth;
+        compareBtn.classList.add('compare-receive-pop');
+      };
+    } else {
+      badge.remove();
+    }
   },
 
   flyDnaIntoTube(sourceElements, targetTubeId) {

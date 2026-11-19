@@ -243,6 +243,10 @@ const AppController = {
           `【${HYPOTHESES[store.hypothesis].name}・第${gen}世代】${summary.detailText}が現れました！`
         );
         LabView.renderLab();
+
+        if (gen === 2) {
+          CentrifugeView.flyResultToCompareBtn(HYPOTHESES[store.hypothesis].name);
+        }
       }, CONFIG.SETTLE_DURATION_MS);
     }
   },
@@ -260,6 +264,7 @@ const AppController = {
   },
 
   toggleActualResult() {
+    if (store.countCompletedHypotheses() < 3) return;
     store.actualResultRevealed = !store.actualResultRevealed;
     LabView.renderCompareModal();
   },

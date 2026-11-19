@@ -497,12 +497,25 @@ export const LabView = {
     const actualPanel = document.getElementById('actual-result-panel');
     const toggleBtn = document.getElementById('toggle-actual-btn');
     const actualTubes = document.getElementById('actual-tubes-container');
+    const completedCount = store.countCompletedHypotheses();
+    const allCompleted = completedCount === 3;
 
     if (actualPanel && toggleBtn && actualTubes) {
+      if (!allCompleted) {
+        store.actualResultRevealed = false;
+      }
+      toggleBtn.disabled = !allCompleted;
+      if (!allCompleted) {
+        toggleBtn.className = 'bg-slate-300 text-slate-500 cursor-not-allowed font-extrabold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-sm';
+        toggleBtn.textContent = `3仮説すべて実験すると表示できます（${completedCount}/3）`;
+      } else {
+        toggleBtn.className = `bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-sm transition active:scale-95 cursor-pointer ${store.actualResultRevealed ? '' : 'next-action-glow'}`;
+        toggleBtn.textContent = store.actualResultRevealed
+          ? '実際の実験結果を隠す'
+          : '実際の実験結果を表示する';
+      }
+
       actualPanel.classList.toggle('hidden', !store.actualResultRevealed);
-      toggleBtn.textContent = store.actualResultRevealed
-        ? '実際の実験結果を隠す'
-        : '実際の実験結果を表示する';
 
       if (store.actualResultRevealed) {
         actualTubes.innerHTML = [
