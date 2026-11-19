@@ -118,6 +118,57 @@ export const CentrifugeView = {
     });
   },
 
+  clearFlyingDna() {
+    document.querySelectorAll('.dna-fly-clone').forEach((el) => el.remove());
+  },
+
+  flyDnaIntoTube(sourceElements, targetTubeId) {
+    const tube = document.getElementById(targetTubeId);
+    if (!tube || !sourceElements || sourceElements.length === 0) {
+      return 0;
+    }
+
+    this.clearFlyingDna();
+    const tubeRect = tube.getBoundingClientRect();
+    const targetX = tubeRect.left + tubeRect.width / 2;
+    const targetY = tubeRect.top + 18;
+    const staggerMs = 65;
+    const flyMs = 520;
+
+    sourceElements.forEach((srcEl, idx) => {
+      const rect = srcEl.getBoundingClientRect();
+      const clone = srcEl.cloneNode(true);
+      clone.removeAttribute('id');
+      clone.querySelectorAll('[id]').forEach((n) => n.removeAttribute('id'));
+      clone.classList.add('dna-fly-clone');
+      clone.style.left = `${rect.left}px`;
+      clone.style.top = `${rect.top}px`;
+      clone.style.width = `${rect.width}px`;
+      clone.style.height = `${rect.height}px`;
+      clone.style.margin = '0';
+      clone.style.transform = 'translate(0, 0) scale(1) rotate(0deg)';
+      clone.style.opacity = '1';
+      document.body.appendChild(clone);
+
+      const dx = targetX - (rect.left + rect.width / 2);
+      const dy = targetY - (rect.top + rect.height / 2);
+
+      window.setTimeout(() => {
+        requestAnimationFrame(() => {
+          clone.style.transform = `translate(${dx}px, ${dy}px) scale(0.24) rotate(${idx % 2 === 0 ? 18 : -18}deg)`;
+          clone.style.opacity = '0.15';
+        });
+      }, idx * staggerMs);
+    });
+
+    tube.classList.remove('tube-receive-pulse');
+    void tube.offsetWidth;
+    tube.classList.add('tube-receive-pulse');
+
+    const totalMs = flyMs + (sourceElements.length - 1) * staggerMs + 40;
+    return totalMs;
+  },
+
   setStatusBadge(text, colorClasses) {
     const badge = document.getElementById('centrifuge-status');
     if (!badge) return;

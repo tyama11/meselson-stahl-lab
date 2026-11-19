@@ -125,7 +125,7 @@ export const LabView = {
           <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
           ${this.renderStatusBadge(slot, 'conservative')}
         </div>
-        <div class="relative flex items-center justify-center gap-3 my-1 px-2">
+        <div data-dna-visual="${slot.id}" class="relative flex items-center justify-center gap-3 my-1 px-2">
           ${this.renderStrandHtml(slot.left, { animateGrow: animGrow, delaySec: 0, buildSlotId: canBuild ? slot.id : null })}
           ${this.renderRungsHtml(slot.built)}
           ${this.renderStrandHtml(slot.right, { animateGrow: animGrow, delaySec: 0.4, buildSlotId: canBuild ? slot.id : null })}
@@ -166,7 +166,7 @@ export const LabView = {
           <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
           ${this.renderStatusBadge(slot, 'semiconservative')}
         </div>
-        <div class="relative flex items-center justify-center gap-3 my-1 px-2">
+        <div data-dna-visual="${slot.id}" class="relative flex items-center justify-center gap-3 my-1 px-2">
           ${this.renderStrandHtml(slot.left, { animateGrow: animLeft, buildSlotId: canBuild && !slot.left ? slot.id : null })}
           ${this.renderRungsHtml(isDone || (slot.exists && !slot.split))}
           ${rightStrandInteractive}
@@ -214,7 +214,7 @@ export const LabView = {
           <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
           ${this.renderStatusBadge(slot, 'dispersive')}
         </div>
-        <div class="relative flex items-center justify-center gap-3 my-1 px-2">
+        <div data-dna-visual="${slot.id}" class="relative flex items-center justify-center gap-3 my-1 px-2">
           ${this.renderSegmentedStrandHtml(slot.leftSegs, slot.cut, slot.newLeftMask, Boolean(slot.justBuilt), canBuild ? slot.id : null)}
           ${this.renderRungsHtml(isDone)}
           ${this.renderSegmentedStrandHtml(slot.rightSegs, slot.cut, slot.newRightMask, Boolean(slot.justBuilt), canBuild ? slot.id : null)}
@@ -266,6 +266,8 @@ export const LabView = {
     if (guideEl) {
       if (!complete) {
         guideEl.textContent = '光っている場所をドラッグ・なぞってDNAを完成させよう！';
+      } else if (store.centrifugePhase === 'loading') {
+        guideEl.textContent = 'DNAが試験管の中へ吸い込まれています...';
       } else if (store.centrifugePhase === 'spinning') {
         guideEl.textContent = '回転中！もう一度ボタンを押して止めよう！';
       } else if (store.centrifugePhase === 'settling') {
@@ -304,7 +306,12 @@ export const LabView = {
     const compareCtaBtn = document.getElementById('compare-cta-btn');
 
     if (spinBtn && spinIcon && spinLabel) {
-      if (store.centrifugePhase === 'spinning') {
+      if (store.centrifugePhase === 'loading') {
+        spinBtn.disabled = true;
+        spinBtn.className = 'bg-slate-300 text-slate-500 cursor-not-allowed font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm flex items-center justify-center gap-2';
+        spinIcon.className = 'w-3 h-3 rounded-full bg-sky-400 inline-block';
+        spinLabel.textContent = '試験管へ投入中...';
+      } else if (store.centrifugePhase === 'spinning') {
         spinBtn.disabled = false;
         spinBtn.className = 'bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 next-action-glow';
         spinIcon.className = 'w-3 h-3 rounded-sm bg-white inline-block';
@@ -437,6 +444,13 @@ export const LabView = {
         startBtn.disabled = true;
         startBtn.classList.remove('next-action-glow');
       }
+    } else if (phase === 'loading') {
+      if (spinBtn) {
+        spinBtn.disabled = true;
+        spinBtn.classList.remove('next-action-glow');
+      }
+      if (spinLabel) spinLabel.textContent = '試験管へ投入中...';
+      if (statusEl) statusEl.textContent = 'DNAが試験管の中へ吸い込まれています...';
     } else if (phase === 'spinning') {
       if (spinBtn) {
         spinBtn.disabled = false;

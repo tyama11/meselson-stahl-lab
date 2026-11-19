@@ -36,6 +36,8 @@ const AppController = {
     const modal = document.getElementById('rules-modal');
     if (modal) modal.classList.add('hidden');
     store.clearTimer('gen0');
+    store.clearTimer('gen0-load');
+    CentrifugeView.clearFlyingDna();
 
     if (store.gen0Phase !== 'done') {
       store.gen0Phase = 'done';
@@ -74,16 +76,27 @@ const AppController = {
 
   toggleModalGen0() {
     if (store.gen0Phase === 'idle') {
-      store.gen0Phase = 'spinning';
-      CentrifugeView.renderParticles('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0, true);
-      CentrifugeView.renderParticles('tube-content-0', ACTUAL_MESELSON_STAHL.gen0, true);
+      store.gen0Phase = 'loading';
       LabView.syncGen0ModalUi();
-      requestAnimationFrame(() => {
+
+      const srcEl = document.getElementById('gen0-dna-visual');
+      const modalContent = document.getElementById('modal-tube-content');
+      if (modalContent) modalContent.innerHTML = '';
+
+      const delayMs = CentrifugeView.flyDnaIntoTube(srcEl ? [srcEl] : [], 'modal-tube-wrapper');
+      store.setTimer('gen0-load', () => {
+        CentrifugeView.clearFlyingDna();
+        store.gen0Phase = 'spinning';
+        CentrifugeView.renderParticles('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0, true);
+        CentrifugeView.renderParticles('tube-content-0', ACTUAL_MESELSON_STAHL.gen0, true);
+        LabView.syncGen0ModalUi();
         requestAnimationFrame(() => {
-          CentrifugeView.migrateParticlesToDensity('modal-tube-content');
-          CentrifugeView.migrateParticlesToDensity('tube-content-0');
+          requestAnimationFrame(() => {
+            CentrifugeView.migrateParticlesToDensity('modal-tube-content');
+            CentrifugeView.migrateParticlesToDensity('tube-content-0');
+          });
         });
-      });
+      }, delayMs);
     } else if (store.gen0Phase === 'spinning') {
       store.gen0Phase = 'settling';
       LabView.syncGen0ModalUi();
@@ -146,7 +159,7 @@ const AppController = {
 
   toggleCentrifuge() {
     const slots = store.getCurrentSlots();
-    if (store.centrifugePhase === 'settling') return;
+    if (store.centrifugePhase === 'loading' || store.centrifugePhase === 'settling') return;
     if (!BiologyModel.isGenerationComplete(slots, store.hypothesis)) return;
 
     const gen = store.currentGen;
@@ -156,20 +169,34 @@ const AppController = {
     const molecules = BiologyModel.getMoleculesFromSlots(slots, store.hypothesis);
 
     if (store.centrifugePhase === 'idle') {
-      store.centrifugePhase = 'spinning';
-      CentrifugeView.setStatusBadge('回転・分離中...', 'bg-rose-100 text-rose-700');
+      store.centrifugePhase = 'loading';
+      CentrifugeView.setStatusBadge('DNAを投入中...', 'bg-sky-100 text-sky-700');
       if (labelEl) {
-        labelEl.textContent = '移動中...';
-        labelEl.className = 'text-[10px] font-bold text-rose-400 leading-tight';
+        labelEl.textContent = '投入中...';
+        labelEl.className = 'text-[10px] font-bold text-sky-400 leading-tight';
       }
-      CentrifugeView.renderParticles(`tube-content-${gen}`, molecules, true);
-      if (wrapper) wrapper.classList.add('animate-centrifuge');
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          CentrifugeView.migrateParticlesToDensity(`tube-content-${gen}`);
-        });
-      });
+
+      const sourceEls = [...document.querySelectorAll('#dna-slots-container [data-dna-visual]')];
+      const delayMs = CentrifugeView.flyDnaIntoTube(sourceEls, `tube-wrapper-${gen}`);
       LabView.renderLab();
+
+      store.setTimer('centrifuge-load', () => {
+        CentrifugeView.clearFlyingDna();
+        store.centrifugePhase = 'spinning';
+        CentrifugeView.setStatusBadge('回転・分離中...', 'bg-rose-100 text-rose-700');
+        if (labelEl) {
+          labelEl.textContent = '移動中...';
+          labelEl.className = 'text-[10px] font-bold text-rose-400 leading-tight';
+        }
+        CentrifugeView.renderParticles(`tube-content-${gen}`, molecules, true);
+        if (wrapper) wrapper.classList.add('animate-centrifuge');
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            CentrifugeView.migrateParticlesToDensity(`tube-content-${gen}`);
+          });
+        });
+        LabView.renderLab();
+      }, delayMs);
     } else if (store.centrifugePhase === 'spinning') {
       store.centrifugePhase = 'settling';
       if (wrapper) wrapper.classList.remove('animate-centrifuge');
@@ -230,6 +257,7 @@ const AppController = {
 
   resetAll() {
     store.clearAllTimers();
+    CentrifugeView.clearFlyingDna();
     store.gen0Phase = 'idle';
     store.centrifugePhase = 'idle';
     store.currentGen = 1;
