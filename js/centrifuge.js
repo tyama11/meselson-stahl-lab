@@ -131,42 +131,58 @@ export const CentrifugeView = {
     this.clearFlyingDna();
     const tubeRect = tube.getBoundingClientRect();
     const targetX = tubeRect.left + tubeRect.width / 2;
-    const targetY = tubeRect.top + 18;
-    const staggerMs = 65;
-    const flyMs = 520;
+    const targetY = tubeRect.top + 28;
+    const staggerMs = 90;
+    const flyMs = 680;
 
     sourceElements.forEach((srcEl, idx) => {
       const rect = srcEl.getBoundingClientRect();
       const clone = srcEl.cloneNode(true);
       clone.removeAttribute('id');
       clone.querySelectorAll('[id]').forEach((n) => n.removeAttribute('id'));
+      clone.classList.remove('relative');
       clone.classList.add('dna-fly-clone');
+
+      // Inline positioning guarantees priority over Tailwind Play CDN classes
+      clone.style.position = 'fixed';
+      clone.style.zIndex = '60';
+      clone.style.pointerEvents = 'none';
       clone.style.left = `${rect.left}px`;
       clone.style.top = `${rect.top}px`;
       clone.style.width = `${rect.width}px`;
       clone.style.height = `${rect.height}px`;
       clone.style.margin = '0';
-      clone.style.transform = 'translate(0, 0) scale(1) rotate(0deg)';
-      clone.style.opacity = '1';
       document.body.appendChild(clone);
 
       const dx = targetX - (rect.left + rect.width / 2);
       const dy = targetY - (rect.top + rect.height / 2);
+      const midX = dx * 0.45;
+      const midY = Math.min(0, dy * 0.35) - 36;
+      const tilt = idx % 2 === 0 ? 22 : -22;
 
-      window.setTimeout(() => {
-        requestAnimationFrame(() => {
-          clone.style.transform = `translate(${dx}px, ${dy}px) scale(0.24) rotate(${idx % 2 === 0 ? 18 : -18}deg)`;
-          clone.style.opacity = '0.15';
-        });
-      }, idx * staggerMs);
+      if (typeof clone.animate === 'function') {
+        clone.animate(
+          [
+            { transform: 'translate(0px, 0px) scale(1) rotate(0deg)', opacity: 1, offset: 0 },
+            { transform: `translate(${midX}px, ${midY}px) scale(0.85) rotate(${tilt * 0.5}deg)`, opacity: 0.98, offset: 0.42 },
+            { transform: `translate(${dx}px, ${dy - 14}px) scale(0.42) rotate(${tilt}deg)`, opacity: 0.85, offset: 0.78 },
+            { transform: `translate(${dx}px, ${dy + 18}px) scale(0.18) rotate(${tilt * 1.2}deg)`, opacity: 0.05, offset: 1 }
+          ],
+          {
+            duration: flyMs,
+            delay: idx * staggerMs,
+            easing: 'cubic-bezier(0.45, 0.05, 0.55, 0.95)',
+            fill: 'forwards'
+          }
+        );
+      }
     });
 
     tube.classList.remove('tube-receive-pulse');
     void tube.offsetWidth;
     tube.classList.add('tube-receive-pulse');
 
-    const totalMs = flyMs + (sourceElements.length - 1) * staggerMs + 40;
-    return totalMs;
+    return flyMs + (sourceElements.length - 1) * staggerMs + 60;
   },
 
   setStatusBadge(text, colorClasses) {

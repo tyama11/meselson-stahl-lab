@@ -273,7 +273,7 @@ export const LabView = {
       } else if (store.centrifugePhase === 'settling') {
         guideEl.textContent = '比重の合う高さへDNAが移動中...';
       } else if (!spun) {
-        guideEl.textContent = 'DNAが完成！赤いボタンを押して遠心分離機を回そう！';
+        guideEl.textContent = 'DNAが完成！ボタンを押して試験管へ投入・遠心分離しよう！';
       } else if (gen === 1) {
         guideEl.textContent = '第1世代の分離完了！「第2世代へ進む」を押そう！';
       } else if (completedCount < 3) {
@@ -310,12 +310,12 @@ export const LabView = {
         spinBtn.disabled = true;
         spinBtn.className = 'bg-slate-300 text-slate-500 cursor-not-allowed font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm flex items-center justify-center gap-2';
         spinIcon.className = 'w-3 h-3 rounded-full bg-sky-400 inline-block';
-        spinLabel.textContent = '試験管へ投入中...';
+        spinLabel.textContent = 'DNAを試験管へ投入中...';
       } else if (store.centrifugePhase === 'spinning') {
         spinBtn.disabled = false;
         spinBtn.className = 'bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 next-action-glow';
         spinIcon.className = 'w-3 h-3 rounded-sm bg-white inline-block';
-        spinLabel.textContent = '遠心分離機を止める（ストップ）';
+        spinLabel.textContent = '遠心分離を止める（ストップ）';
       } else if (store.centrifugePhase === 'settling') {
         spinBtn.disabled = true;
         spinBtn.className = 'bg-slate-300 text-slate-500 cursor-not-allowed font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm flex items-center justify-center gap-2';
@@ -325,12 +325,12 @@ export const LabView = {
         spinBtn.disabled = false;
         spinBtn.className = 'bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 next-action-glow';
         spinIcon.className = 'w-3 h-3 rounded-full bg-white inline-block';
-        spinLabel.textContent = '遠心分離機を回す（スタート）';
+        spinLabel.textContent = 'DNAを投入して遠心分離する';
       } else {
         spinBtn.disabled = true;
         spinBtn.className = 'bg-slate-300 text-slate-500 cursor-not-allowed font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm flex items-center justify-center gap-2';
         spinIcon.className = 'w-3 h-3 rounded-full bg-slate-400 inline-block';
-        spinLabel.textContent = spun ? '遠心分離 完了' : '遠心分離機を回す（スタート）';
+        spinLabel.textContent = spun ? '遠心分離 完了' : 'DNAを投入して遠心分離する';
       }
     }
 
@@ -438,8 +438,8 @@ export const LabView = {
         spinBtn.className = 'w-full bg-rose-500 hover:bg-rose-600 text-white font-black py-2.5 px-4 rounded-2xl text-xs sm:text-sm shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 next-action-glow';
       }
       if (spinIcon) spinIcon.className = 'w-3 h-3 rounded-full bg-white inline-block';
-      if (spinLabel) spinLabel.textContent = '遠心分離機を回す（スタート）';
-      if (statusEl) statusEl.textContent = 'ボタンを押して回してみよう！';
+      if (spinLabel) spinLabel.textContent = 'DNAを投入して遠心分離する';
+      if (statusEl) statusEl.textContent = 'ボタンを押してDNAを投入しよう！';
       if (startBtn) {
         startBtn.disabled = true;
         startBtn.classList.remove('next-action-glow');
@@ -449,7 +449,7 @@ export const LabView = {
         spinBtn.disabled = true;
         spinBtn.classList.remove('next-action-glow');
       }
-      if (spinLabel) spinLabel.textContent = '試験管へ投入中...';
+      if (spinLabel) spinLabel.textContent = 'DNAを試験管へ投入中...';
       if (statusEl) statusEl.textContent = 'DNAが試験管の中へ吸い込まれています...';
     } else if (phase === 'spinning') {
       if (spinBtn) {
@@ -457,7 +457,7 @@ export const LabView = {
         spinBtn.className = 'w-full bg-amber-500 hover:bg-amber-600 text-white font-black py-2.5 px-4 rounded-2xl text-xs sm:text-sm shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 next-action-glow';
       }
       if (spinIcon) spinIcon.className = 'w-3 h-3 rounded-sm bg-white inline-block';
-      if (spinLabel) spinLabel.textContent = '遠心分離機を止める（ストップ）';
+      if (spinLabel) spinLabel.textContent = '遠心分離を止める（ストップ）';
       if (statusEl) statusEl.textContent = '回転しながら比重の位置へ移動中！もう一度押して止めよう';
     } else if (phase === 'settling') {
       if (spinBtn) {
