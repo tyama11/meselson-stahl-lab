@@ -94,3 +94,61 @@ body {
   outline-offset: 2px;
   animation: tubeReceivePulse 0.55s ease-out;
 }
+
+/* ルール画面：周りの材料（赤・青）からDNAが作られるアニメーション */
+@keyframes gatherInward {
+  0% {
+    transform: translate3d(var(--sx), var(--sy), 0) scale(1);
+    opacity: 0;
+  }
+  15% {
+    transform: translate3d(var(--sx), var(--sy), 0) scale(1);
+    opacity: 0.95;
+  }
+  58% {
+    transform: translate3d(0px, 0px, 0) scale(0.55);
+    opacity: 0.9;
+  }
+  70% {
+    transform: translate3d(0px, 0px, 0) scale(0.2);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(var(--sx), var(--sy), 0) scale(1);
+    opacity: 0;
+  }
+}
+.nutrient-particle {
+  will-change: transform, opacity;
+  animation: gatherInward 3.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes synthStrandLoop {
+  0%, 15% {
+    transform: scaleY(0);
+    opacity: 0.2;
+  }
+  62%, 86% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  96%, 100% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+}
+.synth-strand-loop {
+  transform-origin: top center;
+  will-change: transform, opacity;
+  animation: synthStrandLoop 3.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+@keyframes synthRungsLoop {
+  0%, 42% { opacity: 0; }
+  62%, 86% { opacity: 1; }
+  96%, 100% { opacity: 0; }
+}
+.synth-rungs-loop {
+  will-change: opacity;
+  animation: synthRungsLoop 3.8s ease-in-out infinite;
+}

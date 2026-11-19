@@ -49,10 +49,12 @@ const AppController = {
   showModalStep(step) {
     const s1 = document.getElementById('modal-step-1');
     const s2 = document.getElementById('modal-step-2');
-    if (!s1 || !s2) return;
+    const s3 = document.getElementById('modal-step-3');
+    if (!s1 || !s2 || !s3) return;
     s1.classList.toggle('hidden', step !== 1);
     s2.classList.toggle('hidden', step !== 2);
-    if (step === 2) {
+    s3.classList.toggle('hidden', step !== 3);
+    if (step === 3) {
       if (store.gen0Phase === 'idle') {
         CentrifugeView.renderParticles('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0, false);
       } else if (store.gen0Phase === 'done') {
