@@ -1,0 +1,78 @@
+body {
+  font-family: 'M PLUS Rounded 1c', 'Inter', sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+@keyframes spinCentrifuge {
+  0% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(360deg) scale(1.04); }
+  60% { transform: rotate(720deg) scale(1.04); }
+  100% { transform: rotate(1080deg) scale(1); }
+}
+.animate-centrifuge {
+  animation: spinCentrifuge 1.3s cubic-bezier(0.35, 0, 0.25, 1) infinite;
+}
+
+@keyframes floatParticle {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(5px, -6px) rotate(22deg); }
+  66% { transform: translate(-5px, 5px) rotate(-22deg); }
+}
+.dna-particle-swirl {
+  animation: floatParticle 0.55s ease-in-out infinite;
+}
+
+.dna-strand-move {
+  transition:
+    top 1.15s cubic-bezier(0.22, 1, 0.36, 1),
+    left 1.15s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.15s ease;
+}
+
+@keyframes bandAppear {
+  0% { opacity: 0; transform: translateY(-50%) scaleX(0.6); }
+  100% { opacity: 1; transform: translateY(-50%) scaleX(1); }
+}
+.band-appear {
+  animation: bandAppear 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.85), 0 4px 12px rgba(2, 132, 199, 0.3);
+  }
+  50% {
+    transform: scale(1.03);
+    box-shadow: 0 0 0 6px rgba(250, 204, 21, 0), 0 6px 16px rgba(2, 132, 199, 0.45);
+  }
+}
+.next-action-glow {
+  animation: pulseGlow 1.4s ease-in-out infinite;
+  outline: 3px solid #facc15;
+  outline-offset: 2px;
+}
+
+@keyframes scissorSnip {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(-18deg) scale(1.15); }
+}
+.scissor-snip-anim {
+  animation: scissorSnip 0.45s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes growStrandFromTop {
+  0% { transform: scaleY(0); opacity: 0; }
+  100% { transform: scaleY(1); opacity: 1; }
+}
+.animate-grow-top {
+  transform-origin: top center;
+  animation: growStrandFromTop 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.gesture-zone {
+  touch-action: none;
+  user-select: none;
+}
