@@ -69,7 +69,7 @@ const AppController = {
       lbl0.className = 'text-[10px] font-extrabold text-rose-400 leading-tight';
     }
     LabView.syncGen0ModalUi();
-    LabView.setObservation('第0世代は一番下（密度大・15N 100%）に沈みました！次は第1世代を作ろう！');
+    LabView.setObservation('第0世代は一番下（比重大）に沈みました！次は第1世代を作ろう！');
   },
 
   toggleModalGen0() {
@@ -162,7 +162,7 @@ const AppController = {
     } else if (store.centrifugePhase === 'spinning') {
       store.centrifugePhase = 'settling';
       if (wrapper) wrapper.classList.remove('animate-centrifuge');
-      CentrifugeView.setStatusBadge('密度分離中...', 'bg-amber-100 text-amber-800');
+      CentrifugeView.setStatusBadge('バンド形成中...', 'bg-amber-100 text-amber-800');
       if (labelEl) {
         labelEl.textContent = '分離中...';
         labelEl.className = 'text-[10px] font-bold text-amber-400 leading-tight';

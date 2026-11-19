@@ -1,7 +1,7 @@
 import { store } from './store.js';
 
 // =========================================================================
-// インタラクティブジェスチャー制御 (ドラッグ分離 & ハサミ切り)
+// インタラクティブジェスチャー制御 (ドラッグ分離・ハサミ切り・なぞり合成)
 // =========================================================================
 export const GestureController = {
   activeSplitSlotId: null,
@@ -9,6 +9,9 @@ export const GestureController = {
   isOverTargetCard: false,
   activeCutSlotId: null,
   cutStartX: 0,
+  activeBuildSlotId: null,
+  activeBuildOp: null,
+  buildStartY: 0,
 
   isPointInCard(cardEl, x, y, margin = 12) {
     if (!cardEl) return false;
@@ -32,7 +35,7 @@ export const GestureController = {
       const targetDrop = document.querySelector(`[data-drop-target="${this.activeSplitSlotId + 1}"]`);
       if (targetDrop) {
         targetDrop.classList.remove('border-amber-400', 'bg-amber-50', 'text-amber-800');
-        targetDrop.textContent = 'ここに右の鎖をドロップ！';
+        targetDrop.textContent = 'ここに右の鎖をドラッグ！';
       }
     }
     this.activeSplitSlotId = null;
@@ -47,10 +50,34 @@ export const GestureController = {
     this.activeCutSlotId = null;
   },
 
+  updateBuildProgress(slotId, pct) {
+    const bar = document.querySelector(`[data-build-bar="${slotId}"]`);
+    if (bar) bar.style.width = `${pct}%`;
+
+    document.querySelectorAll(`[data-build-fill="${slotId}"]`).forEach((el) => {
+      el.style.height = `${pct}%`;
+    });
+
+    document.querySelectorAll(`[data-build-seg-fill="${slotId}"]`).forEach((el) => {
+      const idx = parseInt(el.getAttribute('data-seg-idx') || '0', 10);
+      const segPct = Math.max(0, Math.min(100, ((pct - idx * 25) / 25) * 100));
+      el.style.height = `${segPct}%`;
+    });
+  },
+
+  cleanupBuildSwipe() {
+    if (this.activeBuildSlotId !== null) {
+      this.updateBuildProgress(this.activeBuildSlotId, 0);
+    }
+    this.activeBuildSlotId = null;
+    this.activeBuildOp = null;
+  },
+
   attach(onSlotAction) {
     document.addEventListener('pointerdown', (e) => {
       if (store.isBusy()) return;
 
+      // 1. 半保存的複製：右鎖ドラッグ
       const splitZone = e.target.closest('[data-split-slot]');
       if (splitZone) {
         e.preventDefault();
@@ -77,11 +104,22 @@ export const GestureController = {
         return;
       }
 
+      // 2. 分散的複製：ハサミのスワイプ切り
       const cutZone = e.target.closest('[data-cut-slot]');
       if (cutZone) {
         e.preventDefault();
         this.activeCutSlotId = parseInt(cutZone.getAttribute('data-cut-slot'), 10);
         this.cutStartX = e.clientX;
+        return;
+      }
+
+      // 3. 全仮説共通：上から下へなぞって青い鎖を合成
+      const buildZone = e.target.closest('[data-build-slot]');
+      if (buildZone) {
+        e.preventDefault();
+        this.activeBuildSlotId = parseInt(buildZone.getAttribute('data-build-slot'), 10);
+        this.activeBuildOp = buildZone.getAttribute('data-build-op') || 'build';
+        this.buildStartY = e.clientY;
       }
     });
 
@@ -116,6 +154,22 @@ export const GestureController = {
           onSlotAction(targetId, 'cut');
         }
       }
+
+      if (this.activeBuildSlotId !== null) {
+        const zone = document.querySelector(`[data-build-slot="${this.activeBuildSlotId}"]`);
+        const requiredDist = zone ? Math.max(48, zone.getBoundingClientRect().height * 0.65) : 56;
+        const dy = Math.max(0, e.clientY - this.buildStartY);
+        const pct = Math.min(100, Math.round((dy / requiredDist) * 100));
+        this.updateBuildProgress(this.activeBuildSlotId, pct);
+
+        if (dy >= requiredDist) {
+          const targetId = this.activeBuildSlotId;
+          const targetOp = this.activeBuildOp;
+          this.activeBuildSlotId = null;
+          this.activeBuildOp = null;
+          onSlotAction(targetId, targetOp);
+        }
+      }
     });
 
     document.addEventListener('pointerup', (e) => {
@@ -129,11 +183,15 @@ export const GestureController = {
       if (this.activeCutSlotId !== null) {
         this.cleanupCutSwipe();
       }
+      if (this.activeBuildSlotId !== null) {
+        this.cleanupBuildSwipe();
+      }
     });
 
     document.addEventListener('pointercancel', () => {
       this.cleanupSplitDrag();
       this.cleanupCutSwipe();
+      this.cleanupBuildSwipe();
     });
   }
 };

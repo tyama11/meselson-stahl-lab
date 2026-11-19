@@ -20,7 +20,7 @@
           メセルソンとスタールの実験ラボ
         </h1>
         <p class="text-[11px] text-slate-500 font-bold hidden sm:block">
-          3つの仮説でDNA複製を再現し、密度勾配遠心法のバンドを比較しよう！
+          仮説を選んでDNAを複製させ、遠心分離機で比重のバンドを観察しよう！
         </p>
       </div>
     </div>
@@ -150,42 +150,35 @@
       </div>
 
       <!-- 下段：操作ボタン -->
-      <div class="flex flex-wrap items-center justify-between gap-2.5">
-        <div id="culture-note" class="text-[11px] font-bold text-slate-500 flex items-center gap-1.5">
-          <span class="inline-block w-2.5 h-2.5 rounded-full bg-sky-500"></span>
-          <span>培地：軽い窒素（<sup>14</sup>N）のみの環境で培養中</span>
-        </div>
+      <div class="flex flex-wrap items-center justify-end gap-2.5">
+        <button
+          id="spin-centrifuge-btn"
+          type="button"
+          data-action="toggle-centrifuge"
+          disabled
+          class="bg-rose-500 hover:bg-rose-600 disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+        >
+          <span id="spin-btn-icon" class="w-3 h-3 rounded-full bg-white inline-block"></span>
+          <span id="spin-btn-label">遠心分離機を回す（スタート）</span>
+        </button>
 
-        <div class="flex flex-wrap items-center justify-end gap-2.5 ml-auto">
-          <button
-            id="spin-centrifuge-btn"
-            type="button"
-            data-action="toggle-centrifuge"
-            disabled
-            class="bg-rose-500 hover:bg-rose-600 disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2"
-          >
-            <span id="spin-btn-icon" class="w-3 h-3 rounded-full bg-white inline-block"></span>
-            <span id="spin-btn-label">遠心分離機を回す（スタート）</span>
-          </button>
+        <button
+          id="next-gen-btn"
+          type="button"
+          data-action="go-gen-2"
+          class="hidden bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-sm px-5 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer"
+        >
+          第2世代へ進む ▶
+        </button>
 
-          <button
-            id="next-gen-btn"
-            type="button"
-            data-action="go-gen-2"
-            class="hidden bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-sm px-5 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer"
-          >
-            第2世代へ進む ▶
-          </button>
-
-          <button
-            id="compare-cta-btn"
-            type="button"
-            data-action="open-compare"
-            class="hidden bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm px-5 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer"
-          >
-            📊 実験結果を比較・考察する
-          </button>
-        </div>
+        <button
+          id="compare-cta-btn"
+          type="button"
+          data-action="open-compare"
+          class="hidden bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm px-5 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer"
+        >
+          📊 実験結果を比較・考察する
+        </button>
       </div>
     </section>
 
@@ -193,7 +186,7 @@
     <section class="lg:col-span-5 bg-white rounded-3xl border border-slate-200 shadow-sm p-3.5 sm:p-4 flex flex-col justify-between gap-3">
       <div class="flex items-center justify-between gap-2">
         <h2 class="font-extrabold text-sm sm:text-base text-slate-900 flex items-center gap-1.5">
-          <span aria-hidden="true">🧪</span> 遠心分離機の試験管（密度勾配）
+          <span aria-hidden="true">🧪</span> 遠心分離機の試験管（比重比べ）
         </h2>
         <span id="centrifuge-status" class="text-[11px] font-extrabold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">
           待機中
@@ -202,11 +195,11 @@
 
       <!-- 3本の試験管エリア -->
       <div class="flex-1 bg-slate-900 rounded-2xl p-3 sm:p-4 flex flex-col justify-between relative overflow-hidden gap-2">
-        <!-- 密度ガイドライン凡例 -->
+        <!-- 比重ガイドライン -->
         <div class="flex justify-between text-[10px] font-bold text-slate-400 px-1">
-          <span>↑ 密度が小（<sup>14</sup>N多）</span>
-          <span>中間（50%）</span>
-          <span>↓ 密度が大（<sup>15</sup>N多）</span>
+          <span>↑ 比重が小さい（上）</span>
+          <span>真ん中（中くらい）</span>
+          <span>↓ 比重が大きい（下）</span>
         </div>
 
         <div class="grid grid-cols-3 gap-2 sm:gap-3 my-auto pt-1 pb-1 items-end">
@@ -256,14 +249,9 @@
           </div>
         </div>
 
-        <!-- 実験観察メモ＆バンド量比表示 -->
-        <div class="space-y-1.5">
-          <div id="observation-box" class="bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 font-bold text-center" aria-live="polite">
-            まずは第0世代（重い赤いDNA）の動きを見てみよう！
-          </div>
-          <p class="text-[10px] text-slate-400 text-center">
-            ※ 実際の塩化セシウム密度勾配遠心法ではDNAを紫外線吸収で観察します。ここでは<sup>15</sup>N/<sup>14</sup>Nの組成と量比が直感的に分かるよう色と太さで表しています。
-          </p>
+        <!-- 実験観察メモ -->
+        <div id="observation-box" class="bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 font-bold text-center" aria-live="polite">
+          まずは第0世代（重い赤いDNA）の動きを見てみよう！
         </div>
       </div>
     </section>
@@ -436,9 +424,9 @@
             </div>
             <div class="flex items-center gap-3 my-auto">
               <div class="flex flex-col justify-between h-44 text-[10px] font-bold text-slate-400 text-right py-1">
-                <span>↑ 密度小</span>
-                <span>中間</span>
-                <span>↓ 密度大</span>
+                <span>↑ 比重小</span>
+                <span>中くらい</span>
+                <span>↓ 比重大</span>
               </div>
               <div id="modal-tube-wrapper" class="relative w-16 h-44 rounded-b-full border-2 border-slate-400/80 bg-slate-800/90 overflow-hidden shadow-inner">
                 <div class="absolute inset-x-0 bottom-0 top-4 bg-gradient-to-b from-sky-400/5 via-sky-400/10 to-sky-400/20"></div>
@@ -458,17 +446,17 @@
               <div class="font-black text-slate-900 text-sm">🎨 DNAの色のルール</div>
               <div class="flex items-center gap-2">
                 <span class="w-5 h-3 rounded-full bg-rose-500 inline-block shrink-0"></span>
-                <span><strong class="text-rose-600">赤い鎖</strong>：重い窒素（<sup>15</sup>N）の元のDNA</span>
+                <span><strong class="text-rose-600">赤い鎖</strong>：重い（<sup>15</sup>N）元のDNA</span>
               </div>
               <div class="flex items-center gap-2">
                 <span class="w-5 h-3 rounded-full bg-sky-500 inline-block shrink-0"></span>
-                <span><strong class="text-sky-600">青い鎖</strong>：軽い窒素（<sup>14</sup>N）で新合成</span>
+                <span><strong class="text-sky-600">青い鎖</strong>：軽い（<sup>14</sup>N）新しいDNA</span>
               </div>
             </div>
 
             <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3 text-xs text-slate-800 leading-relaxed">
               <div class="font-black text-amber-900 mb-1">👀 基準の位置を確かめよう！</div>
-              塩化セシウムの密度勾配の中で、DNAは自分と同じ密度の位置に止まります。<sup>15</sup>Nだけの第0世代は<strong>一番下（密度大）</strong>にバンドを作ります。
+              赤い2本の鎖のDNAは比重が大きいため、遠心分離機にかけて止めると試験管の<strong>一番下</strong>に沈みます。これが比較の基準になります。
             </div>
 
             <button
