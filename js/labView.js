@@ -208,7 +208,7 @@ export const LabView = {
       : this.renderSwipeBuildGuide(slot.id, '上から下へなぞって青の2本鎖を作る！');
 
     return `
-      <div class="compact-dna-card relative overflow-hidden bg-white/90 rounded-2xl border-2 ${slot.built ? 'border-emerald-300' : 'border-slate-200'} p-2.5 sm:p-3 flex flex-col items-center justify-between gap-2 shadow-sm">
+      <div class="compact-dna-card min-w-0 relative overflow-hidden bg-white/90 rounded-2xl border-2 ${slot.built ? 'border-emerald-300' : 'border-slate-200'} p-2.5 sm:p-3 flex flex-col items-center justify-between gap-2 shadow-sm">
         ${this.renderCardAmbientBlueSpecks()}
         <div class="relative z-10 w-full flex items-center justify-between gap-1">
           <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
@@ -252,7 +252,7 @@ export const LabView = {
       : this.renderStrandHtml(slot.right, { animateGrow: animRight, buildSlotId: canBuild && !slot.right ? slot.id : null });
 
     return `
-      <div data-card-slot="${slot.id}" class="compact-dna-card relative overflow-hidden bg-white/90 rounded-2xl border-2 ${isDone ? 'border-emerald-300' : 'border-slate-200'} p-2.5 sm:p-3 flex flex-col items-center justify-between gap-2 shadow-sm transition">
+      <div data-card-slot="${slot.id}" class="compact-dna-card min-w-0 relative overflow-hidden bg-white/90 rounded-2xl border-2 ${isDone ? 'border-emerald-300' : 'border-slate-200'} p-2.5 sm:p-3 flex flex-col items-center justify-between gap-2 shadow-sm transition">
         ${this.renderCardAmbientBlueSpecks()}
         <div class="relative z-10 w-full flex items-center justify-between gap-1">
           <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
@@ -303,7 +303,7 @@ export const LabView = {
       : '';
 
     return `
-      <div class="compact-dna-card relative overflow-hidden bg-white/90 rounded-2xl border-2 ${isDone ? 'border-emerald-300' : 'border-slate-200'} p-2.5 sm:p-3 flex flex-col items-center justify-between gap-2 shadow-sm">
+      <div class="compact-dna-card min-w-0 relative overflow-hidden bg-white/90 rounded-2xl border-2 ${isDone ? 'border-emerald-300' : 'border-slate-200'} p-2.5 sm:p-3 flex flex-col items-center justify-between gap-2 shadow-sm">
         ${this.renderCardAmbientBlueSpecks()}
         <div class="relative z-10 w-full flex items-center justify-between gap-1">
           <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
@@ -384,7 +384,7 @@ export const LabView = {
     if (container) {
       container.className = gen === 1
         ? 'relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-2.5'
-        : 'relative z-10 grid grid-cols-2 lg:grid-cols-4 gap-2.5';
+        : 'relative z-10 grid grid-cols-2 xl:grid-cols-4 gap-2';
       container.innerHTML = slots
         .map((slot) => {
           const glow = slot.id === nextSlotId ? 'next-action-glow' : '';
