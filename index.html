@@ -141,9 +141,29 @@
         </div>
       </div>
 
-      <!-- 中段：DNA組み立てスロット -->
-      <div class="flex-1 flex flex-col justify-center bg-slate-50/70 border-2 border-dashed border-slate-200 rounded-2xl p-3">
-        <div id="dna-slots-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+      <!-- 中段：DNA組み立てスロット（常時青い粒が漂う培地エリア） -->
+      <div class="relative flex-1 flex flex-col justify-center bg-sky-50/50 border-2 border-dashed border-sky-200 rounded-2xl p-3 overflow-hidden">
+        <!-- 培地全体に常に存在する青い粒々（複製前・移動前・完了後も残る） -->
+        <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+          <span class="medium-speck absolute w-1.5 h-1.5 rounded-full bg-sky-400/70" style="top:8%; left:6%; --dx:5px; --dy:-4px; --dur:4.2s;"></span>
+          <span class="medium-speck absolute w-1 h-1 rounded-full bg-sky-500/70" style="top:14%; left:22%; --dx:-4px; --dy:5px; --dur:5.1s;"></span>
+          <span class="medium-speck absolute w-1.5 h-1.5 rounded-full bg-sky-400/65" style="top:6%; left:44%; --dx:4px; --dy:4px; --dur:4.8s;"></span>
+          <span class="medium-speck absolute w-1 h-1 rounded-full bg-sky-500/70" style="top:12%; left:68%; --dx:-5px; --dy:-3px; --dur:4.4s;"></span>
+          <span class="medium-speck absolute w-1.5 h-1.5 rounded-full bg-sky-400/70" style="top:9%; left:88%; --dx:3px; --dy:5px; --dur:5.3s;"></span>
+          <span class="medium-speck absolute w-1 h-1 rounded-full bg-sky-500/65" style="top:34%; left:4%; --dx:6px; --dy:-3px; --dur:4.6s;"></span>
+          <span class="medium-speck absolute w-1.5 h-1.5 rounded-full bg-sky-400/70" style="top:42%; left:94%; --dx:-5px; --dy:4px; --dur:4.9s;"></span>
+          <span class="medium-speck absolute w-1 h-1 rounded-full bg-sky-500/70" style="top:58%; left:3%; --dx:4px; --dy:5px; --dur:5.2s;"></span>
+          <span class="medium-speck absolute w-1.5 h-1.5 rounded-full bg-sky-400/65" style="top:64%; left:95%; --dx:-4px; --dy:-5px; --dur:4.3s;"></span>
+          <span class="medium-speck absolute w-1 h-1 rounded-full bg-sky-500/70" style="top:86%; left:10%; --dx:5px; --dy:-4px; --dur:4.7s;"></span>
+          <span class="medium-speck absolute w-1.5 h-1.5 rounded-full bg-sky-400/70" style="top:91%; left:32%; --dx:-4px; --dy:-5px; --dur:5.0s;"></span>
+          <span class="medium-speck absolute w-1 h-1 rounded-full bg-sky-500/65" style="top:88%; left:54%; --dx:4px; --dy:4px; --dur:4.5s;"></span>
+          <span class="medium-speck absolute w-1.5 h-1.5 rounded-full bg-sky-400/70" style="top:92%; left:76%; --dx:-5px; --dy:3px; --dur:5.4s;"></span>
+          <span class="medium-speck absolute w-1 h-1 rounded-full bg-sky-500/70" style="top:85%; left:91%; --dx:3px; --dy:-5px; --dur:4.1s;"></span>
+          <span class="medium-speck absolute w-1 h-1 rounded-full bg-sky-400/60" style="top:26%; left:50%; --dx:-3px; --dy:4px; --dur:4.8s;"></span>
+          <span class="medium-speck absolute w-1 h-1 rounded-full bg-sky-400/60" style="top:72%; left:49%; --dx:4px; --dy:-3px; --dur:5.1s;"></span>
+        </div>
+
+        <div id="dna-slots-container" class="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <!-- JSで動的にDNAカードを描画 -->
         </div>
       </div>
@@ -412,6 +432,14 @@
 
             <!-- アニメーションステージ（赤） -->
             <div class="relative w-full h-36 bg-white/85 rounded-2xl border border-rose-200 flex items-center justify-center overflow-hidden">
+              <!-- 常時漂う赤い背景粒（完成後も培地に残る） -->
+              <span class="medium-speck absolute w-1 h-1 rounded-full bg-rose-400/65" style="top:14%; left:10%; --dx:4px; --dy:-3px; --dur:4.2s;"></span>
+              <span class="medium-speck absolute w-1.5 h-1.5 rounded-full bg-rose-300/80" style="top:24%; left:86%; --dx:-4px; --dy:4px; --dur:4.9s;"></span>
+              <span class="medium-speck absolute w-1 h-1 rounded-full bg-rose-400/65" style="top:74%; left:14%; --dx:3px; --dy:4px; --dur:4.6s;"></span>
+              <span class="medium-speck absolute w-1.5 h-1.5 rounded-full bg-rose-300/80" style="top:80%; left:82%; --dx:-3px; --dy:-4px; --dur:5.1s;"></span>
+              <span class="medium-speck absolute w-1 h-1 rounded-full bg-rose-400/60" style="top:48%; left:8%; --dx:4px; --dy:3px; --dur:4.4s;"></span>
+              <span class="medium-speck absolute w-1 h-1 rounded-full bg-rose-400/60" style="top:52%; left:90%; --dx:-4px; --dy:-3px; --dur:4.8s;"></span>
+
               <!-- 周りのとても小さい赤い粒々（広範囲から中央へ飛んでくる） -->
               <span class="nutrient-particle absolute w-1.5 h-1.5 rounded-full bg-rose-400" style="--sx:-112px; --sy:-52px; animation-delay:0s;"></span>
               <span class="nutrient-particle absolute w-1 h-1 rounded-full bg-rose-500" style="--sx:-88px; --sy:-58px; animation-delay:0.1s;"></span>
@@ -466,6 +494,14 @@
 
             <!-- アニメーションステージ（青） -->
             <div class="relative w-full h-36 bg-white/85 rounded-2xl border border-sky-200 flex items-center justify-center overflow-hidden">
+              <!-- 常時漂う青い背景粒（複製前〜完了後も培地に残る） -->
+              <span class="medium-speck absolute w-1 h-1 rounded-full bg-sky-400/70" style="top:14%; left:10%; --dx:4px; --dy:-3px; --dur:4.2s;"></span>
+              <span class="medium-speck absolute w-1.5 h-1.5 rounded-full bg-sky-300/85" style="top:24%; left:86%; --dx:-4px; --dy:4px; --dur:4.9s;"></span>
+              <span class="medium-speck absolute w-1 h-1 rounded-full bg-sky-400/70" style="top:74%; left:14%; --dx:3px; --dy:4px; --dur:4.6s;"></span>
+              <span class="medium-speck absolute w-1.5 h-1.5 rounded-full bg-sky-300/85" style="top:80%; left:82%; --dx:-3px; --dy:-4px; --dur:5.1s;"></span>
+              <span class="medium-speck absolute w-1 h-1 rounded-full bg-sky-400/65" style="top:48%; left:8%; --dx:4px; --dy:3px; --dur:4.4s;"></span>
+              <span class="medium-speck absolute w-1 h-1 rounded-full bg-sky-400/65" style="top:52%; left:90%; --dx:-4px; --dy:-3px; --dur:4.8s;"></span>
+
               <!-- 周りのとても小さい青い粒々（広範囲から中央へ飛んでくる） -->
               <span class="nutrient-particle absolute w-1.5 h-1.5 rounded-full bg-sky-400" style="--sx:-114px; --sy:-52px; animation-delay:0s;"></span>
               <span class="nutrient-particle absolute w-1 h-1 rounded-full bg-sky-500" style="--sx:-86px; --sy:-58px; animation-delay:0.1s;"></span>

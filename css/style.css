@@ -177,3 +177,13 @@ body {
   will-change: transform, opacity;
   transform: translate3d(var(--sx), var(--sy), 0);
 }
+
+/* 培地全体に常に漂う極小の材料粒（複製前〜完了後まで常時表示） */
+@keyframes ambientDrift {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(var(--dx, 4px), var(--dy, -4px), 0); }
+}
+.medium-speck {
+  will-change: transform;
+  animation: ambientDrift var(--dur, 4.5s) ease-in-out infinite;
+}

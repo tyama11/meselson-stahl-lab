@@ -112,6 +112,27 @@ export const LabView = {
     `;
   },
 
+  renderCardAmbientBlueSpecks() {
+    const specks = [
+      { top: '16%', left: '10%', sz: 'w-1 h-1', dx: '3px', dy: '-3px', dur: '4.2s' },
+      { top: '26%', left: '84%', sz: 'w-1.5 h-1.5', dx: '-3px', dy: '3px', dur: '4.9s' },
+      { top: '52%', left: '8%', sz: 'w-1 h-1', dx: '4px', dy: '2px', dur: '4.5s' },
+      { top: '48%', left: '88%', sz: 'w-1 h-1', dx: '-4px', dy: '-2px', dur: '5.1s' },
+      { top: '76%', left: '14%', sz: 'w-1.5 h-1.5', dx: '3px', dy: '3px', dur: '4.7s' },
+      { top: '78%', left: '82%', sz: 'w-1 h-1', dx: '-3px', dy: '-3px', dur: '4.3s' }
+    ];
+    return `
+      <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        ${specks
+          .map(
+            (s) =>
+              `<span class="medium-speck absolute ${s.sz} rounded-full bg-sky-400/60" style="top:${s.top}; left:${s.left}; --dx:${s.dx}; --dy:${s.dy}; --dur:${s.dur};"></span>`
+          )
+          .join('')}
+      </div>
+    `;
+  },
+
   renderBlueAbsorbParticles(slotId, mode) {
     const coords = [
       { sx: -68, sy: -48, d: 0, sz: 'w-1.5 h-1.5' },
@@ -157,19 +178,20 @@ export const LabView = {
       : this.renderSwipeBuildGuide(slot.id, '上から下へなぞって青の2本鎖を作る！');
 
     return `
-      <div class="bg-white rounded-2xl border-2 ${slot.built ? 'border-emerald-300' : 'border-slate-200'} p-3 flex flex-col items-center justify-between gap-2 shadow-sm">
-        <div class="w-full flex items-center justify-between gap-1">
+      <div class="relative overflow-hidden bg-white/90 rounded-2xl border-2 ${slot.built ? 'border-emerald-300' : 'border-slate-200'} p-3 flex flex-col items-center justify-between gap-2 shadow-sm">
+        ${this.renderCardAmbientBlueSpecks()}
+        <div class="relative z-10 w-full flex items-center justify-between gap-1">
           <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
           ${this.renderStatusBadge(slot, 'conservative')}
         </div>
-        <div data-dna-visual="${slot.id}" class="relative flex items-center justify-center gap-3 my-1 px-2">
+        <div data-dna-visual="${slot.id}" class="relative z-10 flex items-center justify-center gap-3 my-1 px-2">
           ${this.renderBlueAbsorbParticles(slot.id, absorbMode)}
           ${this.renderStrandHtml(slot.left, { animateGrow: animGrow, delaySec: 0, buildSlotId: canBuild ? slot.id : null })}
           ${this.renderRungsHtml(slot.built)}
           ${this.renderStrandHtml(slot.right, { animateGrow: animGrow, delaySec: 0.4, buildSlotId: canBuild ? slot.id : null })}
           ${canBuild ? this.renderBuildOverlay(slot.id, 'build', glowClass) : ''}
         </div>
-        <div class="w-full">${actionHtml}</div>
+        <div class="relative z-10 w-full">${actionHtml}</div>
       </div>
     `;
   },
@@ -200,19 +222,20 @@ export const LabView = {
       : this.renderStrandHtml(slot.right, { animateGrow: animRight, buildSlotId: canBuild && !slot.right ? slot.id : null });
 
     return `
-      <div data-card-slot="${slot.id}" class="bg-white rounded-2xl border-2 ${isDone ? 'border-emerald-300' : 'border-slate-200'} p-3 flex flex-col items-center justify-between gap-2 shadow-sm transition">
-        <div class="w-full flex items-center justify-between gap-1">
+      <div data-card-slot="${slot.id}" class="relative overflow-hidden bg-white/90 rounded-2xl border-2 ${isDone ? 'border-emerald-300' : 'border-slate-200'} p-3 flex flex-col items-center justify-between gap-2 shadow-sm transition">
+        ${this.renderCardAmbientBlueSpecks()}
+        <div class="relative z-10 w-full flex items-center justify-between gap-1">
           <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
           ${this.renderStatusBadge(slot, 'semiconservative')}
         </div>
-        <div data-dna-visual="${slot.id}" class="relative flex items-center justify-center gap-3 my-1 px-2">
+        <div data-dna-visual="${slot.id}" class="relative z-10 flex items-center justify-center gap-3 my-1 px-2">
           ${this.renderBlueAbsorbParticles(slot.id, absorbMode)}
           ${this.renderStrandHtml(slot.left, { animateGrow: animLeft, buildSlotId: canBuild && !slot.left ? slot.id : null })}
           ${this.renderRungsHtml(isDone || (slot.exists && !slot.split))}
           ${rightStrandInteractive}
           ${canBuild ? this.renderBuildOverlay(slot.id, 'build', glowClass) : ''}
         </div>
-        <div class="w-full">${actionHtml}</div>
+        <div class="relative z-10 w-full">${actionHtml}</div>
       </div>
     `;
   },
@@ -250,12 +273,13 @@ export const LabView = {
       : '';
 
     return `
-      <div class="bg-white rounded-2xl border-2 ${isDone ? 'border-emerald-300' : 'border-slate-200'} p-3 flex flex-col items-center justify-between gap-2 shadow-sm">
-        <div class="w-full flex items-center justify-between gap-1">
+      <div class="relative overflow-hidden bg-white/90 rounded-2xl border-2 ${isDone ? 'border-emerald-300' : 'border-slate-200'} p-3 flex flex-col items-center justify-between gap-2 shadow-sm">
+        ${this.renderCardAmbientBlueSpecks()}
+        <div class="relative z-10 w-full flex items-center justify-between gap-1">
           <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
           ${this.renderStatusBadge(slot, 'dispersive')}
         </div>
-        <div data-dna-visual="${slot.id}" class="relative flex items-center justify-center gap-3 my-1 px-2">
+        <div data-dna-visual="${slot.id}" class="relative z-10 flex items-center justify-center gap-3 my-1 px-2">
           ${this.renderBlueAbsorbParticles(slot.id, absorbMode)}
           ${this.renderSegmentedStrandHtml(slot.leftSegs, slot.cut, slot.newLeftMask, Boolean(slot.justBuilt), canBuild ? slot.id : null)}
           ${this.renderRungsHtml(isDone)}
@@ -263,7 +287,7 @@ export const LabView = {
           ${cutOverlay}
           ${canBuild ? this.renderBuildOverlay(slot.id, 'mix', glowClass) : ''}
         </div>
-        <div class="w-full">${actionHtml}</div>
+        <div class="relative z-10 w-full">${actionHtml}</div>
       </div>
     `;
   },
@@ -329,8 +353,8 @@ export const LabView = {
     const container = document.getElementById('dna-slots-container');
     if (container) {
       container.className = gen === 1
-        ? 'grid grid-cols-1 sm:grid-cols-2 gap-2.5'
-        : 'grid grid-cols-2 lg:grid-cols-4 gap-2.5';
+        ? 'relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-2.5'
+        : 'relative z-10 grid grid-cols-2 lg:grid-cols-4 gap-2.5';
       container.innerHTML = slots
         .map((slot) => {
           const glow = slot.id === nextSlotId ? 'next-action-glow' : '';
