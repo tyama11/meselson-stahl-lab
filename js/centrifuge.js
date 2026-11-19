@@ -120,6 +120,7 @@ export const CentrifugeView = {
 
   clearFlyingDna() {
     document.querySelectorAll('.dna-fly-clone').forEach((el) => el.remove());
+    document.querySelectorAll('.tube-receive-pulse').forEach((el) => el.classList.remove('tube-receive-pulse'));
   },
 
   flyDnaIntoTube(sourceElements, targetTubeId) {
