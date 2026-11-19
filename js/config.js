@@ -3,7 +3,7 @@
 // =========================================================================
 
 export const CONFIG = {
-  POST_LOAD_PAUSE_MS: 480,
+  POST_LOAD_PAUSE_MS: 1100,
   SETTLE_DURATION_MS: 1200,
   TUBE_TOP_LIGHT_PCT: 24, // 15N = 0% (完全な14N DNA)
   TUBE_SPAN_PCT: 56       // 15N = 100% -> 24 + 56 = 80% (完全な15N DNA)

@@ -88,6 +88,8 @@ const AppController = {
         CentrifugeView.clearFlyingDna();
         CentrifugeView.renderParticles('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0, false);
         CentrifugeView.renderParticles('tube-content-0', ACTUAL_MESELSON_STAHL.gen0, false);
+        const statusEl = document.getElementById('modal-tube-status');
+        if (statusEl) statusEl.textContent = '試験管に入りました！まもなく回転します...';
 
         store.setTimer('gen0-load', () => {
           store.gen0Phase = 'spinning';
@@ -188,6 +190,11 @@ const AppController = {
       store.setTimer('centrifuge-load', () => {
         CentrifugeView.clearFlyingDna();
         CentrifugeView.renderParticles(`tube-content-${gen}`, molecules, false);
+        CentrifugeView.setStatusBadge('投入完了・回転準備中...', 'bg-sky-100 text-sky-700');
+        if (labelEl) {
+          labelEl.textContent = '投入完了！';
+          labelEl.className = 'text-[10px] font-bold text-sky-300 leading-tight';
+        }
 
         store.setTimer('centrifuge-load', () => {
           store.centrifugePhase = 'spinning';
