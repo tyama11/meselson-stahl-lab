@@ -195,56 +195,58 @@
 
       <!-- 3本の試験管エリア -->
       <div class="flex-1 bg-slate-900 rounded-2xl p-3 sm:p-4 flex flex-col justify-between relative overflow-hidden gap-2">
-        <!-- 比重ガイドライン -->
-        <div class="flex justify-between text-[10px] font-bold text-slate-400 px-1">
-          <span>↑ 比重が小さい（上）</span>
-          <span>真ん中（中くらい）</span>
-          <span>↓ 比重が大きい（下）</span>
-        </div>
-
-        <div class="grid grid-cols-3 gap-2 sm:gap-3 my-auto pt-1 pb-1 items-end">
-          <!-- 第0世代 試験管 -->
-          <div class="flex flex-col items-center">
-            <div id="tube-wrapper-0" class="relative w-16 sm:w-20 h-52 sm:h-60 rounded-b-full border-2 border-slate-400/70 bg-slate-800/80 overflow-hidden shadow-inner">
-              <div class="absolute inset-x-0 bottom-0 top-5 bg-gradient-to-b from-sky-400/5 via-sky-400/10 to-sky-400/20"></div>
-              <div class="absolute inset-x-0 top-[24%] -translate-y-1/2 border-t border-dashed border-sky-400/35"></div>
-              <div class="absolute inset-x-0 top-[52%] -translate-y-1/2 border-t border-dashed border-slate-400/35"></div>
-              <div class="absolute inset-x-0 top-[80%] -translate-y-1/2 border-t border-dashed border-rose-400/35"></div>
-              <div id="tube-content-0" class="absolute inset-0"></div>
-            </div>
-            <div class="mt-2 text-center min-h-[36px]">
-              <div class="text-xs font-extrabold text-white">第0世代</div>
-              <div id="tube-label-0" class="text-[10px] font-bold text-rose-400 leading-tight">準備中</div>
-            </div>
+        <div class="flex items-start gap-2 sm:gap-3 my-auto pt-2 pb-1">
+          <!-- 左側：比重ガイドライン（試験管の目盛り高さと一致） -->
+          <div class="relative w-12 sm:w-14 h-52 sm:h-60 shrink-0 text-[10px] font-bold text-slate-400 text-right pr-1">
+            <span class="absolute right-1 top-[24%] -translate-y-1/2 leading-tight text-sky-300">↑ 比重小</span>
+            <span class="absolute right-1 top-[52%] -translate-y-1/2 leading-tight">中くらい</span>
+            <span class="absolute right-1 top-[80%] -translate-y-1/2 leading-tight text-rose-300">↓ 比重大</span>
           </div>
 
-          <!-- 第1世代 試験管 -->
-          <div class="flex flex-col items-center">
-            <div id="tube-wrapper-1" class="relative w-16 sm:w-20 h-52 sm:h-60 rounded-b-full border-2 border-slate-400/70 bg-slate-800/80 overflow-hidden shadow-inner">
-              <div class="absolute inset-x-0 bottom-0 top-5 bg-gradient-to-b from-sky-400/5 via-sky-400/10 to-sky-400/20"></div>
-              <div class="absolute inset-x-0 top-[24%] -translate-y-1/2 border-t border-dashed border-sky-400/35"></div>
-              <div class="absolute inset-x-0 top-[52%] -translate-y-1/2 border-t border-dashed border-slate-400/35"></div>
-              <div class="absolute inset-x-0 top-[80%] -translate-y-1/2 border-t border-dashed border-rose-400/35"></div>
-              <div id="tube-content-1" class="absolute inset-0"></div>
+          <div class="flex-1 grid grid-cols-3 gap-2 sm:gap-3 items-end">
+            <!-- 第0世代 試験管 -->
+            <div class="flex flex-col items-center">
+              <div id="tube-wrapper-0" class="relative w-14 sm:w-16 md:w-20 h-52 sm:h-60 rounded-b-full border-2 border-slate-400/70 bg-slate-800/80 overflow-hidden shadow-inner">
+                <div class="absolute inset-x-0 bottom-0 top-5 bg-gradient-to-b from-sky-400/5 via-sky-400/10 to-sky-400/20"></div>
+                <div class="absolute inset-x-0 top-[24%] -translate-y-1/2 border-t border-dashed border-sky-400/35"></div>
+                <div class="absolute inset-x-0 top-[52%] -translate-y-1/2 border-t border-dashed border-slate-400/35"></div>
+                <div class="absolute inset-x-0 top-[80%] -translate-y-1/2 border-t border-dashed border-rose-400/35"></div>
+                <div id="tube-content-0" class="absolute inset-0"></div>
+              </div>
+              <div class="mt-2 text-center min-h-[36px]">
+                <div class="text-xs font-extrabold text-white">第0世代</div>
+                <div id="tube-label-0" class="text-[10px] font-bold text-rose-400 leading-tight">準備中</div>
+              </div>
             </div>
-            <div class="mt-2 text-center min-h-[36px]">
-              <div class="text-xs font-extrabold text-white">第1世代</div>
-              <div id="tube-label-1" class="text-[10px] font-bold text-slate-400 leading-tight">未実験</div>
-            </div>
-          </div>
 
-          <!-- 第2世代 試験管 -->
-          <div class="flex flex-col items-center">
-            <div id="tube-wrapper-2" class="relative w-16 sm:w-20 h-52 sm:h-60 rounded-b-full border-2 border-slate-400/70 bg-slate-800/80 overflow-hidden shadow-inner">
-              <div class="absolute inset-x-0 bottom-0 top-5 bg-gradient-to-b from-sky-400/5 via-sky-400/10 to-sky-400/20"></div>
-              <div class="absolute inset-x-0 top-[24%] -translate-y-1/2 border-t border-dashed border-sky-400/35"></div>
-              <div class="absolute inset-x-0 top-[52%] -translate-y-1/2 border-t border-dashed border-slate-400/35"></div>
-              <div class="absolute inset-x-0 top-[80%] -translate-y-1/2 border-t border-dashed border-rose-400/35"></div>
-              <div id="tube-content-2" class="absolute inset-0"></div>
+            <!-- 第1世代 試験管 -->
+            <div class="flex flex-col items-center">
+              <div id="tube-wrapper-1" class="relative w-14 sm:w-16 md:w-20 h-52 sm:h-60 rounded-b-full border-2 border-slate-400/70 bg-slate-800/80 overflow-hidden shadow-inner">
+                <div class="absolute inset-x-0 bottom-0 top-5 bg-gradient-to-b from-sky-400/5 via-sky-400/10 to-sky-400/20"></div>
+                <div class="absolute inset-x-0 top-[24%] -translate-y-1/2 border-t border-dashed border-sky-400/35"></div>
+                <div class="absolute inset-x-0 top-[52%] -translate-y-1/2 border-t border-dashed border-slate-400/35"></div>
+                <div class="absolute inset-x-0 top-[80%] -translate-y-1/2 border-t border-dashed border-rose-400/35"></div>
+                <div id="tube-content-1" class="absolute inset-0"></div>
+              </div>
+              <div class="mt-2 text-center min-h-[36px]">
+                <div class="text-xs font-extrabold text-white">第1世代</div>
+                <div id="tube-label-1" class="text-[10px] font-bold text-slate-400 leading-tight">未実験</div>
+              </div>
             </div>
-            <div class="mt-2 text-center min-h-[36px]">
-              <div class="text-xs font-extrabold text-white">第2世代</div>
-              <div id="tube-label-2" class="text-[10px] font-bold text-slate-400 leading-tight">未実験</div>
+
+            <!-- 第2世代 試験管 -->
+            <div class="flex flex-col items-center">
+              <div id="tube-wrapper-2" class="relative w-14 sm:w-16 md:w-20 h-52 sm:h-60 rounded-b-full border-2 border-slate-400/70 bg-slate-800/80 overflow-hidden shadow-inner">
+                <div class="absolute inset-x-0 bottom-0 top-5 bg-gradient-to-b from-sky-400/5 via-sky-400/10 to-sky-400/20"></div>
+                <div class="absolute inset-x-0 top-[24%] -translate-y-1/2 border-t border-dashed border-sky-400/35"></div>
+                <div class="absolute inset-x-0 top-[52%] -translate-y-1/2 border-t border-dashed border-slate-400/35"></div>
+                <div class="absolute inset-x-0 top-[80%] -translate-y-1/2 border-t border-dashed border-rose-400/35"></div>
+                <div id="tube-content-2" class="absolute inset-0"></div>
+              </div>
+              <div class="mt-2 text-center min-h-[36px]">
+                <div class="text-xs font-extrabold text-white">第2世代</div>
+                <div id="tube-label-2" class="text-[10px] font-bold text-slate-400 leading-tight">未実験</div>
+              </div>
             </div>
           </div>
         </div>
