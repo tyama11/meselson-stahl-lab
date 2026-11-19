@@ -86,16 +86,21 @@ const AppController = {
       const delayMs = CentrifugeView.flyDnaIntoTube(srcEl ? [srcEl] : [], 'modal-tube-wrapper');
       store.setTimer('gen0-load', () => {
         CentrifugeView.clearFlyingDna();
-        store.gen0Phase = 'spinning';
-        CentrifugeView.renderParticles('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0, true);
-        CentrifugeView.renderParticles('tube-content-0', ACTUAL_MESELSON_STAHL.gen0, true);
-        LabView.syncGen0ModalUi();
-        requestAnimationFrame(() => {
+        CentrifugeView.renderParticles('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0, false);
+        CentrifugeView.renderParticles('tube-content-0', ACTUAL_MESELSON_STAHL.gen0, false);
+
+        store.setTimer('gen0-load', () => {
+          store.gen0Phase = 'spinning';
+          CentrifugeView.renderParticles('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0, true);
+          CentrifugeView.renderParticles('tube-content-0', ACTUAL_MESELSON_STAHL.gen0, true);
+          LabView.syncGen0ModalUi();
           requestAnimationFrame(() => {
-            CentrifugeView.migrateParticlesToDensity('modal-tube-content');
-            CentrifugeView.migrateParticlesToDensity('tube-content-0');
+            requestAnimationFrame(() => {
+              CentrifugeView.migrateParticlesToDensity('modal-tube-content');
+              CentrifugeView.migrateParticlesToDensity('tube-content-0');
+            });
           });
-        });
+        }, CONFIG.POST_LOAD_PAUSE_MS);
       }, delayMs);
     } else if (store.gen0Phase === 'spinning') {
       store.gen0Phase = 'settling';
@@ -182,20 +187,24 @@ const AppController = {
 
       store.setTimer('centrifuge-load', () => {
         CentrifugeView.clearFlyingDna();
-        store.centrifugePhase = 'spinning';
-        CentrifugeView.setStatusBadge('回転・分離中...', 'bg-rose-100 text-rose-700');
-        if (labelEl) {
-          labelEl.textContent = '移動中...';
-          labelEl.className = 'text-[10px] font-bold text-rose-400 leading-tight';
-        }
-        CentrifugeView.renderParticles(`tube-content-${gen}`, molecules, true);
-        if (wrapper) wrapper.classList.add('animate-centrifuge');
-        requestAnimationFrame(() => {
+        CentrifugeView.renderParticles(`tube-content-${gen}`, molecules, false);
+
+        store.setTimer('centrifuge-load', () => {
+          store.centrifugePhase = 'spinning';
+          CentrifugeView.setStatusBadge('回転・分離中...', 'bg-rose-100 text-rose-700');
+          if (labelEl) {
+            labelEl.textContent = '移動中...';
+            labelEl.className = 'text-[10px] font-bold text-rose-400 leading-tight';
+          }
+          CentrifugeView.renderParticles(`tube-content-${gen}`, molecules, true);
+          if (wrapper) wrapper.classList.add('animate-centrifuge');
           requestAnimationFrame(() => {
-            CentrifugeView.migrateParticlesToDensity(`tube-content-${gen}`);
+            requestAnimationFrame(() => {
+              CentrifugeView.migrateParticlesToDensity(`tube-content-${gen}`);
+            });
           });
-        });
-        LabView.renderLab();
+          LabView.renderLab();
+        }, CONFIG.POST_LOAD_PAUSE_MS);
       }, delayMs);
     } else if (store.centrifugePhase === 'spinning') {
       store.centrifugePhase = 'settling';
