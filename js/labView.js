@@ -133,7 +133,37 @@ export const LabView = {
     `;
   },
 
-  renderBlueAbsorbParticles(slotId, mode) {
+  getBlueAbsorbTargets(slot, hypo) {
+    // 左鎖の中心 x ≈ -22px、右鎖の中心 x ≈ +22px、縦方向は -36px〜+36px
+    const rowYs = [-36, -12, 12, 36];
+    if (hypo === 'conservative') {
+      return [
+        { tx: -22, ty: -36 }, { tx: 22, ty: -36 },
+        { tx: -22, ty: -12 }, { tx: 22, ty: -12 },
+        { tx: -22, ty: 12 }, { tx: 22, ty: 12 },
+        { tx: -22, ty: 36 }, { tx: 22, ty: 36 }
+      ];
+    }
+    if (hypo === 'semiconservative') {
+      const side = slot.built ? slot.newSide : !slot.left ? 'left' : 'right';
+      const tx = side === 'left' ? -22 : 22;
+      return rowYs.map((ty) => ({ tx, ty }));
+    }
+    // dispersive: 空き断片（または直前に埋めた新断片）の正確な位置へ吸収
+    const targets = [];
+    const useMask = Boolean(slot.mixed);
+    for (let i = 0; i < 4; i++) {
+      const leftTarget = useMask ? slot.newLeftMask?.[i] : slot.leftSegs?.[i] === null;
+      const rightTarget = useMask ? slot.newRightMask?.[i] : slot.rightSegs?.[i] === null;
+      if (leftTarget) targets.push({ tx: -22, ty: rowYs[i] });
+      if (rightTarget) targets.push({ tx: 22, ty: rowYs[i] });
+    }
+    return targets.length > 0 ? targets : [{ tx: -22, ty: 0 }, { tx: 22, ty: 0 }];
+  },
+
+  renderBlueAbsorbParticles(slot, hypo, mode) {
+    if (!mode) return '';
+    const targets = this.getBlueAbsorbTargets(slot, hypo);
     const coords = [
       { sx: -68, sy: -48, d: 0, sz: 'w-1.5 h-1.5' },
       { sx: -44, sy: -54, d: 0.04, sz: 'w-1 h-1' },
@@ -152,18 +182,18 @@ export const LabView = {
     ];
     if (mode === 'ready') {
       return coords
-        .map(
-          (p) =>
-            `<span data-build-dot="${slotId}" data-sx="${p.sx}" data-sy="${p.sy}" class="blue-ambient-dot pointer-events-none absolute ${p.sz} rounded-full bg-sky-400/90" style="--sx:${p.sx}px; --sy:${p.sy}px;"></span>`
-        )
+        .map((p, idx) => {
+          const tgt = targets[idx % targets.length];
+          return `<span data-build-dot="${slot.id}" data-sx="${p.sx}" data-sy="${p.sy}" data-tx="${tgt.tx}" data-ty="${tgt.ty}" class="blue-ambient-dot pointer-events-none absolute ${p.sz} rounded-full bg-sky-400/90" style="--sx:${p.sx}px; --sy:${p.sy}px;"></span>`;
+        })
         .join('');
     }
     if (mode === 'justBuilt') {
       return coords
-        .map(
-          (p) =>
-            `<span class="blue-absorb-once pointer-events-none absolute ${p.sz} rounded-full bg-sky-500" style="--sx:${p.sx}px; --sy:${p.sy}px; animation-delay:${p.d}s;"></span>`
-        )
+        .map((p, idx) => {
+          const tgt = targets[idx % targets.length];
+          return `<span class="blue-absorb-once pointer-events-none absolute ${p.sz} rounded-full bg-sky-500" style="--sx:${p.sx}px; --sy:${p.sy}px; --tx:${tgt.tx}px; --ty:${tgt.ty}px; animation-delay:${p.d}s;"></span>`;
+        })
         .join('');
     }
     return '';
@@ -185,7 +215,7 @@ export const LabView = {
           ${this.renderStatusBadge(slot, 'conservative')}
         </div>
         <div data-dna-visual="${slot.id}" class="relative z-10 flex items-center justify-center gap-3 my-1 px-2">
-          ${this.renderBlueAbsorbParticles(slot.id, absorbMode)}
+          ${this.renderBlueAbsorbParticles(slot, 'conservative', absorbMode)}
           ${this.renderStrandHtml(slot.left, { animateGrow: animGrow, delaySec: 0, buildSlotId: canBuild ? slot.id : null })}
           ${this.renderRungsHtml(slot.built)}
           ${this.renderStrandHtml(slot.right, { animateGrow: animGrow, delaySec: 0.4, buildSlotId: canBuild ? slot.id : null })}
@@ -229,7 +259,7 @@ export const LabView = {
           ${this.renderStatusBadge(slot, 'semiconservative')}
         </div>
         <div data-dna-visual="${slot.id}" class="relative z-10 flex items-center justify-center gap-3 my-1 px-2">
-          ${this.renderBlueAbsorbParticles(slot.id, absorbMode)}
+          ${this.renderBlueAbsorbParticles(slot, 'semiconservative', absorbMode)}
           ${this.renderStrandHtml(slot.left, { animateGrow: animLeft, buildSlotId: canBuild && !slot.left ? slot.id : null })}
           ${this.renderRungsHtml(isDone || (slot.exists && !slot.split))}
           ${rightStrandInteractive}
@@ -280,7 +310,7 @@ export const LabView = {
           ${this.renderStatusBadge(slot, 'dispersive')}
         </div>
         <div data-dna-visual="${slot.id}" class="relative z-10 flex items-center justify-center gap-3 my-1 px-2">
-          ${this.renderBlueAbsorbParticles(slot.id, absorbMode)}
+          ${this.renderBlueAbsorbParticles(slot, 'dispersive', absorbMode)}
           ${this.renderSegmentedStrandHtml(slot.leftSegs, slot.cut, slot.newLeftMask, Boolean(slot.justBuilt), canBuild ? slot.id : null)}
           ${this.renderRungsHtml(isDone)}
           ${this.renderSegmentedStrandHtml(slot.rightSegs, slot.cut, slot.newRightMask, Boolean(slot.justBuilt), canBuild ? slot.id : null)}

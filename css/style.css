@@ -106,11 +106,11 @@ body {
     opacity: 0.95;
   }
   58% {
-    transform: translate3d(0px, 0px, 0) scale(0.55);
+    transform: translate3d(var(--tx, 0px), var(--ty, 0px), 0) scale(0.55);
     opacity: 0.9;
   }
   70% {
-    transform: translate3d(0px, 0px, 0) scale(0.2);
+    transform: translate3d(var(--tx, 0px), var(--ty, 0px), 0) scale(0.2);
     opacity: 0;
   }
   100% {
@@ -153,18 +153,18 @@ body {
   animation: synthRungsLoop 3.8s ease-in-out infinite;
 }
 
-/* 複製時：周りの青い粒がDNA鎖へ吸収されるアニメーション */
+/* 複製時：周りの青い粒が青いDNA鎖へ吸収されるアニメーション */
 @keyframes absorbBlueOnce {
   0% {
     transform: translate3d(var(--sx), var(--sy), 0) scale(1);
     opacity: 0.95;
   }
   75% {
-    transform: translate3d(0px, 0px, 0) scale(0.45);
+    transform: translate3d(var(--tx, 0px), var(--ty, 0px), 0) scale(0.45);
     opacity: 0.85;
   }
   100% {
-    transform: translate3d(0px, 0px, 0) scale(0.1);
+    transform: translate3d(var(--tx, 0px), var(--ty, 0px), 0) scale(0.1);
     opacity: 0;
   }
 }

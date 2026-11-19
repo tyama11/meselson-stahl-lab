@@ -76,9 +76,9 @@ export const GestureController = {
 
     const t = pct / 100;
     for (let i = 0; i < this.buildDotEls.length; i++) {
-      const { el, sx, sy } = this.buildDotEls[i];
-      const cx = (sx * (1 - t)).toFixed(1);
-      const cy = (sy * (1 - t)).toFixed(1);
+      const { el, sx, sy, tx, ty } = this.buildDotEls[i];
+      const cx = (sx + (tx - sx) * t).toFixed(1);
+      const cy = (sy + (ty - sy) * t).toFixed(1);
       const sc = (1 - t * 0.65).toFixed(2);
       el.style.transform = `translate3d(${cx}px, ${cy}px, 0) scale(${sc})`;
       el.style.opacity = String((1 - t * 0.75).toFixed(2));
@@ -160,7 +160,9 @@ export const GestureController = {
         this.buildDotEls = [...document.querySelectorAll(`[data-build-dot="${slotId}"]`)].map((el) => ({
           el,
           sx: parseFloat(el.getAttribute('data-sx') || '0'),
-          sy: parseFloat(el.getAttribute('data-sy') || '0')
+          sy: parseFloat(el.getAttribute('data-sy') || '0'),
+          tx: parseFloat(el.getAttribute('data-tx') || '0'),
+          ty: parseFloat(el.getAttribute('data-ty') || '0')
         }));
       }
     });
