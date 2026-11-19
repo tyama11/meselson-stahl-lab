@@ -176,6 +176,7 @@ body {
 .blue-ambient-dot {
   will-change: transform, opacity;
   transform: translate3d(var(--sx), var(--sy), 0);
+  opacity: 0;
 }
 
 /* 培地全体に常に漂う極小の材料粒（複製前〜完了後まで常時表示） */

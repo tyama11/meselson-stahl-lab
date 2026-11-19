@@ -75,13 +75,14 @@ export const GestureController = {
     }
 
     const t = pct / 100;
+    const dotOpacity = t <= 0 ? 0 : t < 0.18 ? (t / 0.18) * 0.95 : Math.max(0, (1 - (t - 0.18) / 0.82) * 0.95);
     for (let i = 0; i < this.buildDotEls.length; i++) {
       const { el, sx, sy, tx, ty } = this.buildDotEls[i];
       const cx = (sx + (tx - sx) * t).toFixed(1);
       const cy = (sy + (ty - sy) * t).toFixed(1);
       const sc = (1 - t * 0.65).toFixed(2);
       el.style.transform = `translate3d(${cx}px, ${cy}px, 0) scale(${sc})`;
-      el.style.opacity = String((1 - t * 0.75).toFixed(2));
+      el.style.opacity = dotOpacity.toFixed(2);
     }
   },
 
