@@ -271,7 +271,7 @@ export const LabView = {
       } else if (store.centrifugePhase === 'spinning') {
         guideEl.textContent = '回転中！もう一度ボタンを押して止めよう！';
       } else if (store.centrifugePhase === 'settling') {
-        guideEl.textContent = '比重の合う高さへDNAが移動中...';
+        guideEl.textContent = 'バンドが形成されています...';
       } else if (!spun) {
         guideEl.textContent = 'DNAが完成！ボタンを押して試験管へ投入・遠心分離しよう！';
       } else if (gen === 1) {
@@ -320,7 +320,7 @@ export const LabView = {
         spinBtn.disabled = true;
         spinBtn.className = 'bg-slate-300 text-slate-500 cursor-not-allowed font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm flex items-center justify-center gap-2';
         spinIcon.className = 'w-3 h-3 rounded-full bg-slate-400 inline-block';
-        spinLabel.textContent = '比重の位置へ移動中...';
+        spinLabel.textContent = 'バンド形成中...';
       } else if (complete && !spun) {
         spinBtn.disabled = false;
         spinBtn.className = 'bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 next-action-glow';
@@ -464,8 +464,8 @@ export const LabView = {
         spinBtn.disabled = true;
         spinBtn.classList.remove('next-action-glow');
       }
-      if (spinLabel) spinLabel.textContent = 'バンドに集まっています...';
-      if (statusEl) statusEl.textContent = '比重の高さへ移動中...';
+      if (spinLabel) spinLabel.textContent = 'バンド形成中...';
+      if (statusEl) statusEl.textContent = 'バンドが形成されています...';
     } else if (phase === 'done') {
       if (spinBtn) {
         spinBtn.disabled = true;

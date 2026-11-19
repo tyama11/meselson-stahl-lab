@@ -105,8 +105,13 @@ const AppController = {
         }, CONFIG.POST_LOAD_PAUSE_MS);
       }, delayMs);
     } else if (store.gen0Phase === 'spinning') {
-      store.gen0Phase = 'done';
-      this.finalizeGen0Visuals();
+      store.gen0Phase = 'settling';
+      LabView.syncGen0ModalUi();
+
+      store.setTimer('gen0', () => {
+        store.gen0Phase = 'done';
+        this.finalizeGen0Visuals();
+      }, CONFIG.SETTLE_DURATION_MS);
     }
   },
 
@@ -204,30 +209,39 @@ const AppController = {
         }, CONFIG.POST_LOAD_PAUSE_MS);
       }, delayMs);
     } else if (store.centrifugePhase === 'spinning') {
-      store.centrifugePhase = 'idle';
+      store.centrifugePhase = 'settling';
       if (wrapper) wrapper.classList.remove('animate-centrifuge');
-
-      if (gen === 1) {
-        store.gen1Spun = true;
-        store.recordedResults[store.hypothesis].gen1 = molecules;
-      } else {
-        store.gen2Spun = true;
-        store.recordedResults[store.hypothesis].gen2 = molecules;
-      }
-
-      CentrifugeView.renderBands(`tube-content-${gen}`, molecules);
-      const summary = BiologyModel.aggregateBands(molecules);
-
-      CentrifugeView.setStatusBadge('分離完了', 'bg-emerald-100 text-emerald-700');
+      CentrifugeView.setStatusBadge('バンド形成中...', 'bg-amber-100 text-amber-800');
       if (labelEl) {
-        labelEl.textContent = summary.compactLabel;
-        labelEl.className = 'text-[10px] font-extrabold text-emerald-400 leading-tight';
+        labelEl.textContent = 'バンド形成中...';
+        labelEl.className = 'text-[10px] font-bold text-amber-400 leading-tight';
       }
-
-      LabView.setObservation(
-        `【${HYPOTHESES[store.hypothesis].name}・第${gen}世代】${summary.detailText}が現れました！`
-      );
       LabView.renderLab();
+
+      store.setTimer('centrifuge', () => {
+        store.centrifugePhase = 'idle';
+        if (gen === 1) {
+          store.gen1Spun = true;
+          store.recordedResults[store.hypothesis].gen1 = molecules;
+        } else {
+          store.gen2Spun = true;
+          store.recordedResults[store.hypothesis].gen2 = molecules;
+        }
+
+        CentrifugeView.renderBands(`tube-content-${gen}`, molecules);
+        const summary = BiologyModel.aggregateBands(molecules);
+
+        CentrifugeView.setStatusBadge('分離完了', 'bg-emerald-100 text-emerald-700');
+        if (labelEl) {
+          labelEl.textContent = summary.compactLabel;
+          labelEl.className = 'text-[10px] font-extrabold text-emerald-400 leading-tight';
+        }
+
+        LabView.setObservation(
+          `【${HYPOTHESES[store.hypothesis].name}・第${gen}世代】${summary.detailText}が現れました！`
+        );
+        LabView.renderLab();
+      }, CONFIG.SETTLE_DURATION_MS);
     }
   },
 
