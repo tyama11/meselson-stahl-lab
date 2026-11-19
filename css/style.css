@@ -1,5 +1,5 @@
 body {
-  font-family: 'M PLUS Rounded 1c', 'Inter', sans-serif;
+  font-family: 'Hiragino Maru Gothic ProN', 'BIZ UDPGothic', 'Yu Gothic', 'Meiryo', system-ui, -apple-system, sans-serif;
   background-color: #f8fafc;
   color: #1e293b;
 }
@@ -11,15 +11,17 @@ body {
   100% { transform: rotate(1080deg) scale(1); }
 }
 .animate-centrifuge {
+  will-change: transform;
   animation: spinCentrifuge 1.3s cubic-bezier(0.35, 0, 0.25, 1) infinite;
 }
 
 @keyframes floatParticle {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  33% { transform: translate(5px, -6px) rotate(22deg); }
-  66% { transform: translate(-5px, 5px) rotate(-22deg); }
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  33% { transform: translate3d(5px, -6px, 0) rotate(22deg); }
+  66% { transform: translate3d(-5px, 5px, 0) rotate(-22deg); }
 }
 .dna-particle-swirl {
+  will-change: transform;
   animation: floatParticle 0.55s ease-in-out infinite;
 }
 
@@ -39,19 +41,15 @@ body {
 }
 
 @keyframes pulseGlow {
-  0%, 100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.85), 0 4px 12px rgba(2, 132, 199, 0.3);
-  }
-  50% {
-    transform: scale(1.03);
-    box-shadow: 0 0 0 6px rgba(250, 204, 21, 0), 0 6px 16px rgba(2, 132, 199, 0.45);
-  }
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
 }
 .next-action-glow {
+  will-change: transform;
   animation: pulseGlow 1.4s ease-in-out infinite;
   outline: 3px solid #facc15;
   outline-offset: 2px;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
 }
 
 @keyframes scissorSnip {
@@ -59,6 +57,7 @@ body {
   50% { transform: rotate(-18deg) scale(1.15); }
 }
 .scissor-snip-anim {
+  will-change: transform;
   animation: scissorSnip 0.45s ease-in-out infinite;
   display: inline-block;
 }
@@ -81,17 +80,17 @@ body {
   position: fixed;
   z-index: 60;
   pointer-events: none;
+  will-change: transform, opacity;
   transform-origin: center center;
-  transition:
-    transform 0.52s cubic-bezier(0.55, 0.05, 0.68, 0.19),
-    opacity 0.52s ease-in;
 }
 
 @keyframes tubeReceivePulse {
-  0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
-  50% { box-shadow: 0 0 18px 4px rgba(56, 189, 248, 0.75); }
-  100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+  0% { opacity: 1; }
+  50% { opacity: 0.82; }
+  100% { opacity: 1; }
 }
 .tube-receive-pulse {
+  outline: 3px solid rgba(56, 189, 248, 0.85);
+  outline-offset: 2px;
   animation: tubeReceivePulse 0.55s ease-out;
 }
