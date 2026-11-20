@@ -286,31 +286,91 @@ section.compact-panel,
 
 /* DNA組み立てトレイ：くぼんだクレイ培地トレイ */
 section.compact-panel > div.bg-sky-50\/50 {
-  background: linear-gradient(160deg, #eaf5ff 0%, #f3f9ff 100%);
-  border: 2px solid rgba(186, 230, 253, 0.9);
+  background: linear-gradient(155deg, #dff0ff 0%, #edf7ff 55%, #e6f4ff 100%);
+  border: 2px solid rgba(186, 230, 253, 0.95);
   border-radius: 1.5rem;
   box-shadow:
-    inset 0 6px 14px rgba(56, 189, 248, 0.15),
-    inset 0 -6px 12px rgba(255, 255, 255, 0.92),
-    0 4px 10px -2px rgba(14, 165, 233, 0.08);
+    inset 0 8px 18px rgba(14, 165, 233, 0.18),
+    inset 0 -6px 14px rgba(255, 255, 255, 0.95),
+    0 4px 10px -2px rgba(14, 165, 233, 0.1);
 }
 
-/* DNAカード＆仮説タブ：丸みのある立体クレイタイル */
-.compact-dna-card,
-[role="tab"] {
+/* DNAカード：下の青いトレイと粒が透けて見える半透明クレイカード */
+.compact-dna-card {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.46) 0%, rgba(240, 249, 255, 0.28) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.78);
   border-radius: 1.25rem;
   box-shadow:
-    0 10px 18px -6px rgba(71, 85, 105, 0.14),
-    inset 0 -5px 10px rgba(148, 163, 184, 0.16),
-    inset 0 5px 10px rgba(255, 255, 255, 0.92);
+    0 10px 20px -6px rgba(14, 116, 144, 0.14),
+    inset 0 -5px 10px rgba(56, 189, 248, 0.12),
+    inset 0 5px 10px rgba(255, 255, 255, 0.75);
+}
+
+.compact-dna-card.border-emerald-300 {
+  background: linear-gradient(160deg, rgba(236, 253, 245, 0.56) 0%, rgba(209, 250, 229, 0.32) 100%) !important;
+  border-color: rgba(110, 231, 183, 0.9);
+  box-shadow:
+    0 10px 20px -6px rgba(16, 185, 129, 0.18),
+    inset 0 -5px 10px rgba(16, 185, 129, 0.14),
+    inset 0 5px 10px rgba(255, 255, 255, 0.8);
+}
+
+/* 仮説タブ：ぷっくりクレイタイル */
+[role="tab"] {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.92) 0%, rgba(248, 250, 252, 0.85) 100%);
+  border-radius: 1.25rem;
+  box-shadow:
+    0 8px 16px -6px rgba(71, 85, 105, 0.14),
+    inset 0 -4px 8px rgba(148, 163, 184, 0.16),
+    inset 0 4px 8px rgba(255, 255, 255, 0.92);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+[role="tab"]:hover {
+  transform: translateY(-1px);
 }
 
 [role="tab"][aria-selected="true"] {
-  background: linear-gradient(155deg, #f0f9ff 0%, #e0f2fe 100%);
+  background: linear-gradient(155deg, #f0f9ff 0%, #dbeafe 100%);
   box-shadow:
-    0 10px 20px -6px rgba(14, 165, 233, 0.25),
-    inset 0 -5px 10px rgba(56, 189, 248, 0.2),
+    0 10px 20px -6px rgba(14, 165, 233, 0.28),
+    inset 0 -5px 10px rgba(56, 189, 248, 0.24),
     inset 0 5px 10px rgba(255, 255, 255, 0.95);
+}
+
+/* 世代ステップバー：やわらかくくぼんだクレイ溝 */
+section.compact-panel .bg-slate-50.border.border-slate-200.rounded-2xl {
+  background: linear-gradient(160deg, #eef2f7 0%, #f8fafc 100%);
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow:
+    inset 0 4px 8px rgba(100, 116, 139, 0.12),
+    inset 0 -4px 8px rgba(255, 255, 255, 0.95);
+}
+
+/* バッジ・ピル類にもクレイの丸みと立体ハイライト */
+header .rounded-full,
+section .rounded-full[class*="px-"],
+#rules-modal .rounded-full[class*="px-"],
+#compare-modal .rounded-full[class*="px-"] {
+  box-shadow:
+    0 3px 6px -2px rgba(15, 23, 42, 0.14),
+    inset 0 2px 4px rgba(255, 255, 255, 0.45),
+    inset 0 -2px 4px rgba(15, 23, 42, 0.12);
+}
+
+/* 試験管内バンド：つやのある3Dクレイピル */
+.band-appear {
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.45),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.24);
+}
+
+/* ルール画面の合成ステージ：下の赤・青環境がほんのり透けるくぼみトレイ */
+.synth-stage-h {
+  background: rgba(255, 255, 255, 0.52) !important;
+  box-shadow:
+    inset 0 6px 14px rgba(100, 116, 139, 0.14),
+    inset 0 -5px 10px rgba(255, 255, 255, 0.85) !important;
 }
 
 /* ボタン全般：押し心地のあるぷっくりクレイボタン */
