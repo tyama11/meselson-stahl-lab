@@ -86,9 +86,9 @@ export const LabView = {
     return `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">${label}</span>`;
   },
 
-  renderSwipeBuildGuide(slotId, text = '上から下へなぞって青い鎖を合成！') {
+  renderSwipeBuildGuide(slotId, text = '上から下へなぞって青い鎖を合成！', glowClass = '') {
     return `
-      <div class="text-center text-[11px] font-extrabold text-sky-800 py-1 bg-sky-50 rounded-xl border border-sky-200">
+      <div class="text-center text-[11px] font-extrabold text-sky-800 py-1 bg-sky-50 rounded-xl border border-sky-200 ${glowClass}">
         ${text}
         <div class="mt-1 mx-2 h-1.5 bg-sky-200/80 rounded-full overflow-hidden">
           <div data-build-bar="${slotId}" class="h-full bg-sky-500 rounded-full transition-all duration-75" style="width:0%;"></div>
@@ -97,18 +97,14 @@ export const LabView = {
     `;
   },
 
-  renderBuildOverlay(slotId, op, glowClass) {
+  renderBuildOverlay(slotId, op) {
     return `
       <div
         data-build-slot="${slotId}"
         data-build-op="${op}"
-        class="gesture-zone absolute -inset-1.5 flex items-center justify-center cursor-ns-resize rounded-xl ${glowClass}"
+        class="gesture-zone absolute -inset-1.5 cursor-ns-resize rounded-xl"
         title="上から下へドラッグして青い鎖を伸ばそう！"
-      >
-        <span class="pointer-events-none text-[10px] font-black text-sky-900 bg-sky-100/95 px-2 py-0.5 rounded-full border border-sky-300 shadow-sm">
-          ⬇ なぞって合成
-        </span>
-      </div>
+      ></div>
     `;
   },
 
@@ -205,7 +201,7 @@ export const LabView = {
     const absorbMode = canBuild ? 'ready' : animGrow ? 'justBuilt' : null;
     const actionHtml = slot.built
       ? `<div class="text-center text-[11px] font-extrabold text-emerald-700 py-1.5 bg-emerald-50 rounded-xl">${slot.isOriginal ? '元のDNAそのまま' : '2本鎖が完成！'}</div>`
-      : this.renderSwipeBuildGuide(slot.id, '上から下へなぞって青の2本鎖を作る！');
+      : this.renderSwipeBuildGuide(slot.id, '上から下へなぞって青の2本鎖を作る！', glowClass);
 
     return `
       <div class="compact-dna-card min-w-0 relative overflow-hidden bg-white/90 rounded-2xl border-2 ${slot.built ? 'border-emerald-300' : 'border-slate-200'} p-2.5 sm:p-3 flex flex-col items-center justify-between gap-2 shadow-sm">
@@ -219,7 +215,7 @@ export const LabView = {
           ${this.renderStrandHtml(slot.left, { animateGrow: animGrow, delaySec: 0, buildSlotId: canBuild ? slot.id : null })}
           ${this.renderRungsHtml(slot.built)}
           ${this.renderStrandHtml(slot.right, { animateGrow: animGrow, delaySec: 0.4, buildSlotId: canBuild ? slot.id : null })}
-          ${canBuild ? this.renderBuildOverlay(slot.id, 'build', glowClass) : ''}
+          ${canBuild ? this.renderBuildOverlay(slot.id, 'build') : ''}
         </div>
         <div class="relative z-10 w-full">${actionHtml}</div>
       </div>
@@ -239,7 +235,7 @@ export const LabView = {
     } else if (!slot.split) {
       actionHtml = `<div class="text-center text-[11px] font-extrabold text-amber-800 py-1.5 bg-amber-50 rounded-xl border border-amber-200">右側の鎖を隣へドラッグ！</div>`;
     } else if (canBuild) {
-      actionHtml = this.renderSwipeBuildGuide(slot.id);
+      actionHtml = this.renderSwipeBuildGuide(slot.id, '上から下へなぞって青い鎖を合成！', glowClass);
     } else {
       actionHtml = `<div class="text-center text-[11px] font-extrabold text-emerald-700 py-1.5 bg-emerald-50 rounded-xl">2本鎖が完成！</div>`;
     }
@@ -263,7 +259,7 @@ export const LabView = {
           ${this.renderStrandHtml(slot.left, { animateGrow: animLeft, buildSlotId: canBuild && !slot.left ? slot.id : null })}
           ${this.renderRungsHtml(isDone || (slot.exists && !slot.split))}
           ${rightStrandInteractive}
-          ${canBuild ? this.renderBuildOverlay(slot.id, 'build', glowClass) : ''}
+          ${canBuild ? this.renderBuildOverlay(slot.id, 'build') : ''}
         </div>
         <div class="relative z-10 w-full">${actionHtml}</div>
       </div>
@@ -288,7 +284,7 @@ export const LabView = {
         </div>
       `;
     } else if (canBuild) {
-      actionHtml = this.renderSwipeBuildGuide(slot.id, '上から下へなぞって青の断片を埋める！');
+      actionHtml = this.renderSwipeBuildGuide(slot.id, '上から下へなぞって青の断片を埋める！', glowClass);
     } else {
       actionHtml = `<div class="text-center text-[11px] font-extrabold text-emerald-700 py-1.5 bg-emerald-50 rounded-xl">2本鎖が完成！</div>`;
     }
@@ -315,7 +311,7 @@ export const LabView = {
           ${this.renderRungsHtml(isDone)}
           ${this.renderSegmentedStrandHtml(slot.rightSegs, slot.cut, slot.newRightMask, Boolean(slot.justBuilt), canBuild ? slot.id : null)}
           ${cutOverlay}
-          ${canBuild ? this.renderBuildOverlay(slot.id, 'mix', glowClass) : ''}
+          ${canBuild ? this.renderBuildOverlay(slot.id, 'mix') : ''}
         </div>
         <div class="relative z-10 w-full">${actionHtml}</div>
       </div>
