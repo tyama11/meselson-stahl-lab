@@ -276,7 +276,7 @@ export const LabView = {
       actionHtml = `<div class="text-center text-[11px] font-bold text-slate-400 py-1.5 bg-slate-50 rounded-xl">隣のカット待ち</div>`;
     } else if (!slot.cut) {
       actionHtml = `
-        <div class="text-center text-[11px] font-extrabold text-amber-800 py-1 bg-amber-50 rounded-xl border border-amber-200">
+        <div class="text-center text-[11px] font-extrabold text-amber-800 py-1 bg-amber-50 rounded-xl border border-amber-200 ${glowClass}">
           上のハサミ線を左右になぞって切ろう！
           <div class="mt-1 mx-2 h-1.5 bg-amber-200/80 rounded-full overflow-hidden">
             <div data-cut-bar="${slot.id}" class="h-full bg-amber-500 rounded-full transition-all duration-75" style="width:0%;"></div>
@@ -290,10 +290,9 @@ export const LabView = {
     }
 
     const cutOverlay = slot.exists && !slot.cut
-      ? `<div data-cut-slot="${slot.id}" class="gesture-zone absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-center cursor-ew-resize py-2 rounded-xl ${glowClass}" title="端までドラッグしてハサミで切ろう！">
-           <div class="w-full border-t-2 border-dashed border-amber-500 flex items-center justify-between px-1">
-             <span class="scissor-snip-anim text-sm bg-amber-100 border border-amber-400 rounded-full px-1 shadow-sm">✂️</span>
-             <span class="text-[10px] font-black text-amber-900 bg-amber-100/95 px-1.5 rounded-full border border-amber-300">なぞって切る</span>
+      ? `<div data-cut-slot="${slot.id}" class="gesture-zone absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center cursor-ew-resize py-2 rounded-xl" title="端までドラッグしてハサミで切ろう！">
+           <div class="w-full border-t-2 border-dashed border-amber-500 flex items-center px-0.5">
+             <span class="scissor-snip-anim text-sm -mt-3.5 bg-amber-100 border border-amber-400 rounded-full px-1 shadow-sm">✂️</span>
            </div>
          </div>`
       : '';
