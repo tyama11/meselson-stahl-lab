@@ -462,21 +462,24 @@ export const LabView = {
       const meta = HYPOTHESES[key];
       const rec = store.recordedResults[key];
       const bothDone = Boolean(rec.gen1 && rec.gen2);
+      const cardStateClass = bothDone
+        ? 'bg-white border-emerald-300'
+        : 'bg-slate-100/80 border-slate-200 opacity-50 grayscale';
       return `
-        <div class="bg-white border-2 ${bothDone ? 'border-emerald-300' : 'border-slate-200'} rounded-2xl p-3 flex flex-col gap-2">
+        <div class="border-2 ${cardStateClass} rounded-2xl p-3 flex flex-col gap-2 transition">
           <div class="flex items-center justify-between">
             <div>
               <span class="text-[10px] font-extrabold ${meta.accentText}">${meta.number}</span>
               <h3 class="font-black text-sm text-slate-900">${meta.name}</h3>
             </div>
-            <span class="text-[10px] font-black px-2 py-0.5 rounded-full ${bothDone ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}">
+            <span class="text-[10px] font-black px-2 py-0.5 rounded-full ${bothDone ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-500'}">
               ${bothDone ? '記録完了' : '未完了'}
             </span>
           </div>
           <div class="bg-slate-900 rounded-xl p-2.5 flex items-end justify-around gap-1">
-            ${this.renderMiniTubeHtml('第0世代', ACTUAL_MESELSON_STAHL.gen0, `cmp-${key}-0`)}
-            ${this.renderMiniTubeHtml('第1世代', rec.gen1, `cmp-${key}-1`)}
-            ${this.renderMiniTubeHtml('第2世代', rec.gen2, `cmp-${key}-2`)}
+            ${this.renderMiniTubeHtml('第0世代', bothDone ? ACTUAL_MESELSON_STAHL.gen0 : null, `cmp-${key}-0`)}
+            ${this.renderMiniTubeHtml('第1世代', bothDone ? rec.gen1 : null, `cmp-${key}-1`)}
+            ${this.renderMiniTubeHtml('第2世代', bothDone ? rec.gen2 : null, `cmp-${key}-2`)}
           </div>
         </div>
       `;
@@ -484,9 +487,11 @@ export const LabView = {
 
     HYPOTHESIS_ORDER.forEach((key) => {
       const rec = store.recordedResults[key];
-      CentrifugeView.renderBands(`cmp-${key}-0`, ACTUAL_MESELSON_STAHL.gen0, true);
-      if (rec.gen1) CentrifugeView.renderBands(`cmp-${key}-1`, rec.gen1, true);
-      if (rec.gen2) CentrifugeView.renderBands(`cmp-${key}-2`, rec.gen2, true);
+      if (rec.gen1 && rec.gen2) {
+        CentrifugeView.renderBands(`cmp-${key}-0`, ACTUAL_MESELSON_STAHL.gen0, true);
+        CentrifugeView.renderBands(`cmp-${key}-1`, rec.gen1, true);
+        CentrifugeView.renderBands(`cmp-${key}-2`, rec.gen2, true);
+      }
     });
 
     const actualPanel = document.getElementById('actual-result-panel');
