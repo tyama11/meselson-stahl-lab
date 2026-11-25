@@ -14,25 +14,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Setup Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
       - name: Install devDependencies (CI only)
-        run: npm install --no-audit --no-fund
+        run: pnpm install
 
       - name: Show tsrs version
-        run: npx tsrs --version
+        run: pnpm exec tsrs --version
 
       - name: Typecheck with oxc-project/tsrs
-        run: npm run typecheck
+        run: pnpm run typecheck
 
       - name: Build JS with oxc-project/tsrs
-        run: npm run build
+        run: pnpm run build
 
       - name: Run unit tests
-        run: npm test
+        run: pnpm test
 
       - name: Verify emitted JS syntax
         run: for f in js/*.js; do node --check "$f"; done
