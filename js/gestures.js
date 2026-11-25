@@ -4,44 +4,44 @@ import { store } from './store.js';
 // インタラクティブジェスチャー制御 (ドラッグ分離・ハサミ切り・なぞり合成)
 // =========================================================================
 export const GestureController = {
-  activeSplitSlotId: null,
-  splitGhostEl: null,
-  splitTargetCard: null,
-  splitTargetRect: null,
+  activeSplitSlotId: null                 ,
+  splitGhostEl: null                      ,
+  splitTargetCard: null                      ,
+  splitTargetRect: null                  ,
   isOverTargetCard: false,
 
-  activeCutSlotId: null,
+  activeCutSlotId: null                 ,
   cutStartX: 0,
   cutRequiredDist: 60,
-  cutBarEl: null,
+  cutBarEl: null                      ,
 
-  activeBuildSlotId: null,
-  activeBuildOp: null,
+  activeBuildSlotId: null                 ,
+  activeBuildOp: null                         ,
   buildStartY: 0,
   buildRequiredDist: 56,
-  buildBarEl: null,
-  buildFillEls: [],
-  buildSegFillEls: [],
-  buildDotEls: [],
+  buildBarEl: null                      ,
+  buildFillEls: []                 ,
+  buildSegFillEls: []                      ,
+  buildDotEls: []                  ,
 
-  isPointInRect(r, x, y, margin = 12) {
+  isPointInRect(r                , x        , y        , margin = 12)          {
     if (!r) return false;
     return x >= r.left - margin && x <= r.right + margin && y >= r.top - margin && y <= r.bottom + margin;
   },
 
-  cleanupSplitDrag() {
+  cleanupSplitDrag()       {
     if (this.splitGhostEl) {
       this.splitGhostEl.remove();
       this.splitGhostEl = null;
     }
     if (this.activeSplitSlotId !== null) {
-      const origZone = document.querySelector(`[data-split-slot="${this.activeSplitSlotId}"]`);
+      const origZone = document.querySelector             (`[data-split-slot="${this.activeSplitSlotId}"]`);
       if (origZone) origZone.classList.remove('opacity-30');
 
       if (this.splitTargetCard) {
         this.splitTargetCard.classList.remove('ring-4', 'ring-amber-400', 'bg-amber-50/60', 'scale-[1.02]');
       }
-      const targetDrop = document.querySelector(`[data-drop-target="${this.activeSplitSlotId + 1}"]`);
+      const targetDrop = document.querySelector             (`[data-drop-target="${this.activeSplitSlotId + 1}"]`);
       if (targetDrop) {
         targetDrop.classList.remove('border-amber-400', 'bg-amber-50', 'text-amber-800');
         targetDrop.textContent = 'ここに右の鎖をドラッグ！';
@@ -53,7 +53,7 @@ export const GestureController = {
     this.isOverTargetCard = false;
   },
 
-  cleanupCutSwipe() {
+  cleanupCutSwipe()       {
     if (this.cutBarEl) {
       this.cutBarEl.style.width = '0%';
       this.cutBarEl = null;
@@ -61,7 +61,7 @@ export const GestureController = {
     this.activeCutSlotId = null;
   },
 
-  updateBuildProgress(pct) {
+  updateBuildProgress(pct        )       {
     if (this.buildBarEl) this.buildBarEl.style.width = `${pct}%`;
 
     for (let i = 0; i < this.buildFillEls.length; i++) {
@@ -86,7 +86,7 @@ export const GestureController = {
     }
   },
 
-  cleanupBuildSwipe() {
+  cleanupBuildSwipe()       {
     if (this.activeBuildSlotId !== null) {
       this.updateBuildProgress(0);
     }
@@ -98,21 +98,21 @@ export const GestureController = {
     this.buildDotEls = [];
   },
 
-  attach(onSlotAction) {
-    document.addEventListener('pointerdown', (e) => {
-      if (store.isBusy()) return;
+  attach(onSlotAction                                                      )       {
+    document.addEventListener('pointerdown', (e              ) => {
+      if (store.isBusy() || !(e.target instanceof Element)) return;
 
       // 1. 半保存的複製：右鎖ドラッグ
-      const splitZone = e.target.closest('[data-split-slot]');
+      const splitZone = e.target.closest             ('[data-split-slot]');
       if (splitZone) {
         e.preventDefault();
-        const slotId = parseInt(splitZone.getAttribute('data-split-slot'), 10);
-        const slot = store.getCurrentSlots()[slotId];
+        const slotId = parseInt(splitZone.getAttribute('data-split-slot') ?? '', 10);
+        const slot = store.getCurrentSlots()[slotId]                                    ;
         if (!slot || !slot.exists || slot.split) return;
 
         this.activeSplitSlotId = slotId;
         this.isOverTargetCard = false;
-        this.splitTargetCard = document.querySelector(`[data-card-slot="${slotId + 1}"]`);
+        this.splitTargetCard = document.querySelector             (`[data-card-slot="${slotId + 1}"]`);
         this.splitTargetRect = this.splitTargetCard ? this.splitTargetCard.getBoundingClientRect() : null;
         splitZone.classList.add('opacity-30');
 
@@ -123,7 +123,7 @@ export const GestureController = {
         this.splitGhostEl.style.transform = `translate3d(${e.clientX - 8}px, ${e.clientY - 48}px, 0) scale(1.1)`;
         document.body.appendChild(this.splitGhostEl);
 
-        const targetDrop = document.querySelector(`[data-drop-target="${slotId + 1}"]`);
+        const targetDrop = document.querySelector             (`[data-drop-target="${slotId + 1}"]`);
         if (targetDrop) {
           targetDrop.classList.add('border-amber-400', 'bg-amber-50', 'text-amber-800');
           targetDrop.textContent = 'ここにドロップして離す！';
@@ -132,43 +132,44 @@ export const GestureController = {
       }
 
       // 2. 分散的複製：ハサミのスワイプ切り
-      const cutZone = e.target.closest('[data-cut-slot]');
+      const cutZone = e.target.closest             ('[data-cut-slot]');
       if (cutZone) {
         e.preventDefault();
-        const slotId = parseInt(cutZone.getAttribute('data-cut-slot'), 10);
+        const slotId = parseInt(cutZone.getAttribute('data-cut-slot') ?? '', 10);
         this.activeCutSlotId = slotId;
         this.cutStartX = e.clientX;
         this.cutRequiredDist = Math.max(50, cutZone.getBoundingClientRect().width * 0.7);
-        this.cutBarEl = document.querySelector(`[data-cut-bar="${slotId}"]`);
+        this.cutBarEl = document.querySelector             (`[data-cut-bar="${slotId}"]`);
         return;
       }
 
       // 3. 全仮説共通：上から下へなぞって青い鎖を合成
-      const buildZone = e.target.closest('[data-build-slot]');
+      const buildZone = e.target.closest             ('[data-build-slot]');
       if (buildZone) {
         e.preventDefault();
-        const slotId = parseInt(buildZone.getAttribute('data-build-slot'), 10);
+        const slotId = parseInt(buildZone.getAttribute('data-build-slot') ?? '', 10);
+        const rawOp = buildZone.getAttribute('data-build-op');
         this.activeBuildSlotId = slotId;
-        this.activeBuildOp = buildZone.getAttribute('data-build-op') || 'build';
+        this.activeBuildOp = rawOp === 'mix' ? 'mix' : 'build';
         this.buildStartY = e.clientY;
         this.buildRequiredDist = Math.max(48, buildZone.getBoundingClientRect().height * 0.65);
-        this.buildBarEl = document.querySelector(`[data-build-bar="${slotId}"]`);
-        this.buildFillEls = [...document.querySelectorAll(`[data-build-fill="${slotId}"]`)];
-        this.buildSegFillEls = [...document.querySelectorAll(`[data-build-seg-fill="${slotId}"]`)].map((el) => ({
+        this.buildBarEl = document.querySelector             (`[data-build-bar="${slotId}"]`);
+        this.buildFillEls = Array.from(document.querySelectorAll             (`[data-build-fill="${slotId}"]`));
+        this.buildSegFillEls = Array.from(document.querySelectorAll             (`[data-build-seg-fill="${slotId}"]`)).map((el) => ({
           el,
-          idx: parseInt(el.getAttribute('data-seg-idx') || '0', 10)
+          idx: parseInt(el.getAttribute('data-seg-idx') ?? '0', 10)
         }));
-        this.buildDotEls = [...document.querySelectorAll(`[data-build-dot="${slotId}"]`)].map((el) => ({
+        this.buildDotEls = Array.from(document.querySelectorAll             (`[data-build-dot="${slotId}"]`)).map((el) => ({
           el,
-          sx: parseFloat(el.getAttribute('data-sx') || '0'),
-          sy: parseFloat(el.getAttribute('data-sy') || '0'),
-          tx: parseFloat(el.getAttribute('data-tx') || '0'),
-          ty: parseFloat(el.getAttribute('data-ty') || '0')
+          sx: parseFloat(el.getAttribute('data-sx') ?? '0'),
+          sy: parseFloat(el.getAttribute('data-sy') ?? '0'),
+          tx: parseFloat(el.getAttribute('data-tx') ?? '0'),
+          ty: parseFloat(el.getAttribute('data-ty') ?? '0')
         }));
       }
     });
 
-    document.addEventListener('pointermove', (e) => {
+    document.addEventListener('pointermove', (e              ) => {
       if (this.activeSplitSlotId !== null) {
         if (this.splitGhostEl) {
           this.splitGhostEl.style.transform = `translate3d(${e.clientX - 8}px, ${e.clientY - 48}px, 0) scale(1.1)`;
@@ -204,7 +205,7 @@ export const GestureController = {
 
         if (dy >= this.buildRequiredDist) {
           const targetId = this.activeBuildSlotId;
-          const targetOp = this.activeBuildOp;
+          const targetOp = this.activeBuildOp ?? 'build';
           this.activeBuildSlotId = null;
           this.activeBuildOp = null;
           this.buildBarEl = null;
@@ -216,7 +217,7 @@ export const GestureController = {
       }
     });
 
-    document.addEventListener('pointerup', (e) => {
+    document.addEventListener('pointerup', (e              ) => {
       if (this.activeSplitSlotId !== null) {
         const targetId = this.activeSplitSlotId;
         const dropped = this.isOverTargetCard || this.isPointInRect(this.splitTargetRect, e.clientX, e.clientY);

@@ -1,3 +1,4 @@
+
 // =========================================================================
 // 定数・ドメイン設定 (Single Source of Truth)
 // =========================================================================
@@ -7,9 +8,9 @@ export const CONFIG = {
   SETTLE_DURATION_MS: 1200,
   TUBE_TOP_LIGHT_PCT: 24, // 15N = 0% (完全な14N DNA)
   TUBE_SPAN_PCT: 56       // 15N = 100% -> 24 + 56 = 80% (完全な15N DNA)
-};
+}         ;
 
-export const HYPOTHESES = {
+export const HYPOTHESES                                                 = {
   conservative: {
     id: 'conservative',
     number: '仮説①',
@@ -33,10 +34,14 @@ export const HYPOTHESES = {
   }
 };
 
-export const HYPOTHESIS_ORDER = ['conservative', 'semiconservative', 'dispersive'];
+export const HYPOTHESIS_ORDER                          = [
+  'conservative',
+  'semiconservative',
+  'dispersive'
+];
 
 // 15Nの含有割合（0.0〜1.0）から線形密度位置・視覚表現を一元定義
-export const DENSITY_TIERS = {
+export const DENSITY_TIERS                                                = {
   light: {
     key: 'light',
     ratio: 0,
@@ -79,7 +84,9 @@ export const DENSITY_TIERS = {
   }
 };
 
-export const ACTUAL_MESELSON_STAHL = {
+export const ACTUAL_MESELSON_STAHL            
+                   
+   = {
   gen0: [{ tierKey: 'heavy', heavyRatio: 1, segmented: false }],
   gen1: [
     { tierKey: 'mid', heavyRatio: 0.5, segmented: false },

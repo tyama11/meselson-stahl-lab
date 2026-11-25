@@ -1,0 +1,622 @@
+import {
+  ACTUAL_MESELSON_STAHL,
+  HYPOTHESES,
+  HYPOTHESIS_ORDER
+} from './config.ts';
+import { BiologyModel } from './model.ts';
+import { store } from './store.ts';
+import { CentrifugeView } from './centrifuge.ts';
+import type {
+  AbsorbMode,
+  ConservativeSlot,
+  DispersiveSlot,
+  DnaSlot,
+  HypothesisId,
+  Molecule,
+  NullableStrand,
+  Point2D,
+  SemiconservativeSlot,
+  SlotActionType
+} from './types.ts';
+
+interface RenderStrandOptions {
+  animateGrow?: boolean;
+  delaySec?: number;
+  buildSlotId?: number | null;
+}
+
+// =========================================================================
+// DNAカード＆ラボ全体ビュー (LabView)
+// =========================================================================
+export const LabView = {
+  setObservation(text: string): void {
+    const el = document.getElementById('observation-box');
+    if (el) el.textContent = text;
+  },
+
+  renderStrandHtml(
+    color: NullableStrand,
+    { animateGrow = false, delaySec = 0, buildSlotId = null }: RenderStrandOptions = {}
+  ): string {
+    const animClass = animateGrow ? 'animate-grow-top' : '';
+    const animStyle = animateGrow && delaySec > 0 ? `style="animation-delay:${delaySec}s;"` : '';
+    if (color === 'red') {
+      return `<div class="dna-strand-h w-3.5 rounded-full bg-rose-500 shadow-sm ${animClass}" ${animStyle}></div>`;
+    }
+    if (color === 'blue') {
+      return `<div class="dna-strand-h w-3.5 rounded-full bg-sky-500 shadow-sm ${animClass}" ${animStyle}></div>`;
+    }
+    const fillHtml = buildSlotId !== null
+      ? `<div data-build-fill="${buildSlotId}" class="absolute inset-x-0 top-0 bg-sky-500 rounded-full" style="height:0%;"></div>`
+      : '';
+    return `<div class="dna-strand-h relative w-3.5 rounded-full border-2 border-dashed border-sky-300 bg-sky-50/60 overflow-hidden">${fillHtml}</div>`;
+  },
+
+  renderSegmentedStrandHtml(
+    segs: readonly NullableStrand[],
+    isCut: boolean,
+    newMask: readonly boolean[] = [],
+    animateGrow = false,
+    buildSlotId: number | null = null
+  ): string {
+    if (!isCut) {
+      return `
+        <div class="dna-strand-h flex flex-col w-3.5 rounded-full overflow-hidden shadow-sm">
+          ${segs
+            .map((c) => {
+              const bg = c === 'red' ? 'bg-rose-500' : c === 'blue' ? 'bg-sky-500' : 'bg-slate-100/60';
+              return `<span class="w-full flex-1 ${bg}"></span>`;
+            })
+            .join('')}
+        </div>
+      `;
+    }
+    return `
+      <div class="dna-strand-h flex flex-col gap-1 justify-between">
+        ${segs
+          .map((c, idx) => {
+            const isNew = animateGrow && newMask[idx];
+            const animAttr = isNew ? `style="animation-delay:${idx * 0.22}s;"` : '';
+            const animClass = isNew ? 'animate-grow-top' : '';
+            if (c === 'red') {
+              return `<span class="w-3.5 flex-1 rounded-full bg-rose-500 shadow-sm"></span>`;
+            }
+            if (c === 'blue') {
+              return `<span class="w-3.5 flex-1 rounded-full bg-sky-500 shadow-sm ${animClass}" ${animAttr}></span>`;
+            }
+            const segFill = buildSlotId !== null
+              ? `<span data-build-seg-fill="${buildSlotId}" data-seg-idx="${idx}" class="absolute inset-x-0 top-0 bg-sky-500 rounded-full" style="height:0%;"></span>`
+              : '';
+            return `<span class="relative w-3.5 flex-1 rounded-full border border-dashed border-sky-300 bg-sky-50/60 overflow-hidden">${segFill}</span>`;
+          })
+          .join('')}
+      </div>
+    `;
+  },
+
+  renderRungsHtml(active: boolean): string {
+    const color = active ? 'bg-slate-400' : 'bg-slate-200';
+    return `
+      <div class="dna-rungs-h flex flex-col justify-around" aria-hidden="true">
+        <span class="w-2.5 h-0.5 ${color}"></span>
+        <span class="w-2.5 h-0.5 ${color}"></span>
+        <span class="w-2.5 h-0.5 ${color}"></span>
+      </div>
+    `;
+  },
+
+  renderStatusBadge(slot: DnaSlot, hypo: HypothesisId): string {
+    if (BiologyModel.isSlotComplete(slot, hypo)) {
+      return `<span class="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">完成</span>`;
+    }
+    const exists = 'exists' in slot ? slot.exists : true;
+    const label = exists === false ? '待機中' : '作業中';
+    return `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">${label}</span>`;
+  },
+
+  renderSwipeBuildGuide(slotId: number, text = '上から下へなぞって青い鎖を合成！', glowClass = ''): string {
+    return `
+      <div class="text-center text-[11px] font-extrabold text-sky-800 py-1 bg-sky-50 rounded-xl border border-sky-200 ${glowClass}">
+        ${text}
+        <div class="mt-1 mx-2 h-1.5 bg-sky-200/80 rounded-full overflow-hidden">
+          <div data-build-bar="${slotId}" class="h-full bg-sky-500 rounded-full transition-all duration-75" style="width:0%;"></div>
+        </div>
+      </div>
+    `;
+  },
+
+  renderBuildOverlay(slotId: number, op: SlotActionType): string {
+    return `
+      <div
+        data-build-slot="${slotId}"
+        data-build-op="${op}"
+        class="gesture-zone absolute -inset-1.5 cursor-ns-resize rounded-xl"
+        title="上から下へドラッグして青い鎖を伸ばそう！"
+      ></div>
+    `;
+  },
+
+  renderCardAmbientBlueSpecks(): string {
+    const specks = [
+      { top: '16%', left: '10%', sz: 'w-1 h-1', dx: '3px', dy: '-3px', dur: '4.2s' },
+      { top: '26%', left: '84%', sz: 'w-1.5 h-1.5', dx: '-3px', dy: '3px', dur: '4.9s' },
+      { top: '52%', left: '8%', sz: 'w-1 h-1', dx: '4px', dy: '2px', dur: '4.5s' },
+      { top: '48%', left: '88%', sz: 'w-1 h-1', dx: '-4px', dy: '-2px', dur: '5.1s' },
+      { top: '76%', left: '14%', sz: 'w-1.5 h-1.5', dx: '3px', dy: '3px', dur: '4.7s' },
+      { top: '78%', left: '82%', sz: 'w-1 h-1', dx: '-3px', dy: '-3px', dur: '4.3s' }
+    ];
+    return `
+      <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        ${specks
+          .map(
+            (s) =>
+              `<span class="medium-speck absolute ${s.sz} rounded-full bg-sky-400/60" style="top:${s.top}; left:${s.left}; --dx:${s.dx}; --dy:${s.dy}; --dur:${s.dur};"></span>`
+          )
+          .join('')}
+      </div>
+    `;
+  },
+
+  getBlueAbsorbTargets(slot: DnaSlot, hypo: HypothesisId): Point2D[] {
+    // 左鎖の中心 x ≈ -22px、右鎖の中心 x ≈ +22px、縦方向は -36px〜+36px
+    const rowYs = [-36, -12, 12, 36];
+    if (hypo === 'conservative') {
+      return [
+        { tx: -22, ty: -36 }, { tx: 22, ty: -36 },
+        { tx: -22, ty: -12 }, { tx: 22, ty: -12 },
+        { tx: -22, ty: 12 }, { tx: 22, ty: 12 },
+        { tx: -22, ty: 36 }, { tx: 22, ty: 36 }
+      ];
+    }
+    if (hypo === 'semiconservative') {
+      const sSlot = slot as SemiconservativeSlot;
+      const side = sSlot.built ? sSlot.newSide : !sSlot.left ? 'left' : 'right';
+      const tx = side === 'left' ? -22 : 22;
+      return rowYs.map((ty) => ({ tx, ty }));
+    }
+    // dispersive: 空き断片（または直前に埋めた新断片）の正確な位置へ吸収
+    const dSlot = slot as DispersiveSlot;
+    const targets: Point2D[] = [];
+    const useMask = Boolean(dSlot.mixed);
+    for (let i = 0; i < 4; i++) {
+      const leftTarget = useMask ? dSlot.newLeftMask?.[i] : dSlot.leftSegs?.[i] === null;
+      const rightTarget = useMask ? dSlot.newRightMask?.[i] : dSlot.rightSegs?.[i] === null;
+      if (leftTarget) targets.push({ tx: -22, ty: rowYs[i] });
+      if (rightTarget) targets.push({ tx: 22, ty: rowYs[i] });
+    }
+    return targets.length > 0 ? targets : [{ tx: -22, ty: 0 }, { tx: 22, ty: 0 }];
+  },
+
+  renderBlueAbsorbParticles(slot: DnaSlot, hypo: HypothesisId, mode: AbsorbMode): string {
+    if (!mode) return '';
+    const targets = this.getBlueAbsorbTargets(slot, hypo);
+    const coords = [
+      { sx: -68, sy: -48, d: 0, sz: 'w-1.5 h-1.5' },
+      { sx: -44, sy: -54, d: 0.04, sz: 'w-1 h-1' },
+      { sx: 66, sy: -46, d: 0.07, sz: 'w-1.5 h-1.5' },
+      { sx: 42, sy: -52, d: 0.1, sz: 'w-1 h-1' },
+      { sx: -76, sy: -16, d: 0.13, sz: 'w-1 h-1' },
+      { sx: 76, sy: -14, d: 0.16, sz: 'w-1.5 h-1.5' },
+      { sx: -74, sy: 16, d: 0.19, sz: 'w-1.5 h-1.5' },
+      { sx: 74, sy: 18, d: 0.22, sz: 'w-1 h-1' },
+      { sx: -66, sy: 48, d: 0.25, sz: 'w-1 h-1' },
+      { sx: -40, sy: 54, d: 0.28, sz: 'w-1.5 h-1.5' },
+      { sx: 64, sy: 46, d: 0.31, sz: 'w-1.5 h-1.5' },
+      { sx: 38, sy: 54, d: 0.34, sz: 'w-1 h-1' },
+      { sx: -16, sy: -56, d: 0.08, sz: 'w-1 h-1' },
+      { sx: 18, sy: 56, d: 0.29, sz: 'w-1 h-1' }
+    ];
+    if (mode === 'ready') {
+      return coords
+        .map((p, idx) => {
+          const tgt = targets[idx % targets.length];
+          return `<span data-build-dot="${slot.id}" data-sx="${p.sx}" data-sy="${p.sy}" data-tx="${tgt.tx}" data-ty="${tgt.ty}" class="blue-ambient-dot pointer-events-none absolute ${p.sz} rounded-full bg-sky-400/90" style="--sx:${p.sx}px; --sy:${p.sy}px;"></span>`;
+        })
+        .join('');
+    }
+    if (mode === 'justBuilt') {
+      return coords
+        .map((p, idx) => {
+          const tgt = targets[idx % targets.length];
+          return `<span class="blue-absorb-once pointer-events-none absolute ${p.sz} rounded-full bg-sky-500" style="--sx:${p.sx}px; --sy:${p.sy}px; --tx:${tgt.tx}px; --ty:${tgt.ty}px; animation-delay:${p.d}s;"></span>`;
+        })
+        .join('');
+    }
+    return '';
+  },
+
+  renderConservativeCard(slot: ConservativeSlot, glowClass: string): string {
+    const animGrow = Boolean(slot.justBuilt && !slot.isOriginal);
+    const canBuild = !slot.built;
+    const absorbMode: AbsorbMode = canBuild ? 'ready' : animGrow ? 'justBuilt' : null;
+    const actionHtml = slot.built
+      ? `<div class="text-center text-[11px] font-extrabold text-emerald-700 py-1.5 bg-emerald-50 rounded-xl">${slot.isOriginal ? '元のDNAそのまま' : '2本鎖が完成！'}</div>`
+      : this.renderSwipeBuildGuide(slot.id, '上から下へなぞって青の2本鎖を作る！', glowClass);
+
+    return `
+      <div class="compact-dna-card min-w-0 relative overflow-hidden bg-white/90 rounded-2xl border-2 ${slot.built ? 'border-emerald-300' : 'border-slate-200'} p-2.5 sm:p-3 flex flex-col items-center justify-between gap-2 shadow-sm">
+        ${this.renderCardAmbientBlueSpecks()}
+        <div class="relative z-10 w-full flex items-center justify-between gap-1">
+          <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
+          ${this.renderStatusBadge(slot, 'conservative')}
+        </div>
+        <div data-dna-visual="${slot.id}" class="relative z-10 flex items-center justify-center gap-3 my-1 px-2">
+          ${this.renderBlueAbsorbParticles(slot, 'conservative', absorbMode)}
+          ${this.renderStrandHtml(slot.left, { animateGrow: animGrow, delaySec: 0, buildSlotId: canBuild ? slot.id : null })}
+          ${this.renderRungsHtml(slot.built)}
+          ${this.renderStrandHtml(slot.right, { animateGrow: animGrow, delaySec: 0.4, buildSlotId: canBuild ? slot.id : null })}
+          ${canBuild ? this.renderBuildOverlay(slot.id, 'build') : ''}
+        </div>
+        <div class="relative z-10 w-full">${actionHtml}</div>
+      </div>
+    `;
+  },
+
+  renderSemiconservativeCard(slot: SemiconservativeSlot, glowClass: string): string {
+    const isDone = BiologyModel.isSlotComplete(slot, 'semiconservative');
+    const animLeft = Boolean(slot.justBuilt && slot.newSide === 'left');
+    const animRight = Boolean(slot.justBuilt && slot.newSide === 'right');
+    const canBuild = Boolean(slot.exists && slot.split && !slot.built);
+    const absorbMode: AbsorbMode = canBuild ? 'ready' : slot.justBuilt ? 'justBuilt' : null;
+
+    let actionHtml = '';
+    if (!slot.exists) {
+      actionHtml = `<div data-drop-target="${slot.id}" class="text-center text-[11px] font-bold text-slate-400 py-1.5 bg-slate-50 rounded-xl border border-dashed border-slate-200 transition">ここに右の鎖をドラッグ！</div>`;
+    } else if (!slot.split) {
+      actionHtml = `<div class="text-center text-[11px] font-extrabold text-amber-800 py-1.5 bg-amber-50 rounded-xl border border-amber-200">右側の鎖を隣へドラッグ！</div>`;
+    } else if (canBuild) {
+      actionHtml = this.renderSwipeBuildGuide(slot.id, '上から下へなぞって青い鎖を合成！', glowClass);
+    } else {
+      actionHtml = `<div class="text-center text-[11px] font-extrabold text-emerald-700 py-1.5 bg-emerald-50 rounded-xl">2本鎖が完成！</div>`;
+    }
+
+    const rightStrandInteractive = slot.exists && !slot.split
+      ? `<div data-split-slot="${slot.id}" class="gesture-zone relative cursor-grab active:cursor-grabbing group p-1 -m-1 rounded-xl ${glowClass}" title="掴んで隣の枠までドラッグして離そう！">
+           ${this.renderStrandHtml(slot.right)}
+           <span class="absolute -right-2.5 top-1/2 -translate-y-1/2 bg-amber-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-full shadow-sm group-hover:scale-110 transition">➡</span>
+         </div>`
+      : this.renderStrandHtml(slot.right, { animateGrow: animRight, buildSlotId: canBuild && !slot.right ? slot.id : null });
+
+    return `
+      <div data-card-slot="${slot.id}" class="compact-dna-card min-w-0 relative overflow-hidden bg-white/90 rounded-2xl border-2 ${isDone ? 'border-emerald-300' : 'border-slate-200'} p-2.5 sm:p-3 flex flex-col items-center justify-between gap-2 shadow-sm transition">
+        ${this.renderCardAmbientBlueSpecks()}
+        <div class="relative z-10 w-full flex items-center justify-between gap-1">
+          <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
+          ${this.renderStatusBadge(slot, 'semiconservative')}
+        </div>
+        <div data-dna-visual="${slot.id}" class="relative z-10 flex items-center justify-center gap-3 my-1 px-2">
+          ${this.renderBlueAbsorbParticles(slot, 'semiconservative', absorbMode)}
+          ${this.renderStrandHtml(slot.left, { animateGrow: animLeft, buildSlotId: canBuild && !slot.left ? slot.id : null })}
+          ${this.renderRungsHtml(isDone || (slot.exists && !slot.split))}
+          ${rightStrandInteractive}
+          ${canBuild ? this.renderBuildOverlay(slot.id, 'build') : ''}
+        </div>
+        <div class="relative z-10 w-full">${actionHtml}</div>
+      </div>
+    `;
+  },
+
+  renderDispersiveCard(slot: DispersiveSlot, glowClass: string): string {
+    const isDone = BiologyModel.isSlotComplete(slot, 'dispersive');
+    const canBuild = Boolean(slot.exists && slot.cut && !slot.mixed);
+    const absorbMode: AbsorbMode = canBuild ? 'ready' : slot.justBuilt ? 'justBuilt' : null;
+
+    let actionHtml = '';
+    if (!slot.exists) {
+      actionHtml = `<div class="text-center text-[11px] font-bold text-slate-400 py-1.5 bg-slate-50 rounded-xl">隣のカット待ち</div>`;
+    } else if (!slot.cut) {
+      actionHtml = `
+        <div class="text-center text-[11px] font-extrabold text-amber-800 py-1 bg-amber-50 rounded-xl border border-amber-200 ${glowClass}">
+          上のハサミ線を左右になぞって切ろう！
+          <div class="mt-1 mx-2 h-1.5 bg-amber-200/80 rounded-full overflow-hidden">
+            <div data-cut-bar="${slot.id}" class="h-full bg-amber-500 rounded-full transition-all duration-75" style="width:0%;"></div>
+          </div>
+        </div>
+      `;
+    } else if (canBuild) {
+      actionHtml = this.renderSwipeBuildGuide(slot.id, '上から下へなぞって青の断片を埋める！', glowClass);
+    } else {
+      actionHtml = `<div class="text-center text-[11px] font-extrabold text-emerald-700 py-1.5 bg-emerald-50 rounded-xl">2本鎖が完成！</div>`;
+    }
+
+    const cutOverlay = slot.exists && !slot.cut
+      ? `<div data-cut-slot="${slot.id}" class="gesture-zone absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center cursor-ew-resize py-2 rounded-xl" title="端までドラッグしてハサミで切ろう！">
+           <div class="w-full border-t-2 border-dashed border-amber-500 flex items-center px-0.5">
+             <span class="scissor-snip-anim text-sm -mt-3.5 bg-amber-100 border border-amber-400 rounded-full px-1 shadow-sm">✂️</span>
+           </div>
+         </div>`
+      : '';
+
+    return `
+      <div class="compact-dna-card min-w-0 relative overflow-hidden bg-white/90 rounded-2xl border-2 ${isDone ? 'border-emerald-300' : 'border-slate-200'} p-2.5 sm:p-3 flex flex-col items-center justify-between gap-2 shadow-sm">
+        ${this.renderCardAmbientBlueSpecks()}
+        <div class="relative z-10 w-full flex items-center justify-between gap-1">
+          <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
+          ${this.renderStatusBadge(slot, 'dispersive')}
+        </div>
+        <div data-dna-visual="${slot.id}" class="relative z-10 flex items-center justify-center gap-3 my-1 px-2">
+          ${this.renderBlueAbsorbParticles(slot, 'dispersive', absorbMode)}
+          ${this.renderSegmentedStrandHtml(slot.leftSegs, slot.cut, slot.newLeftMask, Boolean(slot.justBuilt), canBuild ? slot.id : null)}
+          ${this.renderRungsHtml(isDone)}
+          ${this.renderSegmentedStrandHtml(slot.rightSegs, slot.cut, slot.newRightMask, Boolean(slot.justBuilt), canBuild ? slot.id : null)}
+          ${cutOverlay}
+          ${canBuild ? this.renderBuildOverlay(slot.id, 'mix') : ''}
+        </div>
+        <div class="relative z-10 w-full">${actionHtml}</div>
+      </div>
+    `;
+  },
+
+  renderLab(): void {
+    const h = store.hypothesis;
+    const gen = store.currentGen;
+    const slots = store.getCurrentSlots();
+    const complete = BiologyModel.isGenerationComplete(slots, h);
+    const spun = gen === 1 ? store.gen1Spun : store.gen2Spun;
+
+    HYPOTHESIS_ORDER.forEach((key) => {
+      const btn = document.getElementById(`hypo-btn-${key}`);
+      const doneBadge = document.getElementById(`hypo-done-${key}`);
+      const isRecorded = Boolean(store.recordedResults[key].gen1 && store.recordedResults[key].gen2);
+      if (doneBadge) doneBadge.classList.toggle('hidden', !isRecorded);
+      if (!btn) return;
+      const selected = key === h;
+      btn.setAttribute('aria-selected', String(selected));
+      btn.className = selected
+        ? 'p-2 sm:p-2.5 rounded-2xl border-2 border-sky-500 bg-sky-50/70 text-left transition cursor-pointer shadow-sm'
+        : 'p-2 sm:p-2.5 rounded-2xl border-2 border-slate-200 bg-white hover:bg-slate-50 text-left transition cursor-pointer';
+    });
+
+    const completedCount = store.countCompletedHypotheses();
+    const countBadge = document.getElementById('compare-count-badge');
+    if (countBadge) countBadge.textContent = `${completedCount}/3`;
+
+    const b1 = document.getElementById('step-badge-1');
+    const b2 = document.getElementById('step-badge-2');
+    if (b1 && b2) {
+      if (gen === 1) {
+        b1.className = 'px-2.5 py-1 rounded-xl text-xs font-extrabold bg-sky-500 text-white shadow-sm cursor-pointer';
+        b2.className = 'px-2.5 py-1 rounded-xl text-xs font-extrabold bg-slate-200 text-slate-500';
+      } else {
+        b1.className = 'px-2.5 py-1 rounded-xl text-xs font-extrabold bg-emerald-100 text-emerald-800 hover:bg-emerald-200 cursor-pointer';
+        b2.className = 'px-2.5 py-1 rounded-xl text-xs font-extrabold bg-sky-500 text-white shadow-sm';
+      }
+    }
+
+    const guideEl = document.getElementById('builder-guide-text');
+    if (guideEl) {
+      if (!complete) {
+        guideEl.textContent = '光っている場所をドラッグ・なぞってDNAを完成させよう！';
+      } else if (store.centrifugePhase === 'loading') {
+        guideEl.textContent = 'DNAが試験管の中へ吸い込まれています...';
+      } else if (store.centrifugePhase === 'spinning') {
+        guideEl.textContent = '回転中！もう一度ボタンを押して止めよう！';
+      } else if (store.centrifugePhase === 'settling') {
+        guideEl.textContent = 'バンドが形成されています...';
+      } else if (!spun) {
+        guideEl.textContent = 'DNAが完成！ボタンを押して試験管へ投入・遠心分離しよう！';
+      } else if (gen === 1) {
+        guideEl.textContent = '第1世代の分離完了！「第2世代へ進む」を押そう！';
+      } else if (completedCount < 3) {
+        guideEl.textContent = `記録完了（${completedCount}/3仮説）！他の仮説も試してみよう！`;
+      } else {
+        guideEl.textContent = '全3仮説の実験完了！「結果の比較」で実際の結果と比べよう！';
+      }
+    }
+
+    const nextSlotId = store.isBusy() ? null : BiologyModel.findNextActionSlotId(slots, h);
+    const container = document.getElementById('dna-slots-container');
+    if (container) {
+      container.className = gen === 1
+        ? 'relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-2.5'
+        : 'relative z-10 grid grid-cols-2 xl:grid-cols-4 gap-2';
+      container.innerHTML = slots
+        .map((slot) => {
+          const glow = slot.id === nextSlotId ? 'next-action-glow' : '';
+          if (h === 'conservative') return this.renderConservativeCard(slot as ConservativeSlot, glow);
+          if (h === 'semiconservative') return this.renderSemiconservativeCard(slot as SemiconservativeSlot, glow);
+          return this.renderDispersiveCard(slot as DispersiveSlot, glow);
+        })
+        .join('');
+    }
+
+    const spinBtn = document.getElementById('spin-centrifuge-btn') as HTMLButtonElement | null;
+    const spinIcon = document.getElementById('spin-btn-icon');
+    const spinLabel = document.getElementById('spin-btn-label');
+    const nextBtn = document.getElementById('next-gen-btn');
+    const compareCtaBtn = document.getElementById('compare-cta-btn');
+
+    if (spinBtn && spinIcon && spinLabel) {
+      if (store.centrifugePhase === 'loading') {
+        spinBtn.disabled = true;
+        spinBtn.className = 'bg-slate-300 text-slate-500 cursor-not-allowed font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm flex items-center justify-center gap-2';
+        spinIcon.className = 'w-3 h-3 rounded-full bg-sky-400 inline-block';
+        spinLabel.textContent = 'DNAを試験管へ投入中...';
+      } else if (store.centrifugePhase === 'spinning') {
+        spinBtn.disabled = false;
+        spinBtn.className = 'bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 next-action-glow';
+        spinIcon.className = 'w-3 h-3 rounded-sm bg-white inline-block';
+        spinLabel.textContent = '遠心分離を止める（ストップ）';
+      } else if (store.centrifugePhase === 'settling') {
+        spinBtn.disabled = true;
+        spinBtn.className = 'bg-slate-300 text-slate-500 cursor-not-allowed font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm flex items-center justify-center gap-2';
+        spinIcon.className = 'w-3 h-3 rounded-full bg-slate-400 inline-block';
+        spinLabel.textContent = 'バンド形成中...';
+      } else if (complete && !spun) {
+        spinBtn.disabled = false;
+        spinBtn.className = 'bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 next-action-glow';
+        spinIcon.className = 'w-3 h-3 rounded-full bg-white inline-block';
+        spinLabel.textContent = 'DNAを投入して遠心分離する';
+      } else {
+        spinBtn.disabled = true;
+        spinBtn.className = 'bg-slate-300 text-slate-500 cursor-not-allowed font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm flex items-center justify-center gap-2';
+        spinIcon.className = 'w-3 h-3 rounded-full bg-slate-400 inline-block';
+        spinLabel.textContent = spun ? '遠心分離 完了' : 'DNAを投入して遠心分離する';
+      }
+    }
+
+    if (nextBtn) {
+      const showNext = gen === 1 && spun && !store.isBusy();
+      nextBtn.classList.toggle('hidden', !showNext);
+      nextBtn.classList.toggle('next-action-glow', showNext);
+    }
+
+    if (compareCtaBtn) {
+      const showCompare = gen === 2 && spun && !store.isBusy();
+      compareCtaBtn.classList.toggle('hidden', !showCompare);
+      compareCtaBtn.classList.toggle('next-action-glow', showCompare && completedCount === 3);
+    }
+  },
+
+  renderMiniTubeHtml(title: string, molecules: readonly Molecule[] | null, idPrefix: string): string {
+    const summary = molecules ? BiologyModel.aggregateBands(molecules).compactLabel : '未実験';
+    return `
+      <div class="flex flex-col items-center">
+        <div class="mini-tube-height relative w-11 rounded-b-full border border-slate-500/80 bg-slate-800 overflow-hidden">
+          <div class="absolute inset-x-0 top-[24%] -translate-y-1/2 border-t border-dashed border-sky-400/35"></div>
+          <div class="absolute inset-x-0 top-[52%] -translate-y-1/2 border-t border-dashed border-slate-400/35"></div>
+          <div class="absolute inset-x-0 top-[80%] -translate-y-1/2 border-t border-dashed border-rose-400/35"></div>
+          <div id="${idPrefix}" class="absolute inset-0"></div>
+        </div>
+        <div class="text-[10px] font-extrabold text-slate-200 mt-1">${title}</div>
+        <div class="text-[9px] font-bold ${molecules ? 'text-emerald-300' : 'text-slate-400'} text-center leading-tight min-h-[22px]">${summary}</div>
+      </div>
+    `;
+  },
+
+  renderCompareModal(): void {
+    const grid = document.getElementById('compare-cards-grid');
+    if (!grid) return;
+
+    grid.innerHTML = HYPOTHESIS_ORDER.map((key) => {
+      const meta = HYPOTHESES[key];
+      const rec = store.recordedResults[key];
+      const bothDone = Boolean(rec.gen1 && rec.gen2);
+      const cardStateClass = bothDone
+        ? 'bg-white border-emerald-300'
+        : 'bg-slate-100/80 border-slate-200 opacity-50 grayscale';
+      return `
+        <div class="border-2 ${cardStateClass} rounded-2xl p-3 flex flex-col gap-2 transition">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-[10px] font-extrabold ${meta.accentText}">${meta.number}</span>
+              <h3 class="font-black text-sm text-slate-900">${meta.name}</h3>
+            </div>
+            <span class="text-[10px] font-black px-2 py-0.5 rounded-full ${bothDone ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-500'}">
+              ${bothDone ? '記録完了' : '未完了'}
+            </span>
+          </div>
+          <div class="bg-slate-900 rounded-xl p-2.5 flex items-end justify-around gap-1">
+            ${this.renderMiniTubeHtml('第0世代', bothDone ? ACTUAL_MESELSON_STAHL.gen0 : null, `cmp-${key}-0`)}
+            ${this.renderMiniTubeHtml('第1世代', bothDone ? rec.gen1 : null, `cmp-${key}-1`)}
+            ${this.renderMiniTubeHtml('第2世代', bothDone ? rec.gen2 : null, `cmp-${key}-2`)}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    HYPOTHESIS_ORDER.forEach((key) => {
+      const rec = store.recordedResults[key];
+      if (rec.gen1 && rec.gen2) {
+        CentrifugeView.renderBands(`cmp-${key}-0`, ACTUAL_MESELSON_STAHL.gen0, true);
+        CentrifugeView.renderBands(`cmp-${key}-1`, rec.gen1, true);
+        CentrifugeView.renderBands(`cmp-${key}-2`, rec.gen2, true);
+      }
+    });
+
+    const actualPanel = document.getElementById('actual-result-panel');
+    const toggleBtn = document.getElementById('toggle-actual-btn') as HTMLButtonElement | null;
+    const actualTubes = document.getElementById('actual-tubes-container');
+    const completedCount = store.countCompletedHypotheses();
+    const allCompleted = completedCount === 3;
+
+    if (actualPanel && toggleBtn && actualTubes) {
+      if (!allCompleted) {
+        store.actualResultRevealed = false;
+      }
+      toggleBtn.disabled = !allCompleted;
+      if (!allCompleted) {
+        toggleBtn.className = 'bg-slate-300 text-slate-500 cursor-not-allowed font-extrabold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-sm';
+        toggleBtn.textContent = `3仮説すべて実験すると表示できます（${completedCount}/3）`;
+      } else {
+        toggleBtn.className = `bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-sm transition active:scale-95 cursor-pointer ${store.actualResultRevealed ? '' : 'next-action-glow'}`;
+        toggleBtn.textContent = store.actualResultRevealed
+          ? '実際の実験結果を隠す'
+          : '実際の実験結果を表示する';
+      }
+
+      actualPanel.classList.toggle('hidden', !store.actualResultRevealed);
+
+      if (store.actualResultRevealed) {
+        actualTubes.innerHTML = [
+          this.renderMiniTubeHtml('第0世代', ACTUAL_MESELSON_STAHL.gen0, 'actual-tube-0'),
+          this.renderMiniTubeHtml('第1世代', ACTUAL_MESELSON_STAHL.gen1, 'actual-tube-1'),
+          this.renderMiniTubeHtml('第2世代', ACTUAL_MESELSON_STAHL.gen2, 'actual-tube-2')
+        ].join('');
+        CentrifugeView.renderBands('actual-tube-0', ACTUAL_MESELSON_STAHL.gen0, true);
+        CentrifugeView.renderBands('actual-tube-1', ACTUAL_MESELSON_STAHL.gen1, true);
+        CentrifugeView.renderBands('actual-tube-2', ACTUAL_MESELSON_STAHL.gen2, true);
+      }
+    }
+  },
+
+  syncGen0ModalUi(): void {
+    const wrapper = document.getElementById('modal-tube-wrapper');
+    const spinBtn = document.getElementById('modal-spin-gen0-btn') as HTMLButtonElement | null;
+    const spinLabel = document.getElementById('modal-spin-label');
+    const spinIcon = document.getElementById('modal-spin-icon');
+    const startBtn = document.getElementById('modal-start-btn') as HTMLButtonElement | null;
+    const statusEl = document.getElementById('modal-tube-status');
+    const phase = store.gen0Phase;
+
+    if (wrapper) wrapper.classList.toggle('animate-centrifuge', phase === 'spinning');
+
+    if (phase === 'idle') {
+      if (spinBtn) {
+        spinBtn.disabled = false;
+        spinBtn.className = 'w-full bg-rose-500 hover:bg-rose-600 text-white font-black py-2.5 px-4 rounded-2xl text-xs sm:text-sm shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 next-action-glow';
+      }
+      if (spinIcon) spinIcon.className = 'w-3 h-3 rounded-full bg-white inline-block';
+      if (spinLabel) spinLabel.textContent = 'DNAを投入して遠心分離する';
+      if (statusEl) statusEl.textContent = 'ボタンを押してDNAを投入しよう！';
+      if (startBtn) {
+        startBtn.disabled = true;
+        startBtn.classList.remove('next-action-glow');
+      }
+    } else if (phase === 'loading') {
+      if (spinBtn) {
+        spinBtn.disabled = true;
+        spinBtn.classList.remove('next-action-glow');
+      }
+      if (spinLabel) spinLabel.textContent = 'DNAを試験管へ投入中...';
+      if (statusEl) statusEl.textContent = 'DNAが試験管の中へ吸い込まれています...';
+    } else if (phase === 'spinning') {
+      if (spinBtn) {
+        spinBtn.disabled = false;
+        spinBtn.className = 'w-full bg-amber-500 hover:bg-amber-600 text-white font-black py-2.5 px-4 rounded-2xl text-xs sm:text-sm shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 next-action-glow';
+      }
+      if (spinIcon) spinIcon.className = 'w-3 h-3 rounded-sm bg-white inline-block';
+      if (spinLabel) spinLabel.textContent = '遠心分離を止める（ストップ）';
+      if (statusEl) statusEl.textContent = '回転しながら比重の位置へ移動中！もう一度押して止めよう';
+    } else if (phase === 'settling') {
+      if (spinBtn) {
+        spinBtn.disabled = true;
+        spinBtn.classList.remove('next-action-glow');
+      }
+      if (spinLabel) spinLabel.textContent = 'バンド形成中...';
+      if (statusEl) statusEl.textContent = 'バンドが形成されています...';
+    } else if (phase === 'done') {
+      if (spinBtn) {
+        spinBtn.disabled = true;
+        spinBtn.className = 'w-full bg-slate-300 text-slate-500 cursor-not-allowed font-black py-2.5 px-4 rounded-2xl text-xs sm:text-sm shadow-sm flex items-center justify-center gap-2';
+      }
+      if (spinIcon) spinIcon.className = 'w-3 h-3 rounded-full bg-slate-400 inline-block';
+      if (spinLabel) spinLabel.textContent = '分離完了！';
+      if (statusEl) statusEl.textContent = '一番下（比重大）にバンドができた！';
+      if (startBtn) {
+        startBtn.disabled = false;
+        startBtn.classList.add('next-action-glow');
+      }
+    }
+  }
+};

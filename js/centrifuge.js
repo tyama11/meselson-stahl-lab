@@ -4,7 +4,7 @@ import { BiologyModel } from './model.js';
 // 遠心分離機＆試験管ビュー (CentrifugeView)
 // =========================================================================
 export const CentrifugeView = {
-  renderParticleInnerHtml(molecule) {
+  renderParticleInnerHtml(molecule          )         {
     if (molecule.segmented) {
       const segsL = molecule.tierKey === 'mid'
         ? ['bg-rose-500', 'bg-sky-400', 'bg-rose-500', 'bg-sky-400']
@@ -13,25 +13,25 @@ export const CentrifugeView = {
         ? ['bg-sky-400', 'bg-rose-500', 'bg-sky-400', 'bg-rose-500']
         : ['bg-sky-400', 'bg-rose-500', 'bg-sky-400', 'bg-sky-400'];
 
-      const buildCol = (arr) =>
+      const buildCol = (arr                   )         =>
         `<span class="w-1 h-4 rounded-full overflow-hidden flex flex-col">${arr.map((c) => `<span class="flex-1 ${c}"></span>`).join('')}</span>`;
       return buildCol(segsL) + buildCol(segsR);
     }
 
-    const pairMap = {
+    const pairMap                                           = {
       heavy: ['bg-rose-500', 'bg-rose-500'],
       mid: ['bg-rose-500', 'bg-sky-400'],
       'light-mid': ['bg-rose-500', 'bg-sky-400'],
       light: ['bg-sky-400', 'bg-sky-400']
     };
-    const [l, r] = pairMap[molecule.tierKey] || pairMap.heavy;
+    const [l, r] = pairMap[molecule.tierKey];
     return `
       <span class="w-1 h-4 rounded-full ${l} shadow-sm"></span>
       <span class="w-1 h-4 rounded-full ${r} shadow-sm"></span>
     `;
   },
 
-  renderParticles(containerId, molecules, swirling = false) {
+  renderParticles(containerId        , molecules                     , swirling = false)       {
     const container = document.getElementById(containerId);
     if (!container) return;
 
@@ -57,20 +57,20 @@ export const CentrifugeView = {
       .join('');
   },
 
-  migrateParticlesToDensity(containerId) {
+  migrateParticlesToDensity(containerId        )       {
     const container = document.getElementById(containerId);
     if (!container) return;
-    const items = container.querySelectorAll('.dna-strand-item');
-    const layouts = {
+    const items = container.querySelectorAll             ('.dna-strand-item');
+    const layouts                                    = {
       1: ['44%'],
       2: ['30%', '58%'],
       4: ['16%', '35%', '54%', '73%']
     };
-    const xSlots = layouts[items.length] || ['22%', '44%', '66%'];
+    const xSlots = layouts[items.length] ?? ['22%', '44%', '66%'];
 
     items.forEach((el, idx) => {
       el.classList.remove('dna-particle-swirl');
-      const ratio = parseFloat(el.getAttribute('data-heavy-ratio') || '1');
+      const ratio = parseFloat(el.getAttribute('data-heavy-ratio') ?? '1');
       const targetTop = BiologyModel.computeBandTopPct(ratio);
       el.style.top = `${targetTop}%`;
       el.style.left = xSlots[idx % xSlots.length];
@@ -78,7 +78,7 @@ export const CentrifugeView = {
     });
   },
 
-  renderBands(containerId, molecules, compact = false) {
+  renderBands(containerId        , molecules                     , compact = false)       {
     const container = document.getElementById(containerId);
     if (!container) return;
     const { bands } = BiologyModel.aggregateBands(molecules);
@@ -104,7 +104,7 @@ export const CentrifugeView = {
       .join('');
   },
 
-  clearGenTubes() {
+  clearGenTubes()       {
     [1, 2].forEach((g) => {
       const content = document.getElementById(`tube-content-${g}`);
       const label = document.getElementById(`tube-label-${g}`);
@@ -118,12 +118,12 @@ export const CentrifugeView = {
     });
   },
 
-  clearFlyingDna() {
+  clearFlyingDna()       {
     document.querySelectorAll('.dna-fly-clone, .result-fly-badge').forEach((el) => el.remove());
     document.querySelectorAll('.tube-receive-pulse').forEach((el) => el.classList.remove('tube-receive-pulse'));
   },
 
-  flyResultToCompareBtn(hypothesisName) {
+  flyResultToCompareBtn(hypothesisName        )       {
     const srcTube = document.getElementById('tube-wrapper-2');
     const compareBtn = document.getElementById('open-compare-btn');
     if (!srcTube || !compareBtn) return;
@@ -177,9 +177,9 @@ export const CentrifugeView = {
     }
   },
 
-  flyDnaIntoTube(sourceElements, targetTubeId) {
+  flyDnaIntoTube(sourceElements                        , targetTubeId        )         {
     const tube = document.getElementById(targetTubeId);
-    if (!tube || !sourceElements || sourceElements.length === 0) {
+    if (!tube || sourceElements.length === 0) {
       return 0;
     }
 
@@ -192,7 +192,7 @@ export const CentrifugeView = {
 
     sourceElements.forEach((srcEl, idx) => {
       const rect = srcEl.getBoundingClientRect();
-      const clone = srcEl.cloneNode(true);
+      const clone = srcEl.cloneNode(true)               ;
       clone.removeAttribute('id');
       clone.querySelectorAll('[id]').forEach((n) => n.removeAttribute('id'));
       clone.classList.remove('relative');
@@ -240,7 +240,7 @@ export const CentrifugeView = {
     return flyMs + (sourceElements.length - 1) * staggerMs + 60;
   },
 
-  setStatusBadge(text, colorClasses) {
+  setStatusBadge(text        , colorClasses        )       {
     const badge = document.getElementById('centrifuge-status');
     if (!badge) return;
     badge.textContent = text;

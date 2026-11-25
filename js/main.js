@@ -10,11 +10,19 @@ import { CentrifugeView } from './centrifuge.js';
 import { LabView } from './labView.js';
 import { GestureController } from './gestures.js';
 
+function isHypothesisId(value               )                        {
+  return value === 'conservative' || value === 'semiconservative' || value === 'dispersive';
+}
+
+function isSlotActionType(value               )                          {
+  return value === 'build' || value === 'split' || value === 'cut' || value === 'mix';
+}
+
 // =========================================================================
 // アプリケーションコントローラ (Actions & Lifecycle)
 // =========================================================================
 const AppController = {
-  init() {
+  init()       {
     store.gen1Slots = BiologyModel.createGen1Slots(store.hypothesis);
     CentrifugeView.renderParticles('tube-content-0', ACTUAL_MESELSON_STAHL.gen0, false);
     CentrifugeView.renderParticles('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0, false);
@@ -25,14 +33,14 @@ const AppController = {
     this.attachEvents();
   },
 
-  openRulesModal(step = 1) {
+  openRulesModal(step = 1)       {
     const modal = document.getElementById('rules-modal');
     if (!modal) return;
     this.showModalStep(step);
     modal.classList.remove('hidden');
   },
 
-  closeRulesModal() {
+  closeRulesModal()       {
     const modal = document.getElementById('rules-modal');
     if (modal) modal.classList.add('hidden');
     store.clearTimer('gen0');
@@ -46,7 +54,7 @@ const AppController = {
     LabView.renderLab();
   },
 
-  showModalStep(step) {
+  showModalStep(step        )       {
     const s1 = document.getElementById('modal-step-1');
     const s2 = document.getElementById('modal-step-2');
     const s3 = document.getElementById('modal-step-3');
@@ -64,7 +72,7 @@ const AppController = {
     }
   },
 
-  finalizeGen0Visuals() {
+  finalizeGen0Visuals()       {
     CentrifugeView.renderBands('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0);
     CentrifugeView.renderBands('tube-content-0', ACTUAL_MESELSON_STAHL.gen0);
     const lbl0 = document.getElementById('tube-label-0');
@@ -76,7 +84,7 @@ const AppController = {
     LabView.setObservation('第0世代は一番下（比重大）に沈みました！次は第1世代を作ろう！');
   },
 
-  toggleModalGen0() {
+  toggleModalGen0()       {
     if (store.gen0Phase === 'idle') {
       store.gen0Phase = 'loading';
       LabView.syncGen0ModalUi();
@@ -117,8 +125,8 @@ const AppController = {
     }
   },
 
-  selectHypothesis(hypo) {
-    if (store.isBusy() || !HYPOTHESES[hypo]) return;
+  selectHypothesis(hypo              )       {
+    if (store.isBusy()) return;
     store.hypothesis = hypo;
     store.currentGen = 1;
     store.gen1Spun = false;
@@ -131,7 +139,7 @@ const AppController = {
     LabView.renderLab();
   },
 
-  goToGen1() {
+  goToGen1()       {
     if (store.isBusy() || store.currentGen === 1) return;
     store.currentGen = 1;
     store.gen1Spun = false;
@@ -144,7 +152,7 @@ const AppController = {
     LabView.renderLab();
   },
 
-  goToGen2() {
+  goToGen2()       {
     if (store.isBusy() || !store.gen1Spun) return;
     store.currentGen = 2;
     store.gen2Spun = false;
@@ -154,14 +162,14 @@ const AppController = {
     LabView.renderLab();
   },
 
-  handleSlotAction(slotId, actionType) {
+  handleSlotAction(slotId        , actionType                )       {
     if (store.isBusy()) return;
     const slots = store.getCurrentSlots();
     const changed = BiologyModel.applySlotAction(slots, store.hypothesis, store.currentGen, slotId, actionType);
     if (changed) LabView.renderLab();
   },
 
-  toggleCentrifuge() {
+  toggleCentrifuge()       {
     const slots = store.getCurrentSlots();
     if (store.centrifugePhase === 'loading' || store.centrifugePhase === 'settling') return;
     if (!BiologyModel.isGenerationComplete(slots, store.hypothesis)) return;
@@ -180,7 +188,7 @@ const AppController = {
         labelEl.className = 'text-[10px] font-bold text-sky-400 leading-tight';
       }
 
-      const sourceEls = [...document.querySelectorAll('#dna-slots-container [data-dna-visual]')];
+      const sourceEls = Array.from(document.querySelectorAll             ('#dna-slots-container [data-dna-visual]'));
       const delayMs = CentrifugeView.flyDnaIntoTube(sourceEls, `tube-wrapper-${gen}`);
       LabView.renderLab();
 
@@ -251,25 +259,25 @@ const AppController = {
     }
   },
 
-  openCompareModal() {
+  openCompareModal()       {
     const modal = document.getElementById('compare-modal');
     if (!modal) return;
     LabView.renderCompareModal();
     modal.classList.remove('hidden');
   },
 
-  closeCompareModal() {
+  closeCompareModal()       {
     const modal = document.getElementById('compare-modal');
     if (modal) modal.classList.add('hidden');
   },
 
-  toggleActualResult() {
+  toggleActualResult()       {
     if (store.countCompletedHypotheses() < 3) return;
     store.actualResultRevealed = !store.actualResultRevealed;
     LabView.renderCompareModal();
   },
 
-  resetAll() {
+  resetAll()       {
     store.clearAllTimers();
     CentrifugeView.clearFlyingDna();
     store.gen0Phase = 'idle';
@@ -300,7 +308,7 @@ const AppController = {
     LabView.renderLab();
   },
 
-  toggleFullscreen() {
+  toggleFullscreen()       {
     if (!document.fullscreenEnabled) return;
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(() => {});
@@ -309,35 +317,40 @@ const AppController = {
     }
   },
 
-  syncFullscreenBtn() {
+  syncFullscreenBtn()       {
     const btn = document.getElementById('fullscreen-btn');
     if (!btn) return;
     btn.textContent = document.fullscreenElement ? '✕ 全画面解除' : '⛶ 全画面';
   },
 
-  attachEvents() {
+  attachEvents()       {
     document.addEventListener('fullscreenchange', () => this.syncFullscreenBtn());
-    document.addEventListener('click', (e) => {
-      const target = e.target.closest('[data-action]');
+    document.addEventListener('click', (e            ) => {
+      if (!(e.target instanceof Element)) return;
+      const target = e.target.closest             ('[data-action]');
       if (!target) return;
 
       const action = target.getAttribute('data-action');
       switch (action) {
-        case 'select-hypothesis':
-          this.selectHypothesis(target.getAttribute('data-hypothesis'));
+        case 'select-hypothesis': {
+          const hypo = target.getAttribute('data-hypothesis');
+          if (isHypothesisId(hypo)) this.selectHypothesis(hypo);
           break;
+        }
         case 'go-gen-1':
           this.goToGen1();
           break;
         case 'go-gen-2':
           this.goToGen2();
           break;
-        case 'slot-action':
-          this.handleSlotAction(
-            parseInt(target.getAttribute('data-slot-id'), 10),
-            target.getAttribute('data-slot-op')
-          );
+        case 'slot-action': {
+          const slotId = parseInt(target.getAttribute('data-slot-id') ?? '', 10);
+          const op = target.getAttribute('data-slot-op');
+          if (!Number.isNaN(slotId) && isSlotActionType(op)) {
+            this.handleSlotAction(slotId, op);
+          }
           break;
+        }
         case 'toggle-centrifuge':
           this.toggleCentrifuge();
           break;
@@ -350,9 +363,11 @@ const AppController = {
         case 'close-rules':
           this.closeRulesModal();
           break;
-        case 'modal-step':
-          this.showModalStep(parseInt(target.getAttribute('data-step'), 10));
+        case 'modal-step': {
+          const step = parseInt(target.getAttribute('data-step') ?? '1', 10);
+          this.showModalStep(Number.isNaN(step) ? 1 : step);
           break;
+        }
         case 'open-compare':
           this.openCompareModal();
           break;
@@ -373,7 +388,7 @@ const AppController = {
       }
     });
 
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', (e               ) => {
       if (e.key !== 'Escape') return;
       const compareModal = document.getElementById('compare-modal');
       if (compareModal && !compareModal.classList.contains('hidden')) {

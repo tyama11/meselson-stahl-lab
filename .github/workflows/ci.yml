@@ -1,0 +1,38 @@
+name: TypeScript (tsrs) & Unit Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install devDependencies (CI only)
+        run: npm install --no-audit --no-fund
+
+      - name: Show tsrs version
+        run: npx tsrs --version
+
+      - name: Typecheck with oxc-project/tsrs
+        run: npm run typecheck
+
+      - name: Build JS with oxc-project/tsrs
+        run: npm run build
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Verify emitted JS syntax
+        run: for f in js/*.js; do node --check "$f"; done

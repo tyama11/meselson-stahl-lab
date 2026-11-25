@@ -11,12 +11,15 @@ import { CentrifugeView } from './centrifuge.js';
 // DNAカード＆ラボ全体ビュー (LabView)
 // =========================================================================
 export const LabView = {
-  setObservation(text) {
+  setObservation(text        )       {
     const el = document.getElementById('observation-box');
     if (el) el.textContent = text;
   },
 
-  renderStrandHtml(color, { animateGrow = false, delaySec = 0, buildSlotId = null } = {}) {
+  renderStrandHtml(
+    color                ,
+    { animateGrow = false, delaySec = 0, buildSlotId = null }                      = {}
+  )         {
     const animClass = animateGrow ? 'animate-grow-top' : '';
     const animStyle = animateGrow && delaySec > 0 ? `style="animation-delay:${delaySec}s;"` : '';
     if (color === 'red') {
@@ -31,7 +34,13 @@ export const LabView = {
     return `<div class="dna-strand-h relative w-3.5 rounded-full border-2 border-dashed border-sky-300 bg-sky-50/60 overflow-hidden">${fillHtml}</div>`;
   },
 
-  renderSegmentedStrandHtml(segs, isCut, newMask = [], animateGrow = false, buildSlotId = null) {
+  renderSegmentedStrandHtml(
+    segs                           ,
+    isCut         ,
+    newMask                     = [],
+    animateGrow = false,
+    buildSlotId                = null
+  )         {
     if (!isCut) {
       return `
         <div class="dna-strand-h flex flex-col w-3.5 rounded-full overflow-hidden shadow-sm">
@@ -67,7 +76,7 @@ export const LabView = {
     `;
   },
 
-  renderRungsHtml(active) {
+  renderRungsHtml(active         )         {
     const color = active ? 'bg-slate-400' : 'bg-slate-200';
     return `
       <div class="dna-rungs-h flex flex-col justify-around" aria-hidden="true">
@@ -78,15 +87,16 @@ export const LabView = {
     `;
   },
 
-  renderStatusBadge(slot, hypo) {
+  renderStatusBadge(slot         , hypo              )         {
     if (BiologyModel.isSlotComplete(slot, hypo)) {
       return `<span class="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">完成</span>`;
     }
-    const label = slot.exists === false ? '待機中' : '作業中';
+    const exists = 'exists' in slot ? slot.exists : true;
+    const label = exists === false ? '待機中' : '作業中';
     return `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">${label}</span>`;
   },
 
-  renderSwipeBuildGuide(slotId, text = '上から下へなぞって青い鎖を合成！', glowClass = '') {
+  renderSwipeBuildGuide(slotId        , text = '上から下へなぞって青い鎖を合成！', glowClass = '')         {
     return `
       <div class="text-center text-[11px] font-extrabold text-sky-800 py-1 bg-sky-50 rounded-xl border border-sky-200 ${glowClass}">
         ${text}
@@ -97,7 +107,7 @@ export const LabView = {
     `;
   },
 
-  renderBuildOverlay(slotId, op) {
+  renderBuildOverlay(slotId        , op                )         {
     return `
       <div
         data-build-slot="${slotId}"
@@ -108,7 +118,7 @@ export const LabView = {
     `;
   },
 
-  renderCardAmbientBlueSpecks() {
+  renderCardAmbientBlueSpecks()         {
     const specks = [
       { top: '16%', left: '10%', sz: 'w-1 h-1', dx: '3px', dy: '-3px', dur: '4.2s' },
       { top: '26%', left: '84%', sz: 'w-1.5 h-1.5', dx: '-3px', dy: '3px', dur: '4.9s' },
@@ -129,7 +139,7 @@ export const LabView = {
     `;
   },
 
-  getBlueAbsorbTargets(slot, hypo) {
+  getBlueAbsorbTargets(slot         , hypo              )            {
     // 左鎖の中心 x ≈ -22px、右鎖の中心 x ≈ +22px、縦方向は -36px〜+36px
     const rowYs = [-36, -12, 12, 36];
     if (hypo === 'conservative') {
@@ -141,23 +151,25 @@ export const LabView = {
       ];
     }
     if (hypo === 'semiconservative') {
-      const side = slot.built ? slot.newSide : !slot.left ? 'left' : 'right';
+      const sSlot = slot                        ;
+      const side = sSlot.built ? sSlot.newSide : !sSlot.left ? 'left' : 'right';
       const tx = side === 'left' ? -22 : 22;
       return rowYs.map((ty) => ({ tx, ty }));
     }
     // dispersive: 空き断片（または直前に埋めた新断片）の正確な位置へ吸収
-    const targets = [];
-    const useMask = Boolean(slot.mixed);
+    const dSlot = slot                  ;
+    const targets            = [];
+    const useMask = Boolean(dSlot.mixed);
     for (let i = 0; i < 4; i++) {
-      const leftTarget = useMask ? slot.newLeftMask?.[i] : slot.leftSegs?.[i] === null;
-      const rightTarget = useMask ? slot.newRightMask?.[i] : slot.rightSegs?.[i] === null;
+      const leftTarget = useMask ? dSlot.newLeftMask?.[i] : dSlot.leftSegs?.[i] === null;
+      const rightTarget = useMask ? dSlot.newRightMask?.[i] : dSlot.rightSegs?.[i] === null;
       if (leftTarget) targets.push({ tx: -22, ty: rowYs[i] });
       if (rightTarget) targets.push({ tx: 22, ty: rowYs[i] });
     }
     return targets.length > 0 ? targets : [{ tx: -22, ty: 0 }, { tx: 22, ty: 0 }];
   },
 
-  renderBlueAbsorbParticles(slot, hypo, mode) {
+  renderBlueAbsorbParticles(slot         , hypo              , mode            )         {
     if (!mode) return '';
     const targets = this.getBlueAbsorbTargets(slot, hypo);
     const coords = [
@@ -195,10 +207,10 @@ export const LabView = {
     return '';
   },
 
-  renderConservativeCard(slot, glowClass) {
+  renderConservativeCard(slot                  , glowClass        )         {
     const animGrow = Boolean(slot.justBuilt && !slot.isOriginal);
     const canBuild = !slot.built;
-    const absorbMode = canBuild ? 'ready' : animGrow ? 'justBuilt' : null;
+    const absorbMode             = canBuild ? 'ready' : animGrow ? 'justBuilt' : null;
     const actionHtml = slot.built
       ? `<div class="text-center text-[11px] font-extrabold text-emerald-700 py-1.5 bg-emerald-50 rounded-xl">${slot.isOriginal ? '元のDNAそのまま' : '2本鎖が完成！'}</div>`
       : this.renderSwipeBuildGuide(slot.id, '上から下へなぞって青の2本鎖を作る！', glowClass);
@@ -222,12 +234,12 @@ export const LabView = {
     `;
   },
 
-  renderSemiconservativeCard(slot, glowClass) {
+  renderSemiconservativeCard(slot                      , glowClass        )         {
     const isDone = BiologyModel.isSlotComplete(slot, 'semiconservative');
     const animLeft = Boolean(slot.justBuilt && slot.newSide === 'left');
     const animRight = Boolean(slot.justBuilt && slot.newSide === 'right');
     const canBuild = Boolean(slot.exists && slot.split && !slot.built);
-    const absorbMode = canBuild ? 'ready' : slot.justBuilt ? 'justBuilt' : null;
+    const absorbMode             = canBuild ? 'ready' : slot.justBuilt ? 'justBuilt' : null;
 
     let actionHtml = '';
     if (!slot.exists) {
@@ -266,10 +278,10 @@ export const LabView = {
     `;
   },
 
-  renderDispersiveCard(slot, glowClass) {
+  renderDispersiveCard(slot                , glowClass        )         {
     const isDone = BiologyModel.isSlotComplete(slot, 'dispersive');
     const canBuild = Boolean(slot.exists && slot.cut && !slot.mixed);
-    const absorbMode = canBuild ? 'ready' : slot.justBuilt ? 'justBuilt' : null;
+    const absorbMode             = canBuild ? 'ready' : slot.justBuilt ? 'justBuilt' : null;
 
     let actionHtml = '';
     if (!slot.exists) {
@@ -317,7 +329,7 @@ export const LabView = {
     `;
   },
 
-  renderLab() {
+  renderLab()       {
     const h = store.hypothesis;
     const gen = store.currentGen;
     const slots = store.getCurrentSlots();
@@ -383,14 +395,14 @@ export const LabView = {
       container.innerHTML = slots
         .map((slot) => {
           const glow = slot.id === nextSlotId ? 'next-action-glow' : '';
-          if (h === 'conservative') return this.renderConservativeCard(slot, glow);
-          if (h === 'semiconservative') return this.renderSemiconservativeCard(slot, glow);
-          return this.renderDispersiveCard(slot, glow);
+          if (h === 'conservative') return this.renderConservativeCard(slot                    , glow);
+          if (h === 'semiconservative') return this.renderSemiconservativeCard(slot                        , glow);
+          return this.renderDispersiveCard(slot                  , glow);
         })
         .join('');
     }
 
-    const spinBtn = document.getElementById('spin-centrifuge-btn');
+    const spinBtn = document.getElementById('spin-centrifuge-btn')                            ;
     const spinIcon = document.getElementById('spin-btn-icon');
     const spinLabel = document.getElementById('spin-btn-label');
     const nextBtn = document.getElementById('next-gen-btn');
@@ -438,7 +450,7 @@ export const LabView = {
     }
   },
 
-  renderMiniTubeHtml(title, molecules, idPrefix) {
+  renderMiniTubeHtml(title        , molecules                            , idPrefix        )         {
     const summary = molecules ? BiologyModel.aggregateBands(molecules).compactLabel : '未実験';
     return `
       <div class="flex flex-col items-center">
@@ -454,7 +466,7 @@ export const LabView = {
     `;
   },
 
-  renderCompareModal() {
+  renderCompareModal()       {
     const grid = document.getElementById('compare-cards-grid');
     if (!grid) return;
 
@@ -495,7 +507,7 @@ export const LabView = {
     });
 
     const actualPanel = document.getElementById('actual-result-panel');
-    const toggleBtn = document.getElementById('toggle-actual-btn');
+    const toggleBtn = document.getElementById('toggle-actual-btn')                            ;
     const actualTubes = document.getElementById('actual-tubes-container');
     const completedCount = store.countCompletedHypotheses();
     const allCompleted = completedCount === 3;
@@ -530,12 +542,12 @@ export const LabView = {
     }
   },
 
-  syncGen0ModalUi() {
+  syncGen0ModalUi()       {
     const wrapper = document.getElementById('modal-tube-wrapper');
-    const spinBtn = document.getElementById('modal-spin-gen0-btn');
+    const spinBtn = document.getElementById('modal-spin-gen0-btn')                            ;
     const spinLabel = document.getElementById('modal-spin-label');
     const spinIcon = document.getElementById('modal-spin-icon');
-    const startBtn = document.getElementById('modal-start-btn');
+    const startBtn = document.getElementById('modal-start-btn')                            ;
     const statusEl = document.getElementById('modal-tube-status');
     const phase = store.gen0Phase;
 
