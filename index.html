@@ -5,8 +5,491 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>メセルソンとスタールの実験ラボ</title>
   <meta name="description" content="保存的複製・半保存的複製・分散的複製の3つの仮説を操作しながら再現し、塩化セシウム密度勾配遠心法のバンドを比較できるインタラクティブ生物教材。" />
-  <link rel="stylesheet" href="./css/tailwind.min.css" />
-  <link rel="stylesheet" href="./css/style.css" />
+  <style data-inlined-bundle>
+*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.19 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.\!container{width:100%!important}.container{width:100%}@media (min-width:640px){.\!container{max-width:640px!important}.container{max-width:640px}}@media (min-width:768px){.\!container{max-width:768px!important}.container{max-width:768px}}@media (min-width:1024px){.\!container{max-width:1024px!important}.container{max-width:1024px}}@media (min-width:1280px){.\!container{max-width:1280px!important}.container{max-width:1280px}}@media (min-width:1536px){.\!container{max-width:1536px!important}.container{max-width:1536px}}.pointer-events-none{pointer-events:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.-inset-1\.5{inset:-.375rem}.inset-0{inset:0}.inset-x-0{left:0;right:0}.inset-x-1\.5{left:.375rem;right:.375rem}.-right-2\.5{right:-.625rem}.-top-3\.5{top:-.875rem}.bottom-0{bottom:0}.left-0{left:0}.right-0\.5{right:.125rem}.right-1{right:.25rem}.top-0{top:0}.top-1\/2{top:50%}.top-4{top:1rem}.top-5{top:1.25rem}.top-\[24\%\]{top:24%}.top-\[52\%\]{top:52%}.top-\[80\%\]{top:80%}.z-10{z-index:10}.z-50{z-index:50}.-m-1{margin:-.25rem}.mx-2{margin-left:.5rem;margin-right:.5rem}.mx-auto{margin-left:auto;margin-right:auto}.my-1{margin-top:.25rem;margin-bottom:.25rem}.my-1\.5{margin-top:.375rem;margin-bottom:.375rem}.my-auto{margin-top:auto;margin-bottom:auto}.-mt-3\.5{margin-top:-.875rem}.mb-0\.5{margin-bottom:.125rem}.mb-1{margin-bottom:.25rem}.mb-2{margin-bottom:.5rem}.mb-2\.5{margin-bottom:.625rem}.mb-3{margin-bottom:.75rem}.mb-3\.5{margin-bottom:.875rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.mr-0\.5{margin-right:.125rem}.mt-0\.5{margin-top:.125rem}.mt-1{margin-top:.25rem}.mt-1\.5{margin-top:.375rem}.mt-2\.5{margin-top:.625rem}.inline-block{display:inline-block}.flex{display:flex}.\!grid{display:grid!important}.grid{display:grid}.hidden{display:none}.h-0\.5{height:.125rem}.h-1{height:.25rem}.h-1\.5{height:.375rem}.h-2\.5{height:.625rem}.h-20{height:5rem}.h-24{height:6rem}.h-28{height:7rem}.h-3{height:.75rem}.h-4{height:1rem}.h-8{height:2rem}.h-full{height:100%}.max-h-\[94dvh\]{max-height:94dvh}.min-h-\[22px\]{min-height:22px}.min-h-\[30px\]{min-height:30px}.min-h-screen{min-height:100vh}.w-1{width:.25rem}.w-1\.5{width:.375rem}.w-11{width:2.75rem}.w-12{width:3rem}.w-14{width:3.5rem}.w-16{width:4rem}.w-2{width:.5rem}.w-2\.5{width:.625rem}.w-3{width:.75rem}.w-3\.5{width:.875rem}.w-4{width:1rem}.w-5{width:1.25rem}.w-full{width:100%}.min-w-0{min-width:0}.max-w-3xl{max-width:48rem}.max-w-4xl{max-width:56rem}.max-w-\[1180px\]{max-width:1180px}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.-translate-y-1\/2{--tw-translate-y:-50%}.-translate-y-1\/2,.rotate-90{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.rotate-90{--tw-rotate:90deg}.scale-\[1\.02\]{--tw-scale-x:1.02;--tw-scale-y:1.02}.scale-\[1\.02\],.transform{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-ew-resize{cursor:ew-resize}.cursor-grab{cursor:grab}.cursor-not-allowed{cursor:not-allowed}.cursor-ns-resize{cursor:ns-resize}.cursor-pointer{cursor:pointer}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.items-stretch{align-items:stretch}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.justify-around{justify-content:space-around}.gap-0\.5{gap:.125rem}.gap-1{gap:.25rem}.gap-1\.5{gap:.375rem}.gap-2{gap:.5rem}.gap-2\.5{gap:.625rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.5rem*var(--tw-space-y-reverse))}.space-y-2\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.625rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.625rem*var(--tw-space-y-reverse))}.space-y-3>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.75rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.75rem*var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.overflow-x-hidden{overflow-x:hidden}.whitespace-nowrap{white-space:nowrap}.rounded{border-radius:.25rem}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-sm{border-radius:.125rem}.rounded-xl{border-radius:.75rem}.rounded-b-full{border-bottom-right-radius:9999px;border-bottom-left-radius:9999px}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-t-2{border-top-width:2px}.border-dashed{border-style:dashed}.border-amber-200{--tw-border-opacity:1;border-color:rgb(253 230 138/var(--tw-border-opacity,1))}.border-amber-300{--tw-border-opacity:1;border-color:rgb(252 211 77/var(--tw-border-opacity,1))}.border-amber-400{--tw-border-opacity:1;border-color:rgb(251 191 36/var(--tw-border-opacity,1))}.border-amber-500{--tw-border-opacity:1;border-color:rgb(245 158 11/var(--tw-border-opacity,1))}.border-emerald-200{--tw-border-opacity:1;border-color:rgb(167 243 208/var(--tw-border-opacity,1))}.border-emerald-300{--tw-border-opacity:1;border-color:rgb(110 231 183/var(--tw-border-opacity,1))}.border-indigo-200{--tw-border-opacity:1;border-color:rgb(199 210 254/var(--tw-border-opacity,1))}.border-indigo-300{--tw-border-opacity:1;border-color:rgb(165 180 252/var(--tw-border-opacity,1))}.border-purple-200{--tw-border-opacity:1;border-color:rgb(233 213 255/var(--tw-border-opacity,1))}.border-rose-200{--tw-border-opacity:1;border-color:rgb(254 205 211/var(--tw-border-opacity,1))}.border-rose-300{--tw-border-opacity:1;border-color:rgb(253 164 175/var(--tw-border-opacity,1))}.border-rose-400\/35{border-color:rgba(251,113,133,.35)}.border-sky-200{--tw-border-opacity:1;border-color:rgb(186 230 253/var(--tw-border-opacity,1))}.border-sky-300{--tw-border-opacity:1;border-color:rgb(125 211 252/var(--tw-border-opacity,1))}.border-sky-400\/35{border-color:rgba(56,189,248,.35)}.border-sky-500{--tw-border-opacity:1;border-color:rgb(14 165 233/var(--tw-border-opacity,1))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240/var(--tw-border-opacity,1))}.border-slate-400\/35{border-color:rgba(148,163,184,.35)}.border-slate-400\/70{border-color:rgba(148,163,184,.7)}.border-slate-400\/80{border-color:rgba(148,163,184,.8)}.border-slate-500\/80{border-color:rgba(100,116,139,.8)}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85/var(--tw-border-opacity,1))}.border-white{--tw-border-opacity:1;border-color:rgb(255 255 255/var(--tw-border-opacity,1))}.bg-amber-100{--tw-bg-opacity:1;background-color:rgb(254 243 199/var(--tw-bg-opacity,1))}.bg-amber-200\/80{background-color:hsla(48,97%,77%,.8)}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235/var(--tw-bg-opacity,1))}.bg-amber-50\/60{background-color:rgba(255,251,235,.6)}.bg-amber-50\/70{background-color:rgba(255,251,235,.7)}.bg-amber-500{--tw-bg-opacity:1;background-color:rgb(245 158 11/var(--tw-bg-opacity,1))}.bg-emerald-100{--tw-bg-opacity:1;background-color:rgb(209 250 229/var(--tw-bg-opacity,1))}.bg-emerald-50{--tw-bg-opacity:1;background-color:rgb(236 253 245/var(--tw-bg-opacity,1))}.bg-emerald-50\/70{background-color:rgba(236,253,245,.7)}.bg-emerald-500{--tw-bg-opacity:1;background-color:rgb(16 185 129/var(--tw-bg-opacity,1))}.bg-indigo-100{--tw-bg-opacity:1;background-color:rgb(224 231 255/var(--tw-bg-opacity,1))}.bg-indigo-600{--tw-bg-opacity:1;background-color:rgb(79 70 229/var(--tw-bg-opacity,1))}.bg-purple-100{--tw-bg-opacity:1;background-color:rgb(243 232 255/var(--tw-bg-opacity,1))}.bg-purple-50\/70{background-color:rgba(250,245,255,.7)}.bg-purple-500{--tw-bg-opacity:1;background-color:rgb(168 85 247/var(--tw-bg-opacity,1))}.bg-rose-100{--tw-bg-opacity:1;background-color:rgb(255 228 230/var(--tw-bg-opacity,1))}.bg-rose-300{--tw-bg-opacity:1;background-color:rgb(253 164 175/var(--tw-bg-opacity,1))}.bg-rose-300\/80{background-color:rgba(253,164,175,.8)}.bg-rose-400{--tw-bg-opacity:1;background-color:rgb(251 113 133/var(--tw-bg-opacity,1))}.bg-rose-400\/60{background-color:rgba(251,113,133,.6)}.bg-rose-400\/65{background-color:rgba(251,113,133,.65)}.bg-rose-50{--tw-bg-opacity:1;background-color:rgb(255 241 242/var(--tw-bg-opacity,1))}.bg-rose-500{--tw-bg-opacity:1;background-color:rgb(244 63 94/var(--tw-bg-opacity,1))}.bg-sky-100{--tw-bg-opacity:1;background-color:rgb(224 242 254/var(--tw-bg-opacity,1))}.bg-sky-200\/80{background-color:rgba(186,230,253,.8)}.bg-sky-300{--tw-bg-opacity:1;background-color:rgb(125 211 252/var(--tw-bg-opacity,1))}.bg-sky-300\/85{background-color:rgba(125,211,252,.85)}.bg-sky-400{--tw-bg-opacity:1;background-color:rgb(56 189 248/var(--tw-bg-opacity,1))}.bg-sky-400\/60{background-color:rgba(56,189,248,.6)}.bg-sky-400\/65{background-color:rgba(56,189,248,.65)}.bg-sky-400\/70{background-color:rgba(56,189,248,.7)}.bg-sky-400\/90{background-color:rgba(56,189,248,.9)}.bg-sky-50{--tw-bg-opacity:1;background-color:rgb(240 249 255/var(--tw-bg-opacity,1))}.bg-sky-50\/50{background-color:rgba(240,249,255,.5)}.bg-sky-50\/60{background-color:rgba(240,249,255,.6)}.bg-sky-50\/70{background-color:rgba(240,249,255,.7)}.bg-sky-500{--tw-bg-opacity:1;background-color:rgb(14 165 233/var(--tw-bg-opacity,1))}.bg-sky-500\/65{background-color:rgba(14,165,233,.65)}.bg-sky-500\/70{background-color:rgba(14,165,233,.7)}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249/var(--tw-bg-opacity,1))}.bg-slate-100\/60{background-color:rgba(241,245,249,.6)}.bg-slate-100\/80{background-color:rgba(241,245,249,.8)}.bg-slate-200{--tw-bg-opacity:1;background-color:rgb(226 232 240/var(--tw-bg-opacity,1))}.bg-slate-300{--tw-bg-opacity:1;background-color:rgb(203 213 225/var(--tw-bg-opacity,1))}.bg-slate-400{--tw-bg-opacity:1;background-color:rgb(148 163 184/var(--tw-bg-opacity,1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252/var(--tw-bg-opacity,1))}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59/var(--tw-bg-opacity,1))}.bg-slate-800\/80{background-color:rgba(30,41,59,.8)}.bg-slate-800\/90{background-color:rgba(30,41,59,.9)}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42/var(--tw-bg-opacity,1))}.bg-slate-900\/65{background-color:rgba(15,23,42,.65)}.bg-slate-900\/80{background-color:rgba(15,23,42,.8)}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255/var(--tw-bg-opacity,1))}.bg-white\/85{background-color:hsla(0,0%,100%,.85)}.bg-white\/90{background-color:hsla(0,0%,100%,.9)}.bg-gradient-to-b{background-image:linear-gradient(to bottom,var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right,var(--tw-gradient-stops))}.from-rose-500{--tw-gradient-from:#f43f5e var(--tw-gradient-from-position);--tw-gradient-to:rgba(244,63,94,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.from-sky-400\/5{--tw-gradient-from:rgba(56,189,248,.05) var(--tw-gradient-from-position);--tw-gradient-to:rgba(56,189,248,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.via-sky-400{--tw-gradient-to:rgba(56,189,248,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),#38bdf8 var(--tw-gradient-via-position),var(--tw-gradient-to)}.via-sky-400\/10{--tw-gradient-to:rgba(56,189,248,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),rgba(56,189,248,.1) var(--tw-gradient-via-position),var(--tw-gradient-to)}.to-sky-400{--tw-gradient-to:#38bdf8 var(--tw-gradient-to-position)}.to-sky-400\/20{--tw-gradient-to:rgba(56,189,248,.2) var(--tw-gradient-to-position)}.p-1{padding:.25rem}.p-2{padding:.5rem}.p-2\.5{padding:.625rem}.p-3{padding:.75rem}.p-4{padding:1rem}.px-0\.5{padding-left:.125rem;padding-right:.125rem}.px-1{padding-left:.25rem;padding-right:.25rem}.px-1\.5{padding-left:.375rem;padding-right:.375rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-2\.5{padding-left:.625rem;padding-right:.625rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.px-8{padding-left:2rem;padding-right:2rem}.py-0\.5{padding-top:.125rem;padding-bottom:.125rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-2\.5{padding-top:.625rem;padding-bottom:.625rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.pb-0\.5{padding-bottom:.125rem}.pb-2\.5{padding-bottom:.625rem}.pr-1{padding-right:.25rem}.pt-1{padding-top:.25rem}.pt-2{padding-top:.5rem}.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}.text-2xl{font-size:1.5rem;line-height:2rem}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[9px\]{font-size:9px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:.75rem;line-height:1rem}.font-black{font-weight:900}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.leading-relaxed{line-height:1.625}.leading-tight{line-height:1.25}.text-amber-300{--tw-text-opacity:1;color:rgb(252 211 77/var(--tw-text-opacity,1))}.text-amber-400{--tw-text-opacity:1;color:rgb(251 191 36/var(--tw-text-opacity,1))}.text-amber-600{--tw-text-opacity:1;color:rgb(217 119 6/var(--tw-text-opacity,1))}.text-amber-700{--tw-text-opacity:1;color:rgb(180 83 9/var(--tw-text-opacity,1))}.text-amber-800{--tw-text-opacity:1;color:rgb(146 64 14/var(--tw-text-opacity,1))}.text-amber-900{--tw-text-opacity:1;color:rgb(120 53 15/var(--tw-text-opacity,1))}.text-emerald-300{--tw-text-opacity:1;color:rgb(110 231 183/var(--tw-text-opacity,1))}.text-emerald-400{--tw-text-opacity:1;color:rgb(52 211 153/var(--tw-text-opacity,1))}.text-emerald-600{--tw-text-opacity:1;color:rgb(5 150 105/var(--tw-text-opacity,1))}.text-emerald-700{--tw-text-opacity:1;color:rgb(4 120 87/var(--tw-text-opacity,1))}.text-emerald-800{--tw-text-opacity:1;color:rgb(6 95 70/var(--tw-text-opacity,1))}.text-emerald-950{--tw-text-opacity:1;color:rgb(2 44 34/var(--tw-text-opacity,1))}.text-indigo-800{--tw-text-opacity:1;color:rgb(55 48 163/var(--tw-text-opacity,1))}.text-indigo-900{--tw-text-opacity:1;color:rgb(49 46 129/var(--tw-text-opacity,1))}.text-indigo-950{--tw-text-opacity:1;color:rgb(30 27 75/var(--tw-text-opacity,1))}.text-purple-600{--tw-text-opacity:1;color:rgb(147 51 234/var(--tw-text-opacity,1))}.text-purple-700{--tw-text-opacity:1;color:rgb(126 34 206/var(--tw-text-opacity,1))}.text-purple-800{--tw-text-opacity:1;color:rgb(107 33 168/var(--tw-text-opacity,1))}.text-rose-300{--tw-text-opacity:1;color:rgb(253 164 175/var(--tw-text-opacity,1))}.text-rose-400{--tw-text-opacity:1;color:rgb(251 113 133/var(--tw-text-opacity,1))}.text-rose-600{--tw-text-opacity:1;color:rgb(225 29 72/var(--tw-text-opacity,1))}.text-rose-700{--tw-text-opacity:1;color:rgb(190 18 60/var(--tw-text-opacity,1))}.text-rose-800{--tw-text-opacity:1;color:rgb(159 18 57/var(--tw-text-opacity,1))}.text-sky-300{--tw-text-opacity:1;color:rgb(125 211 252/var(--tw-text-opacity,1))}.text-sky-400{--tw-text-opacity:1;color:rgb(56 189 248/var(--tw-text-opacity,1))}.text-sky-600{--tw-text-opacity:1;color:rgb(2 132 199/var(--tw-text-opacity,1))}.text-sky-700{--tw-text-opacity:1;color:rgb(3 105 161/var(--tw-text-opacity,1))}.text-sky-800{--tw-text-opacity:1;color:rgb(7 89 133/var(--tw-text-opacity,1))}.text-sky-900{--tw-text-opacity:1;color:rgb(12 74 110/var(--tw-text-opacity,1))}.text-slate-200{--tw-text-opacity:1;color:rgb(226 232 240/var(--tw-text-opacity,1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225/var(--tw-text-opacity,1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184/var(--tw-text-opacity,1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139/var(--tw-text-opacity,1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105/var(--tw-text-opacity,1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85/var(--tw-text-opacity,1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59/var(--tw-text-opacity,1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42/var(--tw-text-opacity,1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.opacity-30{opacity:.3}.opacity-50{opacity:.5}.opacity-90{opacity:.9}.opacity-95{opacity:.95}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgba(0,0,0,.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-\[0_0_10px_rgba\(168\2c 85\2c 247\2c 0\.7\)\]{--tw-shadow:0 0 10px rgba(168,85,247,.7);--tw-shadow-colored:0 0 10px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-\[0_0_10px_rgba\(244\2c 63\2c 94\2c 0\.9\)\]{--tw-shadow:0 0 10px rgba(244,63,94,.9);--tw-shadow-colored:0 0 10px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-\[0_0_10px_rgba\(56\2c 189\2c 248\2c 0\.8\)\]{--tw-shadow:0 0 10px rgba(56,189,248,.8);--tw-shadow-colored:0 0 10px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-\[0_0_10px_rgba\(56\2c 189\2c 248\2c 0\.9\)\]{--tw-shadow:0 0 10px rgba(56,189,248,.9);--tw-shadow-colored:0 0 10px var(--tw-shadow-color)}.shadow-\[0_0_10px_rgba\(56\2c 189\2c 248\2c 0\.9\)\],.shadow-inner{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgba(0,0,0,.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color),0 4px 6px -4px var(--tw-shadow-color)}.shadow-lg,.shadow-md{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color),0 2px 4px -2px var(--tw-shadow-color)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgba(0,0,0,.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color)}.shadow-sm,.shadow-xl{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color),0 8px 10px -6px var(--tw-shadow-color)}.ring-4{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.ring-amber-400{--tw-ring-opacity:1;--tw-ring-color:rgb(251 191 36/var(--tw-ring-opacity,1))}.grayscale{--tw-grayscale:grayscale(100%)}.filter,.grayscale{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.duration-75{transition-duration:75ms}.hover\:bg-amber-200:hover{--tw-bg-opacity:1;background-color:rgb(253 230 138/var(--tw-bg-opacity,1))}.hover\:bg-amber-600:hover{--tw-bg-opacity:1;background-color:rgb(217 119 6/var(--tw-bg-opacity,1))}.hover\:bg-emerald-200:hover{--tw-bg-opacity:1;background-color:rgb(167 243 208/var(--tw-bg-opacity,1))}.hover\:bg-emerald-600:hover{--tw-bg-opacity:1;background-color:rgb(5 150 105/var(--tw-bg-opacity,1))}.hover\:bg-indigo-200:hover{--tw-bg-opacity:1;background-color:rgb(199 210 254/var(--tw-bg-opacity,1))}.hover\:bg-indigo-700:hover{--tw-bg-opacity:1;background-color:rgb(67 56 202/var(--tw-bg-opacity,1))}.hover\:bg-rose-600:hover{--tw-bg-opacity:1;background-color:rgb(225 29 72/var(--tw-bg-opacity,1))}.hover\:bg-sky-600:hover{--tw-bg-opacity:1;background-color:rgb(2 132 199/var(--tw-bg-opacity,1))}.hover\:bg-slate-100:hover{--tw-bg-opacity:1;background-color:rgb(241 245 249/var(--tw-bg-opacity,1))}.hover\:bg-slate-200:hover{--tw-bg-opacity:1;background-color:rgb(226 232 240/var(--tw-bg-opacity,1))}.hover\:bg-slate-300:hover{--tw-bg-opacity:1;background-color:rgb(203 213 225/var(--tw-bg-opacity,1))}.hover\:bg-slate-50:hover{--tw-bg-opacity:1;background-color:rgb(248 250 252/var(--tw-bg-opacity,1))}.hover\:bg-slate-900:hover{--tw-bg-opacity:1;background-color:rgb(15 23 42/var(--tw-bg-opacity,1))}.hover\:text-slate-700:hover{--tw-text-opacity:1;color:rgb(51 65 85/var(--tw-text-opacity,1))}.active\:scale-95:active{--tw-scale-x:.95;--tw-scale-y:.95;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.active\:cursor-grabbing:active{cursor:grabbing}.disabled\:cursor-not-allowed:disabled{cursor:not-allowed}.disabled\:bg-slate-300:disabled{--tw-bg-opacity:1;background-color:rgb(203 213 225/var(--tw-bg-opacity,1))}.disabled\:text-slate-500:disabled{--tw-text-opacity:1;color:rgb(100 116 139/var(--tw-text-opacity,1))}.group:hover .group-hover\:scale-110{--tw-scale-x:1.1;--tw-scale-y:1.1;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@media (min-width:640px){.sm\:block{display:block}.sm\:inline-flex{display:inline-flex}.sm\:w-14{width:3.5rem}.sm\:w-16{width:4rem}.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.sm\:gap-2{gap:.5rem}.sm\:gap-2\.5{gap:.625rem}.sm\:p-2\.5{padding:.625rem}.sm\:p-3{padding:.75rem}.sm\:p-3\.5{padding:.875rem}.sm\:p-4{padding:1rem}.sm\:p-5{padding:1.25rem}.sm\:px-4{padding-left:1rem;padding-right:1rem}.sm\:text-2xl{font-size:1.5rem;line-height:2rem}.sm\:text-3xl{font-size:1.875rem;line-height:2.25rem}.sm\:text-base{font-size:1rem;line-height:1.5rem}.sm\:text-sm{font-size:.875rem;line-height:1.25rem}.sm\:text-xl{font-size:1.25rem;line-height:1.75rem}}@media (min-width:768px){.md\:col-span-1{grid-column:span 1/span 1}.md\:col-span-4{grid-column:span 4/span 4}.md\:col-span-5{grid-column:span 5/span 5}.md\:col-span-7{grid-column:span 7/span 7}.md\:flex{display:flex}.md\:w-20{width:5rem}.md\:rotate-0{--tw-rotate:0deg;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.md\:grid-cols-11{grid-template-columns:repeat(11,minmax(0,1fr))}.md\:grid-cols-12{grid-template-columns:repeat(12,minmax(0,1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.md\:flex-col{flex-direction:column}.md\:text-2xl{font-size:1.5rem;line-height:2rem}}@media (min-width:1024px){.lg\:col-span-5{grid-column:span 5/span 5}.lg\:col-span-7{grid-column:span 7/span 7}.lg\:w-16{width:4rem}.lg\:grid-cols-12{grid-template-columns:repeat(12,minmax(0,1fr))}}@media (min-width:1280px){.xl\:w-20{width:5rem}.xl\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}}
+body {
+  font-family: 'Hiragino Maru Gothic ProN', 'BIZ UDPGothic', 'Yu Gothic', 'Meiryo', system-ui, -apple-system, sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+@keyframes spinCentrifuge {
+  0% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(360deg) scale(1.04); }
+  60% { transform: rotate(720deg) scale(1.04); }
+  100% { transform: rotate(1080deg) scale(1); }
+}
+.animate-centrifuge {
+  will-change: transform;
+  animation: spinCentrifuge 1.3s cubic-bezier(0.35, 0, 0.25, 1) infinite;
+}
+
+@keyframes floatParticle {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  33% { transform: translate3d(5px, -6px, 0) rotate(22deg); }
+  66% { transform: translate3d(-5px, 5px, 0) rotate(-22deg); }
+}
+.dna-particle-swirl {
+  will-change: transform;
+  animation: floatParticle 0.55s ease-in-out infinite;
+}
+
+.dna-strand-move {
+  transition:
+    top 1.15s cubic-bezier(0.22, 1, 0.36, 1),
+    left 1.15s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.15s ease;
+}
+
+@keyframes bandAppear {
+  0% { opacity: 0; transform: translateY(-50%) scaleX(0.6); }
+  100% { opacity: 1; transform: translateY(-50%) scaleX(1); }
+}
+.band-appear {
+  animation: bandAppear 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+.next-action-glow {
+  will-change: transform;
+  animation: pulseGlow 1.4s ease-in-out infinite;
+  outline: 3px solid #facc15;
+  outline-offset: 2px;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+}
+
+@keyframes scissorSnip {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(-18deg) scale(1.15); }
+}
+.scissor-snip-anim {
+  will-change: transform;
+  animation: scissorSnip 0.45s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes growStrandFromTop {
+  0% { transform: scaleY(0); opacity: 0; }
+  100% { transform: scaleY(1); opacity: 1; }
+}
+.animate-grow-top {
+  transform-origin: top center;
+  animation: growStrandFromTop 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.gesture-zone {
+  touch-action: none;
+  user-select: none;
+}
+
+.dna-fly-clone {
+  position: fixed;
+  z-index: 60;
+  pointer-events: none;
+  will-change: transform, opacity;
+  transform-origin: center center;
+}
+
+@keyframes tubeReceivePulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.82; }
+  100% { opacity: 1; }
+}
+.tube-receive-pulse {
+  outline: 3px solid rgba(56, 189, 248, 0.85);
+  outline-offset: 2px;
+  animation: tubeReceivePulse 0.55s ease-out;
+}
+
+/* ルール画面：周りの材料（赤・青）からDNAが作られるアニメーション */
+@keyframes gatherInward {
+  0% {
+    transform: translate3d(var(--sx), var(--sy), 0) scale(1);
+    opacity: 0;
+  }
+  15% {
+    transform: translate3d(var(--sx), var(--sy), 0) scale(1);
+    opacity: 0.95;
+  }
+  58% {
+    transform: translate3d(var(--tx, 0px), var(--ty, 0px), 0) scale(0.55);
+    opacity: 0.9;
+  }
+  70% {
+    transform: translate3d(var(--tx, 0px), var(--ty, 0px), 0) scale(0.2);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(var(--sx), var(--sy), 0) scale(1);
+    opacity: 0;
+  }
+}
+.nutrient-particle {
+  will-change: transform, opacity;
+  animation: gatherInward 3.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes synthStrandLoop {
+  0%, 15% {
+    transform: scaleY(0);
+    opacity: 0.2;
+  }
+  62%, 86% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  96%, 100% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+}
+.synth-strand-loop {
+  transform-origin: top center;
+  will-change: transform, opacity;
+  animation: synthStrandLoop 3.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+@keyframes synthRungsLoop {
+  0%, 42% { opacity: 0; }
+  62%, 86% { opacity: 1; }
+  96%, 100% { opacity: 0; }
+}
+.synth-rungs-loop {
+  will-change: opacity;
+  animation: synthRungsLoop 3.8s ease-in-out infinite;
+}
+
+/* 複製時：周りの青い粒が青いDNA鎖へ吸収されるアニメーション */
+@keyframes absorbBlueOnce {
+  0% {
+    transform: translate3d(var(--sx), var(--sy), 0) scale(1);
+    opacity: 0.95;
+  }
+  75% {
+    transform: translate3d(var(--tx, 0px), var(--ty, 0px), 0) scale(0.45);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate3d(var(--tx, 0px), var(--ty, 0px), 0) scale(0.1);
+    opacity: 0;
+  }
+}
+.blue-absorb-once {
+  will-change: transform, opacity;
+  animation: absorbBlueOnce 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.blue-ambient-dot {
+  will-change: transform, opacity;
+  transform: translate3d(var(--sx), var(--sy), 0);
+  opacity: 0;
+}
+
+/* 培地全体に常に漂う極小の材料粒（複製前〜完了後まで常時表示） */
+@keyframes ambientDrift {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(var(--dx, 4px), var(--dy, -4px), 0); }
+}
+.medium-speck {
+  will-change: transform;
+  animation: ambientDrift var(--dur, 4.5s) ease-in-out infinite;
+}
+
+@keyframes compareReceivePop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.14); }
+  100% { transform: scale(1); }
+}
+.compare-receive-pop {
+  animation: compareReceivePop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* =========================================================================
+   Chromebook (1366x768 / 実効ビューポート約 1366x600) を含むフレキシブル高さ対応
+   ========================================================================= */
+.tube-height {
+  height: clamp(164px, 31vh, 240px);
+}
+
+.modal-tube-height {
+  height: clamp(132px, 24vh, 176px);
+}
+
+.mini-tube-height {
+  height: clamp(84px, 15vh, 112px);
+}
+
+.dna-strand-h {
+  height: clamp(72px, 13.5vh, 96px);
+}
+
+.dna-rungs-h {
+  height: clamp(58px, 11vh, 80px);
+}
+
+.synth-stage-h {
+  height: clamp(108px, 20vh, 144px);
+}
+
+@media (max-height: 700px) {
+  .compact-header {
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+  }
+  .compact-header-sub {
+    display: none !important;
+  }
+  .compact-main {
+    padding: 0.5rem 0.75rem;
+    gap: 0.625rem;
+  }
+  .compact-panel {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+  .compact-modal-card {
+    padding: 0.875rem 1.125rem;
+  }
+  .compact-modal-body {
+    margin-bottom: 0.625rem;
+  }
+  .compact-dna-card {
+    padding: 0.5rem;
+    gap: 0.35rem;
+  }
+}
+
+/* =========================================================================
+   Material 3 Expressive テーマ（ロジック変更なし）
+   - トーナル・サーフェス / 特大角丸 / フルピルボタン / スプリング・モーション
+   ========================================================================= */
+:root {
+  --md-sys-color-surface: #fdf7ff;
+  --md-sys-color-surface-container-low: #f7f2fa;
+  --md-sys-color-surface-container: #f2ecf6;
+  --md-sys-color-surface-container-high: #ece6f0;
+  --md-sys-color-primary: #583de8;
+  --md-sys-color-primary-container: #e4dfff;
+  --md-sys-color-on-primary-container: #170065;
+  --md-sys-color-outline-variant: #cac4d0;
+  --md-sys-color-on-surface: #1d1b20;
+  --md-sys-motion-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+body {
+  font-family: 'Hiragino Maru Gothic ProN', 'BIZ UDPGothic', 'Yu Gothic', 'Meiryo', system-ui, sans-serif;
+  color: var(--md-sys-color-on-surface);
+  background-color: var(--md-sys-color-surface);
+  background-image:
+    radial-gradient(at 8% 10%, rgba(228, 223, 255, 0.85) 0px, transparent 45%),
+    radial-gradient(at 92% 14%, rgba(255, 216, 228, 0.6) 0px, transparent 42%),
+    radial-gradient(at 80% 90%, rgba(158, 242, 228, 0.5) 0px, transparent 45%);
+  background-attachment: fixed;
+}
+
+/* トップアプリバー */
+header.compact-header {
+  background: var(--md-sys-color-surface-container-low);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  box-shadow: 0 1px 3px rgba(29, 27, 32, 0.08);
+}
+
+/* 特大サーフェスコンテナ */
+section.compact-panel {
+  background: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: 28px;
+  box-shadow: 0 1px 2px rgba(29, 27, 32, 0.08), 0 4px 12px rgba(29, 27, 32, 0.06);
+}
+
+.compact-modal-card {
+  background: var(--md-sys-color-surface-container-high);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: 28px;
+  box-shadow: 0 8px 28px rgba(29, 27, 32, 0.22);
+}
+
+/* DNA組み立てトレイ */
+section.compact-panel > div.bg-sky-50\/50 {
+  background: #e8f4ff;
+  border: 2px dashed #8fc7f2;
+  border-radius: 24px;
+}
+
+/* DNAの枠：背面の青いトレイ（と漂う粒）を透過させる */
+.compact-dna-card {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.75);
+  border-radius: 20px;
+  box-shadow: none;
+}
+
+.compact-dna-card.border-emerald-300 {
+  background: rgba(16, 185, 129, 0.08) !important;
+  border: 1.5px solid rgba(52, 211, 153, 0.85);
+}
+
+/* 仮説タブ：トーナル・セグメントカード */
+[role="tab"] {
+  background: var(--md-sys-color-surface-container);
+  border: 2px solid transparent;
+  border-radius: 20px;
+  transition: transform 0.35s var(--md-sys-motion-spring), background 0.2s ease, border-color 0.2s ease;
+}
+
+[role="tab"]:hover {
+  background: var(--md-sys-color-surface-container-high);
+  transform: translateY(-2px) scale(1.02);
+}
+
+[role="tab"][aria-selected="true"] {
+  background: var(--md-sys-color-primary-container);
+  border-color: var(--md-sys-color-primary);
+  transform: scale(1.03);
+}
+
+#hypo-btn-conservative[aria-selected="true"] {
+  background: #ffdea8;
+  border-color: #b27a00;
+}
+
+#hypo-btn-semiconservative[aria-selected="true"] {
+  background: #b6f2d6;
+  border-color: #00875a;
+}
+
+#hypo-btn-dispersive[aria-selected="true"] {
+  background: #f2daff;
+  border-color: #8e3fc0;
+}
+
+/* 世代ステップバー */
+section.compact-panel .bg-slate-50.border.border-slate-200.rounded-2xl {
+  background: var(--md-sys-color-surface-container);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: 9999px;
+}
+
+/* ボタン：フルピル＋スプリング */
+button:not([role="tab"]):not([aria-label="閉じる"]) {
+  position: relative;
+  border: none;
+  border-radius: 9999px !important;
+  box-shadow: 0 1px 3px rgba(29, 27, 32, 0.2);
+  transition: transform 0.35s var(--md-sys-motion-spring), box-shadow 0.2s ease, background 0.2s ease;
+}
+
+button:not(:disabled):not([role="tab"]):not([aria-label="閉じる"]):hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 4px 12px rgba(29, 27, 32, 0.25);
+}
+
+button:not(:disabled):not([role="tab"]):not([aria-label="閉じる"]):active {
+  transform: scale(0.94);
+}
+
+button.bg-rose-500:not(:disabled) {
+  background: #b3261e;
+}
+
+button.bg-amber-500:not(:disabled) {
+  background: #8d5a00;
+}
+
+button.bg-emerald-500:not(:disabled) {
+  background: #006a60;
+}
+
+button.bg-sky-500:not(:disabled) {
+  background: #00639b;
+}
+
+button.bg-indigo-600:not(:disabled) {
+  background: var(--md-sys-color-primary);
+}
+
+/* ヘッダー・サブボタン：トーナルピル */
+header button,
+button.bg-slate-200:not(:disabled) {
+  background: var(--md-sys-color-surface-container-high);
+  box-shadow: none;
+}
+
+header #open-compare-btn {
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+header button[data-action="open-rules"] {
+  background: #ffdea8;
+}
+
+button:disabled {
+  background: rgba(29, 27, 32, 0.12) !important;
+  box-shadow: none;
+}
+
+/* バッジ */
+#centrifuge-status,
+.compact-dna-card .rounded-full[class*="px-"],
+header .rounded-full[class*="px-"],
+#rules-modal .rounded-full[class*="px-"] {
+  border: none;
+}
+
+/* DNA鎖 */
+.dna-strand-h.bg-rose-500,
+.dna-strand-h .bg-rose-500,
+#gen0-dna-visual .bg-rose-500 {
+  box-shadow: 0 2px 6px rgba(244, 63, 94, 0.4);
+}
+
+.dna-strand-h.bg-sky-500,
+.dna-strand-h .bg-sky-500 {
+  box-shadow: 0 2px 6px rgba(14, 165, 233, 0.4);
+}
+
+/* 遠心分離機チャンバー：インバース・サーフェス */
+section.compact-panel .bg-slate-900.rounded-2xl,
+#rules-modal .bg-slate-900.rounded-3xl {
+  background: #322f35;
+  border: 1px solid #4a4458;
+  border-radius: 24px;
+}
+
+[id^="tube-wrapper-"],
+#modal-tube-wrapper {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.12) 0%, rgba(29, 27, 32, 0.7) 28%, rgba(20, 18, 24, 0.8) 82%, rgba(255, 255, 255, 0.08) 100%);
+  border: 1.5px solid rgba(230, 224, 233, 0.45);
+}
+
+#observation-box {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 9999px;
+}
+
+.synth-stage-h {
+  background: var(--md-sys-color-surface-container) !important;
+  border: 1px solid var(--md-sys-color-outline-variant) !important;
+}
+
+#rules-modal .rounded-2xl:not(.bg-slate-900),
+#rules-modal .rounded-3xl:not(.bg-slate-900),
+#compare-modal .rounded-2xl:not(.bg-slate-900) {
+  border-color: var(--md-sys-color-outline-variant);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button,
+  [role="tab"] {
+    transition-duration: 0.01ms !important;
+  }
+}
+  </style>
 </head>
 <body class="min-h-screen flex flex-col bg-slate-50 text-slate-800 overflow-x-hidden">
 
@@ -770,6 +1253,1963 @@
     </div>
   </div>
 
-  <script type="module" src="./js/main.js"></script>
+  <script data-inlined-bundle>
+(function () {
+
+// --- config.js ---
+// =========================================================================
+// 定数・ドメイン設定 (Single Source of Truth)
+// =========================================================================
+
+const CONFIG = {
+  POST_LOAD_PAUSE_MS: 1100,
+  SETTLE_DURATION_MS: 1200,
+  TUBE_TOP_LIGHT_PCT: 24, // 15N = 0% (完全な14N DNA)
+  TUBE_SPAN_PCT: 56       // 15N = 100% -> 24 + 56 = 80% (完全な15N DNA)
+}         ;
+
+const HYPOTHESES                                                 = {
+  conservative: {
+    id: 'conservative',
+    number: '仮説①',
+    name: '保存的複製',
+    accentText: 'text-amber-600',
+    summary: '元の2本鎖を残し、新しい2本鎖をまるごと合成'
+  },
+  semiconservative: {
+    id: 'semiconservative',
+    number: '仮説②',
+    name: '半保存的複製',
+    accentText: 'text-emerald-600',
+    summary: '元の2本鎖を1本ずつ開き、それぞれに新しい鎖を合成'
+  },
+  dispersive: {
+    id: 'dispersive',
+    number: '仮説③',
+    name: '分散的複製',
+    accentText: 'text-purple-600',
+    summary: '元のDNAを細かく切って分配し、隙間を新しい鎖で補完'
+  }
+};
+
+const HYPOTHESIS_ORDER                          = [
+  'conservative',
+  'semiconservative',
+  'dispersive'
+];
+
+// 15Nの含有割合（0.0〜1.0）から線形密度位置・視覚表現を一元定義
+const DENSITY_TIERS                                                = {
+  light: {
+    key: 'light',
+    ratio: 0,
+    shortLabel: '上（軽）',
+    positionLabel: '上',
+    bgClass: 'bg-sky-400',
+    glowClass: 'shadow-[0_0_10px_rgba(56,189,248,0.9)]',
+    badgeClass: 'bg-sky-100 text-sky-800',
+    ratioText: '15N 0%'
+  },
+  'light-mid': {
+    key: 'light-mid',
+    ratio: 0.25,
+    shortLabel: 'やや上',
+    positionLabel: 'やや上',
+    bgClass: 'bg-gradient-to-r from-rose-500 via-sky-400 to-sky-400',
+    glowClass: 'shadow-[0_0_10px_rgba(56,189,248,0.8)]',
+    badgeClass: 'bg-purple-100 text-purple-800',
+    ratioText: '15N 25%'
+  },
+  mid: {
+    key: 'mid',
+    ratio: 0.5,
+    shortLabel: '真ん中（中）',
+    positionLabel: '真ん中',
+    bgClass: 'bg-gradient-to-r from-rose-500 to-sky-400',
+    glowClass: 'shadow-[0_0_10px_rgba(168,85,247,0.7)]',
+    badgeClass: 'bg-indigo-100 text-indigo-800',
+    ratioText: '15N 50%'
+  },
+  heavy: {
+    key: 'heavy',
+    ratio: 1,
+    shortLabel: '下（重）',
+    positionLabel: '下',
+    bgClass: 'bg-rose-500',
+    glowClass: 'shadow-[0_0_10px_rgba(244,63,94,0.9)]',
+    badgeClass: 'bg-rose-100 text-rose-800',
+    ratioText: '15N 100%'
+  }
+};
+
+const ACTUAL_MESELSON_STAHL            
+                   
+   = {
+  gen0: [{ tierKey: 'heavy', heavyRatio: 1, segmented: false }],
+  gen1: [
+    { tierKey: 'mid', heavyRatio: 0.5, segmented: false },
+    { tierKey: 'mid', heavyRatio: 0.5, segmented: false }
+  ],
+  gen2: [
+    { tierKey: 'mid', heavyRatio: 0.5, segmented: false },
+    { tierKey: 'light', heavyRatio: 0, segmented: false },
+    { tierKey: 'light', heavyRatio: 0, segmented: false },
+    { tierKey: 'mid', heavyRatio: 0.5, segmented: false }
+  ]
+};
+
+// --- model.js ---
+// =========================================================================
+// 純粋な生物モデル層 (BiologyModel: DOM非依存)
+// =========================================================================
+const BiologyModel = {
+  computeBandTopPct(heavyRatio        )         {
+    return CONFIG.TUBE_TOP_LIGHT_PCT + heavyRatio * CONFIG.TUBE_SPAN_PCT;
+  },
+
+  tierKeyFromHeavyRatio(heavyRatio        )                 {
+    if (heavyRatio >= 0.875) return 'heavy';
+    if (heavyRatio >= 0.375) return 'mid';
+    if (heavyRatio >= 0.125) return 'light-mid';
+    return 'light';
+  },
+
+  createDispersiveSlot(
+    id        ,
+    label        ,
+    exists         ,
+    leftSegs                           ,
+    rightSegs                           
+  )                 {
+    return {
+      id,
+      label,
+      exists,
+      cut: false,
+      mixed: false,
+      justBuilt: false,
+      leftSegs: [...leftSegs],
+      rightSegs: [...rightSegs],
+      newLeftMask: [false, false, false, false],
+      newRightMask: [false, false, false, false]
+    };
+  },
+
+  createGen1Slots(hypo              )            {
+    if (hypo === 'conservative') {
+      const slots                     = [
+        { id: 0, label: '① 元のDNA', left: 'red', right: 'red', built: true, isOriginal: true, justBuilt: false },
+        { id: 1, label: '② 新しく作るDNA', left: null, right: null, built: false, isOriginal: false, justBuilt: false }
+      ];
+      return slots;
+    }
+    if (hypo === 'semiconservative') {
+      const slots                         = [
+        { id: 0, label: '① 1本目のDNA', exists: true, split: false, left: 'red', right: 'red', built: false, newSide: null, justBuilt: false },
+        { id: 1, label: '② 2本目のDNA', exists: false, split: false, left: null, right: null, built: false, newSide: null, justBuilt: false }
+      ];
+      return slots;
+    }
+    return [
+      this.createDispersiveSlot(0, '① 1本目のDNA', true, ['red', 'red', 'red', 'red'], ['red', 'red', 'red', 'red']),
+      this.createDispersiveSlot(1, '② 2本目のDNA', false, [null, null, null, null], [null, null, null, null])
+    ];
+  },
+
+  // 第1世代の実際の結果を引き継いで第2世代の初期スロットを生成
+  createGen2Slots(hypo              , gen1Slots                     = [])            {
+    if (hypo === 'conservative') {
+      const cSlots = gen1Slots                               ;
+      const p0 = cSlots[0] ?? { left: 'red'                  , right: 'red'                   };
+      const p1 = cSlots[1] ?? { left: 'blue'                  , right: 'blue'                   };
+      const slots                     = [
+        { id: 0, label: '① 元のDNA', left: p0.left, right: p0.right, built: true, isOriginal: true, justBuilt: false },
+        { id: 1, label: '② 第1世代のDNA', left: p1.left, right: p1.right, built: true, isOriginal: true, justBuilt: false },
+        { id: 2, label: '③ 新しく作るDNA', left: null, right: null, built: false, isOriginal: false, justBuilt: false },
+        { id: 3, label: '④ 新しく作るDNA', left: null, right: null, built: false, isOriginal: false, justBuilt: false }
+      ];
+      return slots;
+    }
+    if (hypo === 'semiconservative') {
+      const sSlots = gen1Slots                                   ;
+      const p0 = sSlots[0] ?? { left: 'red'                  , right: 'blue'                   };
+      const p1 = sSlots[1] ?? { left: 'blue'                  , right: 'red'                   };
+      const slots                         = [
+        { id: 0, label: '① 1本目のDNA', exists: true, split: false, left: p0.left, right: p0.right, built: false, newSide: null, justBuilt: false },
+        { id: 1, label: '② 2本目のDNA', exists: false, split: false, left: null, right: null, built: false, newSide: null, justBuilt: false },
+        { id: 2, label: '③ 3本目のDNA', exists: true, split: false, left: p1.left, right: p1.right, built: false, newSide: null, justBuilt: false },
+        { id: 3, label: '④ 4本目のDNA', exists: false, split: false, left: null, right: null, built: false, newSide: null, justBuilt: false }
+      ];
+      return slots;
+    }
+    const dSlots = gen1Slots                             ;
+    const p0 = dSlots[0] ?? {
+      leftSegs: ['red', 'blue', 'red', 'blue']                    ,
+      rightSegs: ['blue', 'red', 'blue', 'red']                    
+    };
+    const p1 = dSlots[1] ?? {
+      leftSegs: ['blue', 'red', 'blue', 'red']                    ,
+      rightSegs: ['red', 'blue', 'red', 'blue']                    
+    };
+    return [
+      this.createDispersiveSlot(0, '① 1本目のDNA', true, p0.leftSegs, p0.rightSegs),
+      this.createDispersiveSlot(1, '② 2本目のDNA', false, [null, null, null, null], [null, null, null, null]),
+      this.createDispersiveSlot(2, '③ 3本目のDNA', true, p1.leftSegs, p1.rightSegs),
+      this.createDispersiveSlot(3, '④ 4本目のDNA', false, [null, null, null, null], [null, null, null, null])
+    ];
+  },
+
+  clearJustBuiltFlags(slots                    )       {
+    slots.forEach((s) => {
+      s.justBuilt = false;
+    });
+  },
+
+  applySlotAction(
+    slots           ,
+    hypo              ,
+    gen            ,
+    slotId        ,
+    actionType                
+  )          {
+    this.clearJustBuiltFlags(slots);
+
+    if (hypo === 'conservative') {
+      const slot = slots[slotId]                                ;
+      if (!slot || slot.built) return false;
+      slot.left = 'blue';
+      slot.right = 'blue';
+      slot.built = true;
+      slot.justBuilt = true;
+      return true;
+    }
+
+    if (hypo === 'semiconservative') {
+      const sSlots = slots                          ;
+      if (actionType === 'split') {
+        const parent = sSlots[slotId];
+        const child = sSlots[slotId + 1];
+        if (!parent || !child || !parent.exists || parent.split) return false;
+        child.left = null;
+        child.right = parent.right;
+        parent.right = null;
+        parent.split = true;
+        child.exists = true;
+        child.split = true;
+        return true;
+      }
+      if (actionType === 'build') {
+        const slot = sSlots[slotId];
+        if (!slot || !slot.exists || !slot.split || slot.built) return false;
+        if (!slot.left) {
+          slot.left = 'blue';
+          slot.newSide = 'left';
+        } else if (!slot.right) {
+          slot.right = 'blue';
+          slot.newSide = 'right';
+        }
+        slot.built = true;
+        slot.justBuilt = true;
+        return true;
+      }
+      return false;
+    }
+
+    const dSlots = slots                    ;
+    if (actionType === 'cut') {
+      const parent = dSlots[slotId];
+      const child = dSlots[slotId + 1];
+      if (!parent || !child || !parent.exists || parent.cut) return false;
+
+      const pL = [...parent.leftSegs];
+      const pR = [...parent.rightSegs];
+
+      if (gen === 1) {
+        parent.leftSegs = [pL[0], null, pL[2], null];
+        parent.rightSegs = [null, pR[1], null, pR[3]];
+        child.leftSegs = [null, pL[1], null, pL[3]];
+        child.rightSegs = [pR[0], null, pR[2], null];
+      } else if (slotId === 0) {
+        parent.leftSegs = [pL[0], null, null, pL[3]];
+        parent.rightSegs = [null, pR[1], pR[2], null];
+        child.leftSegs = [null, pL[1], pL[2], null];
+        child.rightSegs = [pR[0], null, null, pR[3]];
+      } else {
+        parent.leftSegs = [null, pL[1], pL[2], null];
+        parent.rightSegs = [pR[0], null, null, pR[3]];
+        child.leftSegs = [pL[0], null, null, pL[3]];
+        child.rightSegs = [null, pR[1], pR[2], null];
+      }
+
+      parent.cut = true;
+      child.exists = true;
+      child.cut = true;
+      return true;
+    }
+
+    if (actionType === 'mix') {
+      const slot = dSlots[slotId];
+      if (!slot || !slot.exists || !slot.cut || slot.mixed) return false;
+      slot.newLeftMask = slot.leftSegs.map((c) => c === null);
+      slot.newRightMask = slot.rightSegs.map((c) => c === null);
+      slot.leftSegs = slot.leftSegs.map((c) => c || 'blue');
+      slot.rightSegs = slot.rightSegs.map((c) => c || 'blue');
+      slot.mixed = true;
+      slot.justBuilt = true;
+      return true;
+    }
+
+    return false;
+  },
+
+  isSlotComplete(slot         , hypo              )          {
+    if (hypo === 'dispersive') {
+      const d = slot                  ;
+      return Boolean(d.exists && d.cut && d.mixed);
+    }
+    if (hypo === 'semiconservative') {
+      const s = slot                        ;
+      return Boolean(s.exists && s.split && s.built);
+    }
+    return Boolean((slot                    ).built);
+  },
+
+  isGenerationComplete(slots                    , hypo              )          {
+    return slots.length > 0 && slots.every((s) => this.isSlotComplete(s, hypo));
+  },
+
+  findNextActionSlotId(slots                    , hypo              )                {
+    if (hypo === 'dispersive') {
+      const dSlots = slots                             ;
+      const uncut = dSlots.find((s) => s.exists && !s.cut);
+      if (uncut) return uncut.id;
+      const unmixed = dSlots.find((s) => s.exists && s.cut && !s.mixed);
+      return unmixed ? unmixed.id : null;
+    }
+    if (hypo === 'semiconservative') {
+      const sSlots = slots                                   ;
+      const unsplit = sSlots.find((s) => s.exists && !s.split);
+      if (unsplit) return unsplit.id;
+      const unbuilt = sSlots.find((s) => s.exists && s.split && !s.built);
+      return unbuilt ? unbuilt.id : null;
+    }
+    const cSlots = slots                               ;
+    const unbuilt = cSlots.find((s) => !s.built);
+    return unbuilt ? unbuilt.id : null;
+  },
+
+  // 各DNA分子の15N割合を計算（0.0〜1.0）
+  calculateHeavyRatio(slot         , hypo              )         {
+    if (hypo === 'dispersive') {
+      const d = slot                  ;
+      const all = [...d.leftSegs, ...d.rightSegs].filter(Boolean);
+      if (all.length === 0) return 0;
+      const redCount = all.filter((c) => c === 'red').length;
+      return redCount / all.length;
+    }
+    const s = slot                                           ;
+    const strands = [s.left, s.right].filter(Boolean);
+    if (strands.length === 0) return 0;
+    const redCount = strands.filter((c) => c === 'red').length;
+    return redCount / strands.length;
+  },
+
+  getMoleculesFromSlots(slots                    , hypo              )             {
+    return slots.map((slot) => {
+      const heavyRatio = this.calculateHeavyRatio(slot, hypo);
+      return {
+        tierKey: this.tierKeyFromHeavyRatio(heavyRatio),
+        heavyRatio,
+        segmented: hypo === 'dispersive'
+      };
+    });
+  },
+
+  // バンドごとの分子数・割合・比率テキスト（例：3 : 1）を集計
+  aggregateBands(molecules                     )              {
+    const total = molecules.length || 1;
+    const counts = new Map                        ();
+    molecules.forEach((m) => {
+      counts.set(m.tierKey, (counts.get(m.tierKey) || 0) + 1);
+    });
+
+    const order                            = ['light', 'light-mid', 'mid', 'heavy'];
+    const bands                    = order
+      .filter((k) => counts.has(k))
+      .map((k) => {
+        const count = counts.get(k) ?? 0;
+        const tier = DENSITY_TIERS[k];
+        return {
+          ...tier,
+          count,
+          fraction: count / total,
+          percent: Math.round((count / total) * 100),
+          topPct: this.computeBandTopPct(tier.ratio)
+        };
+      });
+
+    const gcd = (a        , b        )         => (b === 0 ? a : gcd(b, a % b));
+    const divisor = bands.reduce((acc, b) => gcd(acc, b.count), bands[0]?.count || 1);
+    const ratioStr = bands.length > 1
+      ? bands.map((b) => b.count / divisor).join(' : ')
+      : '100%';
+
+    const posSummary = bands.map((b) => b.positionLabel).join('と');
+    const compactLabel = bands.length === 1
+      ? `${bands[0].shortLabel}（100%）`
+      : `${bands.map((b) => b.positionLabel).join('・')}（${ratioStr}）`;
+    const detailText = bands.length === 1
+      ? `${posSummary}にバンド1本（100%）`
+      : `${posSummary}にバンド${bands.length}本（比 ${ratioStr}）`;
+
+    return { bands, ratioStr, compactLabel, detailText };
+  }
+};
+
+// --- store.js ---
+// =========================================================================
+// 状態管理ストア (Single State Tree + Timer Management)
+// =========================================================================
+const store = {
+  hypothesis: 'semiconservative'                ,
+  currentGen: 1              ,
+  gen0Phase: 'idle'             ,
+  centrifugePhase: 'idle'                   ,
+  gen1Spun: false,
+  gen2Spun: false,
+  gen1Slots: []             ,
+  gen2Slots: []             ,
+  recordedResults: {
+    conservative: { gen1: null, gen2: null },
+    semiconservative: { gen1: null, gen2: null },
+    dispersive: { gen1: null, gen2: null }
+  }                                                  ,
+  actualResultRevealed: false,
+  timers: new Map                                       (),
+
+  setTimer(key        , fn            , ms        )       {
+    this.clearTimer(key);
+    const id = globalThis.setTimeout(() => {
+      this.timers.delete(key);
+      fn();
+    }, ms);
+    this.timers.set(key, id);
+  },
+
+  clearTimer(key        )       {
+    const existing = this.timers.get(key);
+    if (existing !== undefined) {
+      globalThis.clearTimeout(existing);
+      this.timers.delete(key);
+    }
+  },
+
+  clearAllTimers()       {
+    this.timers.forEach((id) => globalThis.clearTimeout(id));
+    this.timers.clear();
+  },
+
+  isBusy()          {
+    return this.centrifugePhase !== 'idle';
+  },
+
+  getCurrentSlots()            {
+    return this.currentGen === 1 ? this.gen1Slots : this.gen2Slots;
+  },
+
+  countCompletedHypotheses()         {
+    return HYPOTHESIS_ORDER.filter(
+      (h) => this.recordedResults[h].gen1 !== null && this.recordedResults[h].gen2 !== null
+    ).length;
+  }
+};
+
+// --- centrifuge.js ---
+// =========================================================================
+// 遠心分離機＆試験管ビュー (CentrifugeView)
+// =========================================================================
+const CentrifugeView = {
+  renderParticleInnerHtml(molecule          )         {
+    if (molecule.segmented) {
+      const segsL = molecule.tierKey === 'mid'
+        ? ['bg-rose-500', 'bg-sky-400', 'bg-rose-500', 'bg-sky-400']
+        : ['bg-rose-500', 'bg-sky-400', 'bg-sky-400', 'bg-sky-400'];
+      const segsR = molecule.tierKey === 'mid'
+        ? ['bg-sky-400', 'bg-rose-500', 'bg-sky-400', 'bg-rose-500']
+        : ['bg-sky-400', 'bg-rose-500', 'bg-sky-400', 'bg-sky-400'];
+
+      const buildCol = (arr                   )         =>
+        `<span class="w-1 h-4 rounded-full overflow-hidden flex flex-col">${arr.map((c) => `<span class="flex-1 ${c}"></span>`).join('')}</span>`;
+      return buildCol(segsL) + buildCol(segsR);
+    }
+
+    const pairMap                                           = {
+      heavy: ['bg-rose-500', 'bg-rose-500'],
+      mid: ['bg-rose-500', 'bg-sky-400'],
+      'light-mid': ['bg-rose-500', 'bg-sky-400'],
+      light: ['bg-sky-400', 'bg-sky-400']
+    };
+    const [l, r] = pairMap[molecule.tierKey];
+    return `
+      <span class="w-1 h-4 rounded-full ${l} shadow-sm"></span>
+      <span class="w-1 h-4 rounded-full ${r} shadow-sm"></span>
+    `;
+  },
+
+  renderParticles(containerId        , molecules                     , swirling = false)       {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const total = molecules.length;
+    const swirlClass = swirling ? 'dna-particle-swirl' : '';
+
+    container.innerHTML = molecules
+      .map((m, idx) => {
+        const topPct = total === 1 ? 48 : 28 + ((idx * 17) % 46);
+        const leftPct = total === 1 ? 42 : 20 + ((idx * 19) % 52);
+        const delay = (idx * 0.12).toFixed(2);
+        return `
+          <div
+            data-heavy-ratio="${m.heavyRatio}"
+            data-strand-idx="${idx}"
+            class="dna-strand-item dna-strand-move ${swirlClass} absolute flex items-center gap-0.5 opacity-95 -translate-y-1/2"
+            style="top:${topPct}%; left:${leftPct}%; animation-delay:${delay}s;"
+          >
+            ${this.renderParticleInnerHtml(m)}
+          </div>
+        `;
+      })
+      .join('');
+  },
+
+  migrateParticlesToDensity(containerId        )       {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const items = container.querySelectorAll             ('.dna-strand-item');
+    const layouts                                    = {
+      1: ['44%'],
+      2: ['30%', '58%'],
+      4: ['16%', '35%', '54%', '73%']
+    };
+    const xSlots = layouts[items.length] ?? ['22%', '44%', '66%'];
+
+    items.forEach((el, idx) => {
+      el.classList.remove('dna-particle-swirl');
+      const ratio = parseFloat(el.getAttribute('data-heavy-ratio') ?? '1');
+      const targetTop = BiologyModel.computeBandTopPct(ratio);
+      el.style.top = `${targetTop}%`;
+      el.style.left = xSlots[idx % xSlots.length];
+      el.style.transform = 'translateY(-50%) rotate(90deg)';
+    });
+  },
+
+  renderBands(containerId        , molecules                     , compact = false)       {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const { bands } = BiologyModel.aggregateBands(molecules);
+
+    container.innerHTML = bands
+      .map((b) => {
+        const heightPx = compact
+          ? Math.max(5, Math.round(5 + b.fraction * 5))
+          : Math.max(7, Math.round(6 + b.fraction * 7));
+        const percentBadge = !compact && bands.length > 1
+          ? `<span class="absolute right-0.5 -top-3.5 text-[9px] font-black text-slate-200 bg-slate-900/80 px-1 rounded">${b.percent}%</span>`
+          : '';
+        return `
+          <div
+            class="band-appear absolute inset-x-1.5 rounded-full ${b.bgClass} ${b.glowClass}"
+            style="top:${b.topPct}%; height:${heightPx}px;"
+            title="${b.shortLabel}: ${b.percent}% (${b.count}/${molecules.length}本)"
+          >
+            ${percentBadge}
+          </div>
+        `;
+      })
+      .join('');
+  },
+
+  clearGenTubes()       {
+    [1, 2].forEach((g) => {
+      const content = document.getElementById(`tube-content-${g}`);
+      const label = document.getElementById(`tube-label-${g}`);
+      const wrapper = document.getElementById(`tube-wrapper-${g}`);
+      if (wrapper) wrapper.classList.remove('animate-centrifuge');
+      if (content) content.innerHTML = '';
+      if (label) {
+        label.textContent = '未実験';
+        label.className = 'text-[10px] font-bold text-slate-400 leading-tight';
+      }
+    });
+  },
+
+  clearFlyingDna()       {
+    document.querySelectorAll('.dna-fly-clone, .result-fly-badge').forEach((el) => el.remove());
+    document.querySelectorAll('.tube-receive-pulse').forEach((el) => el.classList.remove('tube-receive-pulse'));
+  },
+
+  flyResultToCompareBtn(hypothesisName        )       {
+    const srcTube = document.getElementById('tube-wrapper-2');
+    const compareBtn = document.getElementById('open-compare-btn');
+    if (!srcTube || !compareBtn) return;
+
+    const srcRect = srcTube.getBoundingClientRect();
+    const dstRect = compareBtn.getBoundingClientRect();
+
+    // 第2世代の試験管＋仮説ラベルの小さなデータカードを飛ばす
+    const badge = document.createElement('div');
+    badge.className = 'result-fly-badge flex items-center gap-1.5 bg-indigo-600 text-white text-xs font-black px-3 py-1.5 rounded-full shadow-lg border-2 border-white';
+    badge.style.position = 'fixed';
+    badge.style.zIndex = '70';
+    badge.style.pointerEvents = 'none';
+    badge.style.willChange = 'transform, opacity';
+    badge.style.left = `${srcRect.left + srcRect.width / 2 - 58}px`;
+    badge.style.top = `${srcRect.top + srcRect.height / 2 - 16}px`;
+    badge.textContent = `📊 ${hypothesisName} 記録`;
+    document.body.appendChild(badge);
+
+    const startX = srcRect.left + srcRect.width / 2;
+    const startY = srcRect.top + srcRect.height / 2;
+    const endX = dstRect.left + dstRect.width / 2;
+    const endY = dstRect.top + dstRect.height / 2;
+    const dx = endX - startX;
+    const dy = endY - startY;
+    const midX = dx * 0.45;
+    const midY = Math.min(dy * 0.4, -40) - 30;
+
+    if (typeof badge.animate === 'function') {
+      const anim = badge.animate(
+        [
+          { transform: 'translate3d(0px, 0px, 0) scale(0.85)', opacity: 0, offset: 0 },
+          { transform: 'translate3d(0px, -12px, 0) scale(1.06)', opacity: 1, offset: 0.18 },
+          { transform: `translate3d(${midX}px, ${midY}px, 0) scale(0.95)`, opacity: 0.98, offset: 0.58 },
+          { transform: `translate3d(${dx}px, ${dy}px, 0) scale(0.35)`, opacity: 0.1, offset: 1 }
+        ],
+        {
+          duration: 780,
+          easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+          fill: 'forwards'
+        }
+      );
+      anim.onfinish = () => {
+        badge.remove();
+        compareBtn.classList.remove('compare-receive-pop');
+        void compareBtn.offsetWidth;
+        compareBtn.classList.add('compare-receive-pop');
+      };
+    } else {
+      badge.remove();
+    }
+  },
+
+  flyDnaIntoTube(sourceElements                        , targetTubeId        )         {
+    const tube = document.getElementById(targetTubeId);
+    if (!tube || sourceElements.length === 0) {
+      return 0;
+    }
+
+    this.clearFlyingDna();
+    const tubeRect = tube.getBoundingClientRect();
+    const targetX = tubeRect.left + tubeRect.width / 2;
+    const targetY = tubeRect.top + 28;
+    const staggerMs = 90;
+    const flyMs = 680;
+
+    sourceElements.forEach((srcEl, idx) => {
+      const rect = srcEl.getBoundingClientRect();
+      const clone = srcEl.cloneNode(true)               ;
+      clone.removeAttribute('id');
+      clone.querySelectorAll('[id]').forEach((n) => n.removeAttribute('id'));
+      clone.classList.remove('relative');
+      clone.classList.add('dna-fly-clone');
+
+      // Inline positioning guarantees priority over Tailwind Play CDN classes
+      clone.style.position = 'fixed';
+      clone.style.zIndex = '60';
+      clone.style.pointerEvents = 'none';
+      clone.style.left = `${rect.left}px`;
+      clone.style.top = `${rect.top}px`;
+      clone.style.width = `${rect.width}px`;
+      clone.style.height = `${rect.height}px`;
+      clone.style.margin = '0';
+      document.body.appendChild(clone);
+
+      const dx = targetX - (rect.left + rect.width / 2);
+      const dy = targetY - (rect.top + rect.height / 2);
+      const midX = dx * 0.45;
+      const midY = Math.min(0, dy * 0.35) - 36;
+      const tilt = idx % 2 === 0 ? 22 : -22;
+
+      if (typeof clone.animate === 'function') {
+        clone.animate(
+          [
+            { transform: 'translate(0px, 0px) scale(1) rotate(0deg)', opacity: 1, offset: 0 },
+            { transform: `translate(${midX}px, ${midY}px) scale(0.85) rotate(${tilt * 0.5}deg)`, opacity: 0.98, offset: 0.42 },
+            { transform: `translate(${dx}px, ${dy - 14}px) scale(0.42) rotate(${tilt}deg)`, opacity: 0.85, offset: 0.78 },
+            { transform: `translate(${dx}px, ${dy + 18}px) scale(0.18) rotate(${tilt * 1.2}deg)`, opacity: 0.05, offset: 1 }
+          ],
+          {
+            duration: flyMs,
+            delay: idx * staggerMs,
+            easing: 'cubic-bezier(0.45, 0.05, 0.55, 0.95)',
+            fill: 'forwards'
+          }
+        );
+      }
+    });
+
+    tube.classList.remove('tube-receive-pulse');
+    void tube.offsetWidth;
+    tube.classList.add('tube-receive-pulse');
+
+    return flyMs + (sourceElements.length - 1) * staggerMs + 60;
+  },
+
+  setStatusBadge(text        , colorClasses        )       {
+    const badge = document.getElementById('centrifuge-status');
+    if (!badge) return;
+    badge.textContent = text;
+    badge.className = `text-[11px] font-extrabold px-2.5 py-1 rounded-full ${colorClasses}`;
+  }
+};
+
+// --- gestures.js ---
+// =========================================================================
+// インタラクティブジェスチャー制御 (ドラッグ分離・ハサミ切り・なぞり合成)
+// =========================================================================
+const GestureController = {
+  activeSplitSlotId: null                 ,
+  splitGhostEl: null                      ,
+  splitTargetCard: null                      ,
+  splitTargetRect: null                  ,
+  isOverTargetCard: false,
+
+  activeCutSlotId: null                 ,
+  cutStartX: 0,
+  cutRequiredDist: 60,
+  cutBarEl: null                      ,
+
+  activeBuildSlotId: null                 ,
+  activeBuildOp: null                         ,
+  buildStartY: 0,
+  buildRequiredDist: 56,
+  buildBarEl: null                      ,
+  buildFillEls: []                 ,
+  buildSegFillEls: []                      ,
+  buildDotEls: []                  ,
+
+  isPointInRect(r                , x        , y        , margin = 12)          {
+    if (!r) return false;
+    return x >= r.left - margin && x <= r.right + margin && y >= r.top - margin && y <= r.bottom + margin;
+  },
+
+  cleanupSplitDrag()       {
+    if (this.splitGhostEl) {
+      this.splitGhostEl.remove();
+      this.splitGhostEl = null;
+    }
+    if (this.activeSplitSlotId !== null) {
+      const origZone = document.querySelector             (`[data-split-slot="${this.activeSplitSlotId}"]`);
+      if (origZone) origZone.classList.remove('opacity-30');
+
+      if (this.splitTargetCard) {
+        this.splitTargetCard.classList.remove('ring-4', 'ring-amber-400', 'bg-amber-50/60', 'scale-[1.02]');
+      }
+      const targetDrop = document.querySelector             (`[data-drop-target="${this.activeSplitSlotId + 1}"]`);
+      if (targetDrop) {
+        targetDrop.classList.remove('border-amber-400', 'bg-amber-50', 'text-amber-800');
+        targetDrop.textContent = 'ここに右の鎖をドラッグ！';
+      }
+    }
+    this.activeSplitSlotId = null;
+    this.splitTargetCard = null;
+    this.splitTargetRect = null;
+    this.isOverTargetCard = false;
+  },
+
+  cleanupCutSwipe()       {
+    if (this.cutBarEl) {
+      this.cutBarEl.style.width = '0%';
+      this.cutBarEl = null;
+    }
+    this.activeCutSlotId = null;
+  },
+
+  updateBuildProgress(pct        )       {
+    if (this.buildBarEl) this.buildBarEl.style.width = `${pct}%`;
+
+    for (let i = 0; i < this.buildFillEls.length; i++) {
+      this.buildFillEls[i].style.height = `${pct}%`;
+    }
+
+    for (let i = 0; i < this.buildSegFillEls.length; i++) {
+      const { el, idx } = this.buildSegFillEls[i];
+      const segPct = Math.max(0, Math.min(100, ((pct - idx * 25) / 25) * 100));
+      el.style.height = `${segPct}%`;
+    }
+
+    const t = pct / 100;
+    const dotOpacity = t <= 0 ? 0 : t < 0.18 ? (t / 0.18) * 0.95 : Math.max(0, (1 - (t - 0.18) / 0.82) * 0.95);
+    for (let i = 0; i < this.buildDotEls.length; i++) {
+      const { el, sx, sy, tx, ty } = this.buildDotEls[i];
+      const cx = (sx + (tx - sx) * t).toFixed(1);
+      const cy = (sy + (ty - sy) * t).toFixed(1);
+      const sc = (1 - t * 0.65).toFixed(2);
+      el.style.transform = `translate3d(${cx}px, ${cy}px, 0) scale(${sc})`;
+      el.style.opacity = dotOpacity.toFixed(2);
+    }
+  },
+
+  cleanupBuildSwipe()       {
+    if (this.activeBuildSlotId !== null) {
+      this.updateBuildProgress(0);
+    }
+    this.activeBuildSlotId = null;
+    this.activeBuildOp = null;
+    this.buildBarEl = null;
+    this.buildFillEls = [];
+    this.buildSegFillEls = [];
+    this.buildDotEls = [];
+  },
+
+  attach(onSlotAction                                                      )       {
+    document.addEventListener('pointerdown', (e              ) => {
+      if (store.isBusy() || !(e.target instanceof Element)) return;
+
+      // 1. 半保存的複製：右鎖ドラッグ
+      const splitZone = e.target.closest             ('[data-split-slot]');
+      if (splitZone) {
+        e.preventDefault();
+        const slotId = parseInt(splitZone.getAttribute('data-split-slot') ?? '', 10);
+        const slot = store.getCurrentSlots()[slotId]                                    ;
+        if (!slot || !slot.exists || slot.split) return;
+
+        this.activeSplitSlotId = slotId;
+        this.isOverTargetCard = false;
+        this.splitTargetCard = document.querySelector             (`[data-card-slot="${slotId + 1}"]`);
+        this.splitTargetRect = this.splitTargetCard ? this.splitTargetCard.getBoundingClientRect() : null;
+        splitZone.classList.add('opacity-30');
+
+        const colorClass = slot.right === 'red' ? 'bg-rose-500' : 'bg-sky-500';
+        this.splitGhostEl = document.createElement('div');
+        this.splitGhostEl.className = `fixed top-0 left-0 w-4 h-24 rounded-full ${colorClass} shadow-xl opacity-95 pointer-events-none z-50 border-2 border-white`;
+        this.splitGhostEl.style.willChange = 'transform';
+        this.splitGhostEl.style.transform = `translate3d(${e.clientX - 8}px, ${e.clientY - 48}px, 0) scale(1.1)`;
+        document.body.appendChild(this.splitGhostEl);
+
+        const targetDrop = document.querySelector             (`[data-drop-target="${slotId + 1}"]`);
+        if (targetDrop) {
+          targetDrop.classList.add('border-amber-400', 'bg-amber-50', 'text-amber-800');
+          targetDrop.textContent = 'ここにドロップして離す！';
+        }
+        return;
+      }
+
+      // 2. 分散的複製：ハサミのスワイプ切り
+      const cutZone = e.target.closest             ('[data-cut-slot]');
+      if (cutZone) {
+        e.preventDefault();
+        const slotId = parseInt(cutZone.getAttribute('data-cut-slot') ?? '', 10);
+        this.activeCutSlotId = slotId;
+        this.cutStartX = e.clientX;
+        this.cutRequiredDist = Math.max(50, cutZone.getBoundingClientRect().width * 0.7);
+        this.cutBarEl = document.querySelector             (`[data-cut-bar="${slotId}"]`);
+        return;
+      }
+
+      // 3. 全仮説共通：上から下へなぞって青い鎖を合成
+      const buildZone = e.target.closest             ('[data-build-slot]');
+      if (buildZone) {
+        e.preventDefault();
+        const slotId = parseInt(buildZone.getAttribute('data-build-slot') ?? '', 10);
+        const rawOp = buildZone.getAttribute('data-build-op');
+        this.activeBuildSlotId = slotId;
+        this.activeBuildOp = rawOp === 'mix' ? 'mix' : 'build';
+        this.buildStartY = e.clientY;
+        this.buildRequiredDist = Math.max(48, buildZone.getBoundingClientRect().height * 0.65);
+        this.buildBarEl = document.querySelector             (`[data-build-bar="${slotId}"]`);
+        this.buildFillEls = Array.from(document.querySelectorAll             (`[data-build-fill="${slotId}"]`));
+        this.buildSegFillEls = Array.from(document.querySelectorAll             (`[data-build-seg-fill="${slotId}"]`)).map((el) => ({
+          el,
+          idx: parseInt(el.getAttribute('data-seg-idx') ?? '0', 10)
+        }));
+        this.buildDotEls = Array.from(document.querySelectorAll             (`[data-build-dot="${slotId}"]`)).map((el) => ({
+          el,
+          sx: parseFloat(el.getAttribute('data-sx') ?? '0'),
+          sy: parseFloat(el.getAttribute('data-sy') ?? '0'),
+          tx: parseFloat(el.getAttribute('data-tx') ?? '0'),
+          ty: parseFloat(el.getAttribute('data-ty') ?? '0')
+        }));
+      }
+    });
+
+    document.addEventListener('pointermove', (e              ) => {
+      if (this.activeSplitSlotId !== null) {
+        if (this.splitGhostEl) {
+          this.splitGhostEl.style.transform = `translate3d(${e.clientX - 8}px, ${e.clientY - 48}px, 0) scale(1.1)`;
+        }
+        const inside = this.isPointInRect(this.splitTargetRect, e.clientX, e.clientY);
+        if (inside !== this.isOverTargetCard) {
+          this.isOverTargetCard = inside;
+          if (this.splitTargetCard) {
+            this.splitTargetCard.classList.toggle('ring-4', inside);
+            this.splitTargetCard.classList.toggle('ring-amber-400', inside);
+            this.splitTargetCard.classList.toggle('bg-amber-50/60', inside);
+            this.splitTargetCard.classList.toggle('scale-[1.02]', inside);
+          }
+        }
+      }
+
+      if (this.activeCutSlotId !== null) {
+        const dist = Math.abs(e.clientX - this.cutStartX);
+        const pct = Math.min(100, Math.round((dist / this.cutRequiredDist) * 100));
+        if (this.cutBarEl) this.cutBarEl.style.width = `${pct}%`;
+
+        if (dist >= this.cutRequiredDist) {
+          const targetId = this.activeCutSlotId;
+          this.cleanupCutSwipe();
+          onSlotAction(targetId, 'cut');
+        }
+      }
+
+      if (this.activeBuildSlotId !== null) {
+        const dy = Math.max(0, e.clientY - this.buildStartY);
+        const pct = Math.min(100, Math.round((dy / this.buildRequiredDist) * 100));
+        this.updateBuildProgress(pct);
+
+        if (dy >= this.buildRequiredDist) {
+          const targetId = this.activeBuildSlotId;
+          const targetOp = this.activeBuildOp ?? 'build';
+          this.activeBuildSlotId = null;
+          this.activeBuildOp = null;
+          this.buildBarEl = null;
+          this.buildFillEls = [];
+          this.buildSegFillEls = [];
+          this.buildDotEls = [];
+          onSlotAction(targetId, targetOp);
+        }
+      }
+    });
+
+    document.addEventListener('pointerup', (e              ) => {
+      if (this.activeSplitSlotId !== null) {
+        const targetId = this.activeSplitSlotId;
+        const dropped = this.isOverTargetCard || this.isPointInRect(this.splitTargetRect, e.clientX, e.clientY);
+        this.cleanupSplitDrag();
+        if (dropped) onSlotAction(targetId, 'split');
+      }
+      if (this.activeCutSlotId !== null) {
+        this.cleanupCutSwipe();
+      }
+      if (this.activeBuildSlotId !== null) {
+        this.cleanupBuildSwipe();
+      }
+    });
+
+    document.addEventListener('pointercancel', () => {
+      this.cleanupSplitDrag();
+      this.cleanupCutSwipe();
+      this.cleanupBuildSwipe();
+    });
+  }
+};
+
+// --- labView.js ---
+// =========================================================================
+// DNAカード＆ラボ全体ビュー (LabView)
+// =========================================================================
+const LabView = {
+  setObservation(text        )       {
+    const el = document.getElementById('observation-box');
+    if (el) el.textContent = text;
+  },
+
+  renderStrandHtml(
+    color                ,
+    { animateGrow = false, delaySec = 0, buildSlotId = null }                      = {}
+  )         {
+    const animClass = animateGrow ? 'animate-grow-top' : '';
+    const animStyle = animateGrow && delaySec > 0 ? `style="animation-delay:${delaySec}s;"` : '';
+    if (color === 'red') {
+      return `<div class="dna-strand-h w-3.5 rounded-full bg-rose-500 shadow-sm ${animClass}" ${animStyle}></div>`;
+    }
+    if (color === 'blue') {
+      return `<div class="dna-strand-h w-3.5 rounded-full bg-sky-500 shadow-sm ${animClass}" ${animStyle}></div>`;
+    }
+    const fillHtml = buildSlotId !== null
+      ? `<div data-build-fill="${buildSlotId}" class="absolute inset-x-0 top-0 bg-sky-500 rounded-full" style="height:0%;"></div>`
+      : '';
+    return `<div class="dna-strand-h relative w-3.5 rounded-full border-2 border-dashed border-sky-300 bg-sky-50/60 overflow-hidden">${fillHtml}</div>`;
+  },
+
+  renderSegmentedStrandHtml(
+    segs                           ,
+    isCut         ,
+    newMask                     = [],
+    animateGrow = false,
+    buildSlotId                = null
+  )         {
+    if (!isCut) {
+      return `
+        <div class="dna-strand-h flex flex-col w-3.5 rounded-full overflow-hidden shadow-sm">
+          ${segs
+            .map((c) => {
+              const bg = c === 'red' ? 'bg-rose-500' : c === 'blue' ? 'bg-sky-500' : 'bg-slate-100/60';
+              return `<span class="w-full flex-1 ${bg}"></span>`;
+            })
+            .join('')}
+        </div>
+      `;
+    }
+    return `
+      <div class="dna-strand-h flex flex-col gap-1 justify-between">
+        ${segs
+          .map((c, idx) => {
+            const isNew = animateGrow && newMask[idx];
+            const animAttr = isNew ? `style="animation-delay:${idx * 0.22}s;"` : '';
+            const animClass = isNew ? 'animate-grow-top' : '';
+            if (c === 'red') {
+              return `<span class="w-3.5 flex-1 rounded-full bg-rose-500 shadow-sm"></span>`;
+            }
+            if (c === 'blue') {
+              return `<span class="w-3.5 flex-1 rounded-full bg-sky-500 shadow-sm ${animClass}" ${animAttr}></span>`;
+            }
+            const segFill = buildSlotId !== null
+              ? `<span data-build-seg-fill="${buildSlotId}" data-seg-idx="${idx}" class="absolute inset-x-0 top-0 bg-sky-500 rounded-full" style="height:0%;"></span>`
+              : '';
+            return `<span class="relative w-3.5 flex-1 rounded-full border border-dashed border-sky-300 bg-sky-50/60 overflow-hidden">${segFill}</span>`;
+          })
+          .join('')}
+      </div>
+    `;
+  },
+
+  renderRungsHtml(active         )         {
+    const color = active ? 'bg-slate-400' : 'bg-slate-200';
+    return `
+      <div class="dna-rungs-h flex flex-col justify-around" aria-hidden="true">
+        <span class="w-2.5 h-0.5 ${color}"></span>
+        <span class="w-2.5 h-0.5 ${color}"></span>
+        <span class="w-2.5 h-0.5 ${color}"></span>
+      </div>
+    `;
+  },
+
+  renderStatusBadge(slot         , hypo              )         {
+    if (BiologyModel.isSlotComplete(slot, hypo)) {
+      return `<span class="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">完成</span>`;
+    }
+    const exists = 'exists' in slot ? slot.exists : true;
+    const label = exists === false ? '待機中' : '作業中';
+    return `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">${label}</span>`;
+  },
+
+  renderSwipeBuildGuide(slotId        , text = '上から下へなぞって青い鎖を合成！', glowClass = '')         {
+    return `
+      <div class="text-center text-[11px] font-extrabold text-sky-800 py-1 bg-sky-50 rounded-xl border border-sky-200 ${glowClass}">
+        ${text}
+        <div class="mt-1 mx-2 h-1.5 bg-sky-200/80 rounded-full overflow-hidden">
+          <div data-build-bar="${slotId}" class="h-full bg-sky-500 rounded-full transition-all duration-75" style="width:0%;"></div>
+        </div>
+      </div>
+    `;
+  },
+
+  renderBuildOverlay(slotId        , op                )         {
+    return `
+      <div
+        data-build-slot="${slotId}"
+        data-build-op="${op}"
+        class="gesture-zone absolute -inset-1.5 cursor-ns-resize rounded-xl"
+        title="上から下へドラッグして青い鎖を伸ばそう！"
+      ></div>
+    `;
+  },
+
+  renderCardAmbientBlueSpecks()         {
+    const specks = [
+      { top: '16%', left: '10%', sz: 'w-1 h-1', dx: '3px', dy: '-3px', dur: '4.2s' },
+      { top: '26%', left: '84%', sz: 'w-1.5 h-1.5', dx: '-3px', dy: '3px', dur: '4.9s' },
+      { top: '52%', left: '8%', sz: 'w-1 h-1', dx: '4px', dy: '2px', dur: '4.5s' },
+      { top: '48%', left: '88%', sz: 'w-1 h-1', dx: '-4px', dy: '-2px', dur: '5.1s' },
+      { top: '76%', left: '14%', sz: 'w-1.5 h-1.5', dx: '3px', dy: '3px', dur: '4.7s' },
+      { top: '78%', left: '82%', sz: 'w-1 h-1', dx: '-3px', dy: '-3px', dur: '4.3s' }
+    ];
+    return `
+      <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        ${specks
+          .map(
+            (s) =>
+              `<span class="medium-speck absolute ${s.sz} rounded-full bg-sky-400/60" style="top:${s.top}; left:${s.left}; --dx:${s.dx}; --dy:${s.dy}; --dur:${s.dur};"></span>`
+          )
+          .join('')}
+      </div>
+    `;
+  },
+
+  getBlueAbsorbTargets(slot         , hypo              )            {
+    // 左鎖の中心 x ≈ -22px、右鎖の中心 x ≈ +22px、縦方向は -36px〜+36px
+    const rowYs = [-36, -12, 12, 36];
+    if (hypo === 'conservative') {
+      return [
+        { tx: -22, ty: -36 }, { tx: 22, ty: -36 },
+        { tx: -22, ty: -12 }, { tx: 22, ty: -12 },
+        { tx: -22, ty: 12 }, { tx: 22, ty: 12 },
+        { tx: -22, ty: 36 }, { tx: 22, ty: 36 }
+      ];
+    }
+    if (hypo === 'semiconservative') {
+      const sSlot = slot                        ;
+      const side = sSlot.built ? sSlot.newSide : !sSlot.left ? 'left' : 'right';
+      const tx = side === 'left' ? -22 : 22;
+      return rowYs.map((ty) => ({ tx, ty }));
+    }
+    // dispersive: 空き断片（または直前に埋めた新断片）の正確な位置へ吸収
+    const dSlot = slot                  ;
+    const targets            = [];
+    const useMask = Boolean(dSlot.mixed);
+    for (let i = 0; i < 4; i++) {
+      const leftTarget = useMask ? dSlot.newLeftMask?.[i] : dSlot.leftSegs?.[i] === null;
+      const rightTarget = useMask ? dSlot.newRightMask?.[i] : dSlot.rightSegs?.[i] === null;
+      if (leftTarget) targets.push({ tx: -22, ty: rowYs[i] });
+      if (rightTarget) targets.push({ tx: 22, ty: rowYs[i] });
+    }
+    return targets.length > 0 ? targets : [{ tx: -22, ty: 0 }, { tx: 22, ty: 0 }];
+  },
+
+  renderBlueAbsorbParticles(slot         , hypo              , mode            )         {
+    if (!mode) return '';
+    const targets = this.getBlueAbsorbTargets(slot, hypo);
+    const coords = [
+      { sx: -68, sy: -48, d: 0, sz: 'w-1.5 h-1.5' },
+      { sx: -44, sy: -54, d: 0.04, sz: 'w-1 h-1' },
+      { sx: 66, sy: -46, d: 0.07, sz: 'w-1.5 h-1.5' },
+      { sx: 42, sy: -52, d: 0.1, sz: 'w-1 h-1' },
+      { sx: -76, sy: -16, d: 0.13, sz: 'w-1 h-1' },
+      { sx: 76, sy: -14, d: 0.16, sz: 'w-1.5 h-1.5' },
+      { sx: -74, sy: 16, d: 0.19, sz: 'w-1.5 h-1.5' },
+      { sx: 74, sy: 18, d: 0.22, sz: 'w-1 h-1' },
+      { sx: -66, sy: 48, d: 0.25, sz: 'w-1 h-1' },
+      { sx: -40, sy: 54, d: 0.28, sz: 'w-1.5 h-1.5' },
+      { sx: 64, sy: 46, d: 0.31, sz: 'w-1.5 h-1.5' },
+      { sx: 38, sy: 54, d: 0.34, sz: 'w-1 h-1' },
+      { sx: -16, sy: -56, d: 0.08, sz: 'w-1 h-1' },
+      { sx: 18, sy: 56, d: 0.29, sz: 'w-1 h-1' }
+    ];
+    if (mode === 'ready') {
+      return coords
+        .map((p, idx) => {
+          const tgt = targets[idx % targets.length];
+          return `<span data-build-dot="${slot.id}" data-sx="${p.sx}" data-sy="${p.sy}" data-tx="${tgt.tx}" data-ty="${tgt.ty}" class="blue-ambient-dot pointer-events-none absolute ${p.sz} rounded-full bg-sky-400/90" style="--sx:${p.sx}px; --sy:${p.sy}px;"></span>`;
+        })
+        .join('');
+    }
+    if (mode === 'justBuilt') {
+      return coords
+        .map((p, idx) => {
+          const tgt = targets[idx % targets.length];
+          return `<span class="blue-absorb-once pointer-events-none absolute ${p.sz} rounded-full bg-sky-500" style="--sx:${p.sx}px; --sy:${p.sy}px; --tx:${tgt.tx}px; --ty:${tgt.ty}px; animation-delay:${p.d}s;"></span>`;
+        })
+        .join('');
+    }
+    return '';
+  },
+
+  renderConservativeCard(slot                  , glowClass        )         {
+    const animGrow = Boolean(slot.justBuilt && !slot.isOriginal);
+    const canBuild = !slot.built;
+    const absorbMode             = canBuild ? 'ready' : animGrow ? 'justBuilt' : null;
+    const actionHtml = slot.built
+      ? `<div class="text-center text-[11px] font-extrabold text-emerald-700 py-1.5 bg-emerald-50 rounded-xl">${slot.isOriginal ? '元のDNAそのまま' : '2本鎖が完成！'}</div>`
+      : this.renderSwipeBuildGuide(slot.id, '上から下へなぞって青の2本鎖を作る！', glowClass);
+
+    return `
+      <div class="compact-dna-card min-w-0 relative overflow-hidden bg-white/90 rounded-2xl border-2 ${slot.built ? 'border-emerald-300' : 'border-slate-200'} p-2.5 sm:p-3 flex flex-col items-center justify-between gap-2 shadow-sm">
+        ${this.renderCardAmbientBlueSpecks()}
+        <div class="relative z-10 w-full flex items-center justify-between gap-1">
+          <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
+          ${this.renderStatusBadge(slot, 'conservative')}
+        </div>
+        <div data-dna-visual="${slot.id}" class="relative z-10 flex items-center justify-center gap-3 my-1 px-2">
+          ${this.renderBlueAbsorbParticles(slot, 'conservative', absorbMode)}
+          ${this.renderStrandHtml(slot.left, { animateGrow: animGrow, delaySec: 0, buildSlotId: canBuild ? slot.id : null })}
+          ${this.renderRungsHtml(slot.built)}
+          ${this.renderStrandHtml(slot.right, { animateGrow: animGrow, delaySec: 0.4, buildSlotId: canBuild ? slot.id : null })}
+          ${canBuild ? this.renderBuildOverlay(slot.id, 'build') : ''}
+        </div>
+        <div class="relative z-10 w-full">${actionHtml}</div>
+      </div>
+    `;
+  },
+
+  renderSemiconservativeCard(slot                      , glowClass        )         {
+    const isDone = BiologyModel.isSlotComplete(slot, 'semiconservative');
+    const animLeft = Boolean(slot.justBuilt && slot.newSide === 'left');
+    const animRight = Boolean(slot.justBuilt && slot.newSide === 'right');
+    const canBuild = Boolean(slot.exists && slot.split && !slot.built);
+    const absorbMode             = canBuild ? 'ready' : slot.justBuilt ? 'justBuilt' : null;
+
+    let actionHtml = '';
+    if (!slot.exists) {
+      actionHtml = `<div data-drop-target="${slot.id}" class="text-center text-[11px] font-bold text-slate-400 py-1.5 bg-slate-50 rounded-xl border border-dashed border-slate-200 transition">ここに右の鎖をドラッグ！</div>`;
+    } else if (!slot.split) {
+      actionHtml = `<div class="text-center text-[11px] font-extrabold text-amber-800 py-1.5 bg-amber-50 rounded-xl border border-amber-200">右側の鎖を隣へドラッグ！</div>`;
+    } else if (canBuild) {
+      actionHtml = this.renderSwipeBuildGuide(slot.id, '上から下へなぞって青い鎖を合成！', glowClass);
+    } else {
+      actionHtml = `<div class="text-center text-[11px] font-extrabold text-emerald-700 py-1.5 bg-emerald-50 rounded-xl">2本鎖が完成！</div>`;
+    }
+
+    const rightStrandInteractive = slot.exists && !slot.split
+      ? `<div data-split-slot="${slot.id}" class="gesture-zone relative cursor-grab active:cursor-grabbing group p-1 -m-1 rounded-xl ${glowClass}" title="掴んで隣の枠までドラッグして離そう！">
+           ${this.renderStrandHtml(slot.right)}
+           <span class="absolute -right-2.5 top-1/2 -translate-y-1/2 bg-amber-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-full shadow-sm group-hover:scale-110 transition">➡</span>
+         </div>`
+      : this.renderStrandHtml(slot.right, { animateGrow: animRight, buildSlotId: canBuild && !slot.right ? slot.id : null });
+
+    return `
+      <div data-card-slot="${slot.id}" class="compact-dna-card min-w-0 relative overflow-hidden bg-white/90 rounded-2xl border-2 ${isDone ? 'border-emerald-300' : 'border-slate-200'} p-2.5 sm:p-3 flex flex-col items-center justify-between gap-2 shadow-sm transition">
+        ${this.renderCardAmbientBlueSpecks()}
+        <div class="relative z-10 w-full flex items-center justify-between gap-1">
+          <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
+          ${this.renderStatusBadge(slot, 'semiconservative')}
+        </div>
+        <div data-dna-visual="${slot.id}" class="relative z-10 flex items-center justify-center gap-3 my-1 px-2">
+          ${this.renderBlueAbsorbParticles(slot, 'semiconservative', absorbMode)}
+          ${this.renderStrandHtml(slot.left, { animateGrow: animLeft, buildSlotId: canBuild && !slot.left ? slot.id : null })}
+          ${this.renderRungsHtml(isDone || (slot.exists && !slot.split))}
+          ${rightStrandInteractive}
+          ${canBuild ? this.renderBuildOverlay(slot.id, 'build') : ''}
+        </div>
+        <div class="relative z-10 w-full">${actionHtml}</div>
+      </div>
+    `;
+  },
+
+  renderDispersiveCard(slot                , glowClass        )         {
+    const isDone = BiologyModel.isSlotComplete(slot, 'dispersive');
+    const canBuild = Boolean(slot.exists && slot.cut && !slot.mixed);
+    const absorbMode             = canBuild ? 'ready' : slot.justBuilt ? 'justBuilt' : null;
+
+    let actionHtml = '';
+    if (!slot.exists) {
+      actionHtml = `<div class="text-center text-[11px] font-bold text-slate-400 py-1.5 bg-slate-50 rounded-xl">隣のカット待ち</div>`;
+    } else if (!slot.cut) {
+      actionHtml = `
+        <div class="text-center text-[11px] font-extrabold text-amber-800 py-1 bg-amber-50 rounded-xl border border-amber-200 ${glowClass}">
+          上のハサミ線を左右になぞって切ろう！
+          <div class="mt-1 mx-2 h-1.5 bg-amber-200/80 rounded-full overflow-hidden">
+            <div data-cut-bar="${slot.id}" class="h-full bg-amber-500 rounded-full transition-all duration-75" style="width:0%;"></div>
+          </div>
+        </div>
+      `;
+    } else if (canBuild) {
+      actionHtml = this.renderSwipeBuildGuide(slot.id, '上から下へなぞって青の断片を埋める！', glowClass);
+    } else {
+      actionHtml = `<div class="text-center text-[11px] font-extrabold text-emerald-700 py-1.5 bg-emerald-50 rounded-xl">2本鎖が完成！</div>`;
+    }
+
+    const cutOverlay = slot.exists && !slot.cut
+      ? `<div data-cut-slot="${slot.id}" class="gesture-zone absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center cursor-ew-resize py-2 rounded-xl" title="端までドラッグしてハサミで切ろう！">
+           <div class="w-full border-t-2 border-dashed border-amber-500 flex items-center px-0.5">
+             <span class="scissor-snip-anim text-sm -mt-3.5 bg-amber-100 border border-amber-400 rounded-full px-1 shadow-sm">✂️</span>
+           </div>
+         </div>`
+      : '';
+
+    return `
+      <div class="compact-dna-card min-w-0 relative overflow-hidden bg-white/90 rounded-2xl border-2 ${isDone ? 'border-emerald-300' : 'border-slate-200'} p-2.5 sm:p-3 flex flex-col items-center justify-between gap-2 shadow-sm">
+        ${this.renderCardAmbientBlueSpecks()}
+        <div class="relative z-10 w-full flex items-center justify-between gap-1">
+          <span class="text-xs font-extrabold text-slate-700">${slot.label}</span>
+          ${this.renderStatusBadge(slot, 'dispersive')}
+        </div>
+        <div data-dna-visual="${slot.id}" class="relative z-10 flex items-center justify-center gap-3 my-1 px-2">
+          ${this.renderBlueAbsorbParticles(slot, 'dispersive', absorbMode)}
+          ${this.renderSegmentedStrandHtml(slot.leftSegs, slot.cut, slot.newLeftMask, Boolean(slot.justBuilt), canBuild ? slot.id : null)}
+          ${this.renderRungsHtml(isDone)}
+          ${this.renderSegmentedStrandHtml(slot.rightSegs, slot.cut, slot.newRightMask, Boolean(slot.justBuilt), canBuild ? slot.id : null)}
+          ${cutOverlay}
+          ${canBuild ? this.renderBuildOverlay(slot.id, 'mix') : ''}
+        </div>
+        <div class="relative z-10 w-full">${actionHtml}</div>
+      </div>
+    `;
+  },
+
+  renderLab()       {
+    const h = store.hypothesis;
+    const gen = store.currentGen;
+    const slots = store.getCurrentSlots();
+    const complete = BiologyModel.isGenerationComplete(slots, h);
+    const spun = gen === 1 ? store.gen1Spun : store.gen2Spun;
+
+    HYPOTHESIS_ORDER.forEach((key) => {
+      const btn = document.getElementById(`hypo-btn-${key}`);
+      const doneBadge = document.getElementById(`hypo-done-${key}`);
+      const isRecorded = Boolean(store.recordedResults[key].gen1 && store.recordedResults[key].gen2);
+      if (doneBadge) doneBadge.classList.toggle('hidden', !isRecorded);
+      if (!btn) return;
+      const selected = key === h;
+      btn.setAttribute('aria-selected', String(selected));
+      btn.className = selected
+        ? 'p-2 sm:p-2.5 rounded-2xl border-2 border-sky-500 bg-sky-50/70 text-left transition cursor-pointer shadow-sm'
+        : 'p-2 sm:p-2.5 rounded-2xl border-2 border-slate-200 bg-white hover:bg-slate-50 text-left transition cursor-pointer';
+    });
+
+    const completedCount = store.countCompletedHypotheses();
+    const countBadge = document.getElementById('compare-count-badge');
+    if (countBadge) countBadge.textContent = `${completedCount}/3`;
+
+    const b1 = document.getElementById('step-badge-1');
+    const b2 = document.getElementById('step-badge-2');
+    if (b1 && b2) {
+      if (gen === 1) {
+        b1.className = 'px-2.5 py-1 rounded-xl text-xs font-extrabold bg-sky-500 text-white shadow-sm cursor-pointer';
+        b2.className = 'px-2.5 py-1 rounded-xl text-xs font-extrabold bg-slate-200 text-slate-500';
+      } else {
+        b1.className = 'px-2.5 py-1 rounded-xl text-xs font-extrabold bg-emerald-100 text-emerald-800 hover:bg-emerald-200 cursor-pointer';
+        b2.className = 'px-2.5 py-1 rounded-xl text-xs font-extrabold bg-sky-500 text-white shadow-sm';
+      }
+    }
+
+    const guideEl = document.getElementById('builder-guide-text');
+    if (guideEl) {
+      if (!complete) {
+        guideEl.textContent = '光っている場所をドラッグ・なぞってDNAを完成させよう！';
+      } else if (store.centrifugePhase === 'loading') {
+        guideEl.textContent = 'DNAが試験管の中へ吸い込まれています...';
+      } else if (store.centrifugePhase === 'spinning') {
+        guideEl.textContent = '回転中！もう一度ボタンを押して止めよう！';
+      } else if (store.centrifugePhase === 'settling') {
+        guideEl.textContent = 'バンドが形成されています...';
+      } else if (!spun) {
+        guideEl.textContent = 'DNAが完成！ボタンを押して試験管へ投入・遠心分離しよう！';
+      } else if (gen === 1) {
+        guideEl.textContent = '第1世代の分離完了！「第2世代へ進む」を押そう！';
+      } else if (completedCount < 3) {
+        guideEl.textContent = `記録完了（${completedCount}/3仮説）！他の仮説も試してみよう！`;
+      } else {
+        guideEl.textContent = '全3仮説の実験完了！「結果の比較」で実際の結果と比べよう！';
+      }
+    }
+
+    const nextSlotId = store.isBusy() ? null : BiologyModel.findNextActionSlotId(slots, h);
+    const container = document.getElementById('dna-slots-container');
+    if (container) {
+      container.className = gen === 1
+        ? 'relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-2.5'
+        : 'relative z-10 grid grid-cols-2 xl:grid-cols-4 gap-2';
+      container.innerHTML = slots
+        .map((slot) => {
+          const glow = slot.id === nextSlotId ? 'next-action-glow' : '';
+          if (h === 'conservative') return this.renderConservativeCard(slot                    , glow);
+          if (h === 'semiconservative') return this.renderSemiconservativeCard(slot                        , glow);
+          return this.renderDispersiveCard(slot                  , glow);
+        })
+        .join('');
+    }
+
+    const spinBtn = document.getElementById('spin-centrifuge-btn')                            ;
+    const spinIcon = document.getElementById('spin-btn-icon');
+    const spinLabel = document.getElementById('spin-btn-label');
+    const nextBtn = document.getElementById('next-gen-btn');
+    const compareCtaBtn = document.getElementById('compare-cta-btn');
+
+    if (spinBtn && spinIcon && spinLabel) {
+      if (store.centrifugePhase === 'loading') {
+        spinBtn.disabled = true;
+        spinBtn.className = 'bg-slate-300 text-slate-500 cursor-not-allowed font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm flex items-center justify-center gap-2';
+        spinIcon.className = 'w-3 h-3 rounded-full bg-sky-400 inline-block';
+        spinLabel.textContent = 'DNAを試験管へ投入中...';
+      } else if (store.centrifugePhase === 'spinning') {
+        spinBtn.disabled = false;
+        spinBtn.className = 'bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 next-action-glow';
+        spinIcon.className = 'w-3 h-3 rounded-sm bg-white inline-block';
+        spinLabel.textContent = '遠心分離を止める（ストップ）';
+      } else if (store.centrifugePhase === 'settling') {
+        spinBtn.disabled = true;
+        spinBtn.className = 'bg-slate-300 text-slate-500 cursor-not-allowed font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm flex items-center justify-center gap-2';
+        spinIcon.className = 'w-3 h-3 rounded-full bg-slate-400 inline-block';
+        spinLabel.textContent = 'バンド形成中...';
+      } else if (complete && !spun) {
+        spinBtn.disabled = false;
+        spinBtn.className = 'bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 next-action-glow';
+        spinIcon.className = 'w-3 h-3 rounded-full bg-white inline-block';
+        spinLabel.textContent = 'DNAを投入して遠心分離する';
+      } else {
+        spinBtn.disabled = true;
+        spinBtn.className = 'bg-slate-300 text-slate-500 cursor-not-allowed font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-2xl shadow-sm flex items-center justify-center gap-2';
+        spinIcon.className = 'w-3 h-3 rounded-full bg-slate-400 inline-block';
+        spinLabel.textContent = spun ? '遠心分離 完了' : 'DNAを投入して遠心分離する';
+      }
+    }
+
+    if (nextBtn) {
+      const showNext = gen === 1 && spun && !store.isBusy();
+      nextBtn.classList.toggle('hidden', !showNext);
+      nextBtn.classList.toggle('next-action-glow', showNext);
+    }
+
+    if (compareCtaBtn) {
+      const showCompare = gen === 2 && spun && !store.isBusy();
+      compareCtaBtn.classList.toggle('hidden', !showCompare);
+      compareCtaBtn.classList.toggle('next-action-glow', showCompare && completedCount === 3);
+    }
+  },
+
+  renderMiniTubeHtml(title        , molecules                            , idPrefix        )         {
+    const summary = molecules ? BiologyModel.aggregateBands(molecules).compactLabel : '未実験';
+    return `
+      <div class="flex flex-col items-center">
+        <div class="mini-tube-height relative w-11 rounded-b-full border border-slate-500/80 bg-slate-800 overflow-hidden">
+          <div class="absolute inset-x-0 top-[24%] -translate-y-1/2 border-t border-dashed border-sky-400/35"></div>
+          <div class="absolute inset-x-0 top-[52%] -translate-y-1/2 border-t border-dashed border-slate-400/35"></div>
+          <div class="absolute inset-x-0 top-[80%] -translate-y-1/2 border-t border-dashed border-rose-400/35"></div>
+          <div id="${idPrefix}" class="absolute inset-0"></div>
+        </div>
+        <div class="text-[10px] font-extrabold text-slate-200 mt-1">${title}</div>
+        <div class="text-[9px] font-bold ${molecules ? 'text-emerald-300' : 'text-slate-400'} text-center leading-tight min-h-[22px]">${summary}</div>
+      </div>
+    `;
+  },
+
+  renderCompareModal()       {
+    const grid = document.getElementById('compare-cards-grid');
+    if (!grid) return;
+
+    grid.innerHTML = HYPOTHESIS_ORDER.map((key) => {
+      const meta = HYPOTHESES[key];
+      const rec = store.recordedResults[key];
+      const bothDone = Boolean(rec.gen1 && rec.gen2);
+      const cardStateClass = bothDone
+        ? 'bg-white border-emerald-300'
+        : 'bg-slate-100/80 border-slate-200 opacity-50 grayscale';
+      return `
+        <div class="border-2 ${cardStateClass} rounded-2xl p-3 flex flex-col gap-2 transition">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-[10px] font-extrabold ${meta.accentText}">${meta.number}</span>
+              <h3 class="font-black text-sm text-slate-900">${meta.name}</h3>
+            </div>
+            <span class="text-[10px] font-black px-2 py-0.5 rounded-full ${bothDone ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-500'}">
+              ${bothDone ? '記録完了' : '未完了'}
+            </span>
+          </div>
+          <div class="bg-slate-900 rounded-xl p-2.5 flex items-end justify-around gap-1">
+            ${this.renderMiniTubeHtml('第0世代', bothDone ? ACTUAL_MESELSON_STAHL.gen0 : null, `cmp-${key}-0`)}
+            ${this.renderMiniTubeHtml('第1世代', bothDone ? rec.gen1 : null, `cmp-${key}-1`)}
+            ${this.renderMiniTubeHtml('第2世代', bothDone ? rec.gen2 : null, `cmp-${key}-2`)}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    HYPOTHESIS_ORDER.forEach((key) => {
+      const rec = store.recordedResults[key];
+      if (rec.gen1 && rec.gen2) {
+        CentrifugeView.renderBands(`cmp-${key}-0`, ACTUAL_MESELSON_STAHL.gen0, true);
+        CentrifugeView.renderBands(`cmp-${key}-1`, rec.gen1, true);
+        CentrifugeView.renderBands(`cmp-${key}-2`, rec.gen2, true);
+      }
+    });
+
+    const actualPanel = document.getElementById('actual-result-panel');
+    const toggleBtn = document.getElementById('toggle-actual-btn')                            ;
+    const actualTubes = document.getElementById('actual-tubes-container');
+    const completedCount = store.countCompletedHypotheses();
+    const allCompleted = completedCount === 3;
+
+    if (actualPanel && toggleBtn && actualTubes) {
+      if (!allCompleted) {
+        store.actualResultRevealed = false;
+      }
+      toggleBtn.disabled = !allCompleted;
+      if (!allCompleted) {
+        toggleBtn.className = 'bg-slate-300 text-slate-500 cursor-not-allowed font-extrabold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-sm';
+        toggleBtn.textContent = `3仮説すべて実験すると表示できます（${completedCount}/3）`;
+      } else {
+        toggleBtn.className = `bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-sm transition active:scale-95 cursor-pointer ${store.actualResultRevealed ? '' : 'next-action-glow'}`;
+        toggleBtn.textContent = store.actualResultRevealed
+          ? '実際の実験結果を隠す'
+          : '実際の実験結果を表示する';
+      }
+
+      actualPanel.classList.toggle('hidden', !store.actualResultRevealed);
+
+      if (store.actualResultRevealed) {
+        actualTubes.innerHTML = [
+          this.renderMiniTubeHtml('第0世代', ACTUAL_MESELSON_STAHL.gen0, 'actual-tube-0'),
+          this.renderMiniTubeHtml('第1世代', ACTUAL_MESELSON_STAHL.gen1, 'actual-tube-1'),
+          this.renderMiniTubeHtml('第2世代', ACTUAL_MESELSON_STAHL.gen2, 'actual-tube-2')
+        ].join('');
+        CentrifugeView.renderBands('actual-tube-0', ACTUAL_MESELSON_STAHL.gen0, true);
+        CentrifugeView.renderBands('actual-tube-1', ACTUAL_MESELSON_STAHL.gen1, true);
+        CentrifugeView.renderBands('actual-tube-2', ACTUAL_MESELSON_STAHL.gen2, true);
+      }
+    }
+  },
+
+  syncGen0ModalUi()       {
+    const wrapper = document.getElementById('modal-tube-wrapper');
+    const spinBtn = document.getElementById('modal-spin-gen0-btn')                            ;
+    const spinLabel = document.getElementById('modal-spin-label');
+    const spinIcon = document.getElementById('modal-spin-icon');
+    const startBtn = document.getElementById('modal-start-btn')                            ;
+    const statusEl = document.getElementById('modal-tube-status');
+    const phase = store.gen0Phase;
+
+    if (wrapper) wrapper.classList.toggle('animate-centrifuge', phase === 'spinning');
+
+    if (phase === 'idle') {
+      if (spinBtn) {
+        spinBtn.disabled = false;
+        spinBtn.className = 'w-full bg-rose-500 hover:bg-rose-600 text-white font-black py-2.5 px-4 rounded-2xl text-xs sm:text-sm shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 next-action-glow';
+      }
+      if (spinIcon) spinIcon.className = 'w-3 h-3 rounded-full bg-white inline-block';
+      if (spinLabel) spinLabel.textContent = 'DNAを投入して遠心分離する';
+      if (statusEl) statusEl.textContent = 'ボタンを押してDNAを投入しよう！';
+      if (startBtn) {
+        startBtn.disabled = true;
+        startBtn.classList.remove('next-action-glow');
+      }
+    } else if (phase === 'loading') {
+      if (spinBtn) {
+        spinBtn.disabled = true;
+        spinBtn.classList.remove('next-action-glow');
+      }
+      if (spinLabel) spinLabel.textContent = 'DNAを試験管へ投入中...';
+      if (statusEl) statusEl.textContent = 'DNAが試験管の中へ吸い込まれています...';
+    } else if (phase === 'spinning') {
+      if (spinBtn) {
+        spinBtn.disabled = false;
+        spinBtn.className = 'w-full bg-amber-500 hover:bg-amber-600 text-white font-black py-2.5 px-4 rounded-2xl text-xs sm:text-sm shadow-sm transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 next-action-glow';
+      }
+      if (spinIcon) spinIcon.className = 'w-3 h-3 rounded-sm bg-white inline-block';
+      if (spinLabel) spinLabel.textContent = '遠心分離を止める（ストップ）';
+      if (statusEl) statusEl.textContent = '回転しながら比重の位置へ移動中！もう一度押して止めよう';
+    } else if (phase === 'settling') {
+      if (spinBtn) {
+        spinBtn.disabled = true;
+        spinBtn.classList.remove('next-action-glow');
+      }
+      if (spinLabel) spinLabel.textContent = 'バンド形成中...';
+      if (statusEl) statusEl.textContent = 'バンドが形成されています...';
+    } else if (phase === 'done') {
+      if (spinBtn) {
+        spinBtn.disabled = true;
+        spinBtn.className = 'w-full bg-slate-300 text-slate-500 cursor-not-allowed font-black py-2.5 px-4 rounded-2xl text-xs sm:text-sm shadow-sm flex items-center justify-center gap-2';
+      }
+      if (spinIcon) spinIcon.className = 'w-3 h-3 rounded-full bg-slate-400 inline-block';
+      if (spinLabel) spinLabel.textContent = '分離完了！';
+      if (statusEl) statusEl.textContent = '一番下（比重大）にバンドができた！';
+      if (startBtn) {
+        startBtn.disabled = false;
+        startBtn.classList.add('next-action-glow');
+      }
+    }
+  }
+};
+
+// --- main.js ---
+function isHypothesisId(value               )                        {
+  return value === 'conservative' || value === 'semiconservative' || value === 'dispersive';
+}
+
+function isSlotActionType(value               )                          {
+  return value === 'build' || value === 'split' || value === 'cut' || value === 'mix';
+}
+
+// =========================================================================
+// アプリケーションコントローラ (Actions & Lifecycle)
+// =========================================================================
+const AppController = {
+  init()       {
+    store.gen1Slots = BiologyModel.createGen1Slots(store.hypothesis);
+    CentrifugeView.renderParticles('tube-content-0', ACTUAL_MESELSON_STAHL.gen0, false);
+    CentrifugeView.renderParticles('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0, false);
+    this.showModalStep(1);
+    LabView.syncGen0ModalUi();
+    LabView.renderLab();
+    GestureController.attach((slotId, op) => this.handleSlotAction(slotId, op));
+    this.attachEvents();
+  },
+
+  openRulesModal(step = 1)       {
+    const modal = document.getElementById('rules-modal');
+    if (!modal) return;
+    this.showModalStep(step);
+    modal.classList.remove('hidden');
+  },
+
+  closeRulesModal()       {
+    const modal = document.getElementById('rules-modal');
+    if (modal) modal.classList.add('hidden');
+    store.clearTimer('gen0');
+    store.clearTimer('gen0-load');
+    CentrifugeView.clearFlyingDna();
+
+    if (store.gen0Phase !== 'done') {
+      store.gen0Phase = 'done';
+      this.finalizeGen0Visuals();
+    }
+    LabView.renderLab();
+  },
+
+  showModalStep(step        )       {
+    const s1 = document.getElementById('modal-step-1');
+    const s2 = document.getElementById('modal-step-2');
+    const s3 = document.getElementById('modal-step-3');
+    if (!s1 || !s2 || !s3) return;
+    s1.classList.toggle('hidden', step !== 1);
+    s2.classList.toggle('hidden', step !== 2);
+    s3.classList.toggle('hidden', step !== 3);
+    if (step === 3) {
+      if (store.gen0Phase === 'idle') {
+        CentrifugeView.renderParticles('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0, false);
+      } else if (store.gen0Phase === 'done') {
+        CentrifugeView.renderBands('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0);
+      }
+      LabView.syncGen0ModalUi();
+    }
+  },
+
+  finalizeGen0Visuals()       {
+    CentrifugeView.renderBands('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0);
+    CentrifugeView.renderBands('tube-content-0', ACTUAL_MESELSON_STAHL.gen0);
+    const lbl0 = document.getElementById('tube-label-0');
+    if (lbl0) {
+      lbl0.textContent = '下（重・100%）';
+      lbl0.className = 'text-[10px] font-extrabold text-rose-400 leading-tight';
+    }
+    LabView.syncGen0ModalUi();
+    LabView.setObservation('第0世代は一番下（比重大）に沈みました！次は第1世代を作ろう！');
+  },
+
+  toggleModalGen0()       {
+    if (store.gen0Phase === 'idle') {
+      store.gen0Phase = 'loading';
+      LabView.syncGen0ModalUi();
+
+      const srcEl = document.getElementById('gen0-dna-visual');
+      const modalContent = document.getElementById('modal-tube-content');
+      if (modalContent) modalContent.innerHTML = '';
+
+      const delayMs = CentrifugeView.flyDnaIntoTube(srcEl ? [srcEl] : [], 'modal-tube-wrapper');
+      store.setTimer('gen0-load', () => {
+        CentrifugeView.clearFlyingDna();
+        CentrifugeView.renderParticles('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0, false);
+        CentrifugeView.renderParticles('tube-content-0', ACTUAL_MESELSON_STAHL.gen0, false);
+        const statusEl = document.getElementById('modal-tube-status');
+        if (statusEl) statusEl.textContent = '試験管に入りました！まもなく回転します...';
+
+        store.setTimer('gen0-load', () => {
+          store.gen0Phase = 'spinning';
+          CentrifugeView.renderParticles('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0, true);
+          CentrifugeView.renderParticles('tube-content-0', ACTUAL_MESELSON_STAHL.gen0, true);
+          LabView.syncGen0ModalUi();
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              CentrifugeView.migrateParticlesToDensity('modal-tube-content');
+              CentrifugeView.migrateParticlesToDensity('tube-content-0');
+            });
+          });
+        }, CONFIG.POST_LOAD_PAUSE_MS);
+      }, delayMs);
+    } else if (store.gen0Phase === 'spinning') {
+      store.gen0Phase = 'settling';
+      LabView.syncGen0ModalUi();
+
+      store.setTimer('gen0', () => {
+        store.gen0Phase = 'done';
+        this.finalizeGen0Visuals();
+      }, CONFIG.SETTLE_DURATION_MS);
+    }
+  },
+
+  selectHypothesis(hypo              )       {
+    if (store.isBusy()) return;
+    store.hypothesis = hypo;
+    store.currentGen = 1;
+    store.gen1Spun = false;
+    store.gen2Spun = false;
+    store.gen1Slots = BiologyModel.createGen1Slots(hypo);
+    store.gen2Slots = [];
+    CentrifugeView.clearGenTubes();
+    CentrifugeView.setStatusBadge('待機中', 'bg-slate-100 text-slate-600');
+    LabView.setObservation(`【${HYPOTHESES[hypo].name}】に切り替えました。第1世代のDNAを組み立てよう！`);
+    LabView.renderLab();
+  },
+
+  goToGen1()       {
+    if (store.isBusy() || store.currentGen === 1) return;
+    store.currentGen = 1;
+    store.gen1Spun = false;
+    store.gen2Spun = false;
+    store.gen1Slots = BiologyModel.createGen1Slots(store.hypothesis);
+    store.gen2Slots = [];
+    CentrifugeView.clearGenTubes();
+    CentrifugeView.setStatusBadge('待機中', 'bg-slate-100 text-slate-600');
+    LabView.setObservation('第1世代（1回目の複製）に戻りました！');
+    LabView.renderLab();
+  },
+
+  goToGen2()       {
+    if (store.isBusy() || !store.gen1Spun) return;
+    store.currentGen = 2;
+    store.gen2Spun = false;
+    store.gen2Slots = BiologyModel.createGen2Slots(store.hypothesis, store.gen1Slots);
+    CentrifugeView.setStatusBadge('待機中', 'bg-slate-100 text-slate-600');
+    LabView.setObservation('第1世代のDNAをさらに複製して、第2世代（4本）を作ろう！');
+    LabView.renderLab();
+  },
+
+  handleSlotAction(slotId        , actionType                )       {
+    if (store.isBusy()) return;
+    const slots = store.getCurrentSlots();
+    const changed = BiologyModel.applySlotAction(slots, store.hypothesis, store.currentGen, slotId, actionType);
+    if (changed) LabView.renderLab();
+  },
+
+  toggleCentrifuge()       {
+    const slots = store.getCurrentSlots();
+    if (store.centrifugePhase === 'loading' || store.centrifugePhase === 'settling') return;
+    if (!BiologyModel.isGenerationComplete(slots, store.hypothesis)) return;
+
+    const gen = store.currentGen;
+    const wrapper = document.getElementById(`tube-wrapper-${gen}`);
+    const labelEl = document.getElementById(`tube-label-${gen}`);
+    BiologyModel.clearJustBuiltFlags(slots);
+    const molecules = BiologyModel.getMoleculesFromSlots(slots, store.hypothesis);
+
+    if (store.centrifugePhase === 'idle') {
+      store.centrifugePhase = 'loading';
+      CentrifugeView.setStatusBadge('DNAを投入中...', 'bg-sky-100 text-sky-700');
+      if (labelEl) {
+        labelEl.textContent = '投入中...';
+        labelEl.className = 'text-[10px] font-bold text-sky-400 leading-tight';
+      }
+
+      const sourceEls = Array.from(document.querySelectorAll             ('#dna-slots-container [data-dna-visual]'));
+      const delayMs = CentrifugeView.flyDnaIntoTube(sourceEls, `tube-wrapper-${gen}`);
+      LabView.renderLab();
+
+      store.setTimer('centrifuge-load', () => {
+        CentrifugeView.clearFlyingDna();
+        CentrifugeView.renderParticles(`tube-content-${gen}`, molecules, false);
+        CentrifugeView.setStatusBadge('投入完了・回転準備中...', 'bg-sky-100 text-sky-700');
+        if (labelEl) {
+          labelEl.textContent = '投入完了！';
+          labelEl.className = 'text-[10px] font-bold text-sky-300 leading-tight';
+        }
+
+        store.setTimer('centrifuge-load', () => {
+          store.centrifugePhase = 'spinning';
+          CentrifugeView.setStatusBadge('回転・分離中...', 'bg-rose-100 text-rose-700');
+          if (labelEl) {
+            labelEl.textContent = '移動中...';
+            labelEl.className = 'text-[10px] font-bold text-rose-400 leading-tight';
+          }
+          CentrifugeView.renderParticles(`tube-content-${gen}`, molecules, true);
+          if (wrapper) wrapper.classList.add('animate-centrifuge');
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              CentrifugeView.migrateParticlesToDensity(`tube-content-${gen}`);
+            });
+          });
+          LabView.renderLab();
+        }, CONFIG.POST_LOAD_PAUSE_MS);
+      }, delayMs);
+    } else if (store.centrifugePhase === 'spinning') {
+      store.centrifugePhase = 'settling';
+      if (wrapper) wrapper.classList.remove('animate-centrifuge');
+      CentrifugeView.setStatusBadge('バンド形成中...', 'bg-amber-100 text-amber-800');
+      if (labelEl) {
+        labelEl.textContent = 'バンド形成中...';
+        labelEl.className = 'text-[10px] font-bold text-amber-400 leading-tight';
+      }
+      LabView.renderLab();
+
+      store.setTimer('centrifuge', () => {
+        store.centrifugePhase = 'idle';
+        if (gen === 1) {
+          store.gen1Spun = true;
+          store.recordedResults[store.hypothesis].gen1 = molecules;
+        } else {
+          store.gen2Spun = true;
+          store.recordedResults[store.hypothesis].gen2 = molecules;
+        }
+
+        CentrifugeView.renderBands(`tube-content-${gen}`, molecules);
+        const summary = BiologyModel.aggregateBands(molecules);
+
+        CentrifugeView.setStatusBadge('分離完了', 'bg-emerald-100 text-emerald-700');
+        if (labelEl) {
+          labelEl.textContent = summary.compactLabel;
+          labelEl.className = 'text-[10px] font-extrabold text-emerald-400 leading-tight';
+        }
+
+        LabView.setObservation(
+          `【${HYPOTHESES[store.hypothesis].name}・第${gen}世代】${summary.detailText}が現れました！`
+        );
+        LabView.renderLab();
+
+        if (gen === 2) {
+          CentrifugeView.flyResultToCompareBtn(HYPOTHESES[store.hypothesis].name);
+        }
+      }, CONFIG.SETTLE_DURATION_MS);
+    }
+  },
+
+  openCompareModal()       {
+    const modal = document.getElementById('compare-modal');
+    if (!modal) return;
+    LabView.renderCompareModal();
+    modal.classList.remove('hidden');
+  },
+
+  closeCompareModal()       {
+    const modal = document.getElementById('compare-modal');
+    if (modal) modal.classList.add('hidden');
+  },
+
+  toggleActualResult()       {
+    if (store.countCompletedHypotheses() < 3) return;
+    store.actualResultRevealed = !store.actualResultRevealed;
+    LabView.renderCompareModal();
+  },
+
+  resetAll()       {
+    store.clearAllTimers();
+    CentrifugeView.clearFlyingDna();
+    store.gen0Phase = 'idle';
+    store.centrifugePhase = 'idle';
+    store.currentGen = 1;
+    store.gen1Spun = false;
+    store.gen2Spun = false;
+    store.actualResultRevealed = false;
+    HYPOTHESIS_ORDER.forEach((h) => {
+      store.recordedResults[h] = { gen1: null, gen2: null };
+    });
+    store.gen1Slots = BiologyModel.createGen1Slots(store.hypothesis);
+    store.gen2Slots = [];
+
+    CentrifugeView.renderParticles('tube-content-0', ACTUAL_MESELSON_STAHL.gen0, false);
+    CentrifugeView.renderParticles('modal-tube-content', ACTUAL_MESELSON_STAHL.gen0, false);
+    const lbl0 = document.getElementById('tube-label-0');
+    if (lbl0) {
+      lbl0.textContent = '準備中';
+      lbl0.className = 'text-[10px] font-bold text-rose-400 leading-tight';
+    }
+    CentrifugeView.clearGenTubes();
+    CentrifugeView.setStatusBadge('待機中', 'bg-slate-100 text-slate-600');
+    LabView.setObservation('まずは第0世代（重い赤いDNA）の動きを見てみよう！');
+    LabView.syncGen0ModalUi();
+    this.closeCompareModal();
+    this.openRulesModal(1);
+    LabView.renderLab();
+  },
+
+  toggleFullscreen()       {
+    if (!document.fullscreenEnabled) return;
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  },
+
+  syncFullscreenBtn()       {
+    const btn = document.getElementById('fullscreen-btn');
+    if (!btn) return;
+    btn.textContent = document.fullscreenElement ? '✕ 全画面解除' : '⛶ 全画面';
+  },
+
+  attachEvents()       {
+    document.addEventListener('fullscreenchange', () => this.syncFullscreenBtn());
+    document.addEventListener('click', (e            ) => {
+      if (!(e.target instanceof Element)) return;
+      const target = e.target.closest             ('[data-action]');
+      if (!target) return;
+
+      const action = target.getAttribute('data-action');
+      switch (action) {
+        case 'select-hypothesis': {
+          const hypo = target.getAttribute('data-hypothesis');
+          if (isHypothesisId(hypo)) this.selectHypothesis(hypo);
+          break;
+        }
+        case 'go-gen-1':
+          this.goToGen1();
+          break;
+        case 'go-gen-2':
+          this.goToGen2();
+          break;
+        case 'slot-action': {
+          const slotId = parseInt(target.getAttribute('data-slot-id') ?? '', 10);
+          const op = target.getAttribute('data-slot-op');
+          if (!Number.isNaN(slotId) && isSlotActionType(op)) {
+            this.handleSlotAction(slotId, op);
+          }
+          break;
+        }
+        case 'toggle-centrifuge':
+          this.toggleCentrifuge();
+          break;
+        case 'toggle-modal-gen0':
+          this.toggleModalGen0();
+          break;
+        case 'open-rules':
+          this.openRulesModal(1);
+          break;
+        case 'close-rules':
+          this.closeRulesModal();
+          break;
+        case 'modal-step': {
+          const step = parseInt(target.getAttribute('data-step') ?? '1', 10);
+          this.showModalStep(Number.isNaN(step) ? 1 : step);
+          break;
+        }
+        case 'open-compare':
+          this.openCompareModal();
+          break;
+        case 'close-compare':
+          this.closeCompareModal();
+          break;
+        case 'toggle-actual-result':
+          this.toggleActualResult();
+          break;
+        case 'toggle-fullscreen':
+          this.toggleFullscreen();
+          break;
+        case 'reset-all':
+          this.resetAll();
+          break;
+        default:
+          break;
+      }
+    });
+
+    document.addEventListener('keydown', (e               ) => {
+      if (e.key !== 'Escape') return;
+      const compareModal = document.getElementById('compare-modal');
+      if (compareModal && !compareModal.classList.contains('hidden')) {
+        this.closeCompareModal();
+        return;
+      }
+      const rulesModal = document.getElementById('rules-modal');
+      if (rulesModal && !rulesModal.classList.contains('hidden')) {
+        this.closeRulesModal();
+      }
+    });
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  AppController.init();
+});
+
+})();
+  </script>
 </body>
 </html>
